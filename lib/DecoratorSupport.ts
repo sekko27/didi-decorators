@@ -1,4 +1,4 @@
-import {  } from "https://raw.githubusercontent.com/rbuckton/reflect-metadata/v0.1.12/Reflect.ts";
+import "./vendor/Reflect.ts";
 
 export class DecoratorSupport {
     public static fieldType(cls: any, field: string): any {
