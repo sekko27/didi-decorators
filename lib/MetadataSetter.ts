@@ -1,6 +1,6 @@
 export abstract class MetadataSetter<T, MD> {
-    public abstract metadata(target: T): MD;
-    protected abstract toPrototypeTarget(target: T): T;
+    public abstract metadata(constructorOrPrototypeTarget: T): MD;
+    protected abstract toPrototypeTarget(constructorTarget: T): T;
 
     /**
      * Usually we read metadata by class constructor.

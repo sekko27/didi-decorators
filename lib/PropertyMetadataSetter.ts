@@ -37,28 +37,28 @@ export class PropertyMetadataSetter<MD> extends MetadataSetter<IPropertyTarget<a
         super();
     }
 
-    public setField<PC>(target: IPropertyTarget<PC>, field: keyof MD, value: MD[keyof MD]): this {
-        this.metadata(target)[field] = value;
+    public setField<PC>(constructorOrPrototypeTarget: IPropertyTarget<PC>, field: keyof MD, value: MD[keyof MD]): this {
+        this.metadata(constructorOrPrototypeTarget)[field] = value;
         return this;
     }
 
-    public metadata<PC>(target: IPropertyTarget<PC>): MD {
+    public metadata<PC>(constructorOrPrototypeTarget: IPropertyTarget<PC>): MD {
         // Track annotated properties
-        PropertyMetadataSetter.ANNOTATED_PROPERTY_REGISTRY.metadata(target.cls).add(target.property);
+        PropertyMetadataSetter.ANNOTATED_PROPERTY_REGISTRY.metadata(constructorOrPrototypeTarget.cls).add(constructorOrPrototypeTarget.property);
 
-        if (!Reflect.hasMetadata(this.metadataKey, target.cls, target.property)) {
-            const propertyType = DecoratorSupport.fieldType(target.cls, target.property);
-            const metadata: MD = this.factory(target.cls, target.property, propertyType);
-            Reflect.defineMetadata(this.metadataKey, metadata, target.cls, target.property);
+        if (!Reflect.hasMetadata(this.metadataKey, constructorOrPrototypeTarget.cls, constructorOrPrototypeTarget.property)) {
+            const propertyType = DecoratorSupport.fieldType(constructorOrPrototypeTarget.cls, constructorOrPrototypeTarget.property);
+            const metadata: MD = this.factory(constructorOrPrototypeTarget.cls, constructorOrPrototypeTarget.property, propertyType);
+            Reflect.defineMetadata(this.metadataKey, metadata, constructorOrPrototypeTarget.cls, constructorOrPrototypeTarget.property);
         }
-        return Reflect.getMetadata(this.metadataKey, target.cls, target.property);
+        return Reflect.getMetadata(this.metadataKey, constructorOrPrototypeTarget.cls, constructorOrPrototypeTarget.property);
     }
 
-    protected toPrototypeTarget(target: IPropertyTarget): IPropertyTarget {
-        return {cls: target.cls.prototype, property: target.property};
+    protected toPrototypeTarget(constructorTarget: IPropertyTarget): IPropertyTarget {
+        return {cls: constructorTarget.cls.prototype, property: constructorTarget.property};
     }
 
-
+    // TODO Make constructor based field reader (as for metadata)
     public metadataField<PC>(target: IPropertyTarget<PC>, key: keyof MD, defaultValue: MD[keyof MD]): MD[keyof MD] {
         const metadata = this.metadata(target);
         return metadata[key] === undefined ? defaultValue : metadata[key];

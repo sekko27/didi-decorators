@@ -15,16 +15,16 @@ export class ClassMetadataSetter<C> extends MetadataSetter<any, C> {
         return this;
     }
 
-    public metadata(target: any): C {
-        if (!Reflect.hasMetadata(this.metadataKey, target)) {
-            const metadata: C = this.metadataInstanceFactory(target);
-            Reflect.defineMetadata(this.metadataKey, metadata, target);
+    public metadata(constructorOrPrototype: any): C {
+        if (!Reflect.hasMetadata(this.metadataKey, constructorOrPrototype)) {
+            const metadata: C = this.metadataInstanceFactory(constructorOrPrototype);
+            Reflect.defineMetadata(this.metadataKey, metadata, constructorOrPrototype);
             return metadata;
         }
-        return Reflect.getMetadata(this.metadataKey, target);
+        return Reflect.getMetadata(this.metadataKey, constructorOrPrototype);
     }
 
-    protected toPrototypeTarget(target: any): any {
-        return target.prototype;
+    protected toPrototypeTarget(constructorTarget: any): any {
+        return constructorTarget.prototype;
     }
 }
