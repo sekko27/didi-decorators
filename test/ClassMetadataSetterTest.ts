@@ -12,13 +12,13 @@ Deno.test("instance should be strict equals factory returns", () => {
 
     const md = {id: 1};
 
-    assertStrictEquals(new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, (cls) => md).metadata(A), md);
+    assertStrictEquals(new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md).metadata(A), md);
 });
 
 Deno.test("should use factory provided default value", () => {
     const md = {id: 1};
     assertStrictEquals(
-        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, (cls) => md).metadata(A).id,
+        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md).metadata(A).id,
         1
     );
 });
@@ -26,7 +26,7 @@ Deno.test("should use factory provided default value", () => {
 Deno.test("configured property should be return", () => {
     const md: A_MD = {id: 1};
     assertStrictEquals(
-        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, (cls) => md)
+        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md)
             .setField(A, "id", 2)
             .metadata(A).id,
         2

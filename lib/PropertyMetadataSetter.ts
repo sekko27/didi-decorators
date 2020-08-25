@@ -1,4 +1,4 @@
-import "./vendor/Reflect.ts";
+import "./modules/didi-commons/vendor/Reflect.ts";
 import { DecoratorSupport } from "./DecoratorSupport.ts";
 import { ClassMetadataSetter } from "./ClassMetadataSetter.ts";
 import { MetadataSetter } from "./MetadataSetter.ts";

@@ -1,4 +1,4 @@
-import "./vendor/Reflect.ts";
+import "./modules/didi-commons/vendor/Reflect.ts";
 
 export class DecoratorSupport {
     public static fieldType(constructorOrPrototype: any, field: string): any {

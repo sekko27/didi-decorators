@@ -1,4 +1,4 @@
-import "./vendor/Reflect.ts";
+import "./modules/didi-commons/vendor/Reflect.ts";
 import { MetadataSetter } from "./MetadataSetter.ts";
 
 /**
