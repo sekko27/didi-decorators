@@ -3,6 +3,10 @@ import { Name } from "./Name.ts";
 export type PrimitiveType = string | number | boolean | Date;
 
 export class TypeSupport {
+    public static isStringifiable(value: any): boolean {
+        return typeof value?.stringify === "function";
+    }
+
     public static subTypeOf(sub: any, sup: any) {
         return sub !== undefined && TypeSupport._subTypeOf(sub.prototype, sup.prototype);
     }
