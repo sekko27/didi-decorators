@@ -42,7 +42,7 @@ export class ParamDecorators {
      * Dummy method for ensuring annotation processing on method.
      */
     public static Method() {
-        return () => {};
+        return (target: any, method: Name) => {};
     }
 
     public static resolveParamsMetadata(target: any, method: Name) : IParamDecoratorMetadata<any>[] {

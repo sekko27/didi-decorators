@@ -2,7 +2,7 @@ import "./modules/didi-commons/vendor/Reflect.ts";
 import { Name } from "./modules/didi-commons/Name.ts";
 
 export class DecoratorSupport {
-    public static fieldType(constructorOrPrototype: any, field: string): any {
+    public static fieldType(constructorOrPrototype: any, field: Name): any {
         return Reflect.getMetadata("design:type", constructorOrPrototype, field);
     }
 

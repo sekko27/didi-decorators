@@ -76,6 +76,23 @@ Deno.test("should throw error on non-decorated params at all", () => {
     }, MissingParameterDecorationError);
 });
 
+Deno.test("should not throw error on method annotated but no param annotated case", () => {
+    class MethodDecorated {
+        @ParamDecorators.Method()
+        method(p1: string) {}
+    }
+
+    assertEquals(
+        ParamDecorators.resolveParamsMetadata(MethodDecorated.prototype, "method"),
+        [{
+            target: MethodDecorated.prototype,
+            type: String,
+            methodName: "method",
+            index: 0,
+            query: ConstantPredicate.TRUE,
+        }],
+    );
+})
 Deno.test("injection filter can be configurable by Query decorator", () => {
     const tKey: string = "k_e_y";
     const tValue: string = "v_a_l_u_e";
