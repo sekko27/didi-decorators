@@ -20,7 +20,10 @@ export class ParamDecorators {
 
     public static Inject<T>(paramName?: string) {
         return (target: any, methodName: Name, index: number) => {
-            ParamDecorators.getOrCreateMetadata<T>(target, methodName, index).paramName = paramName;
+            const md = ParamDecorators.getOrCreateMetadata<T>(target, methodName, index);
+            if (paramName !== undefined) {
+                md.paramName = paramName;
+            }
         }
     }
 
