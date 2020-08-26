@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "https://deno.land/std@0.63.0/testing/asserts.ts";
+import { assertStrictEquals } from "../deps.ts";
 import { DecoratorSupport } from "../lib/DecoratorSupport.ts";
 
 const fieldTypes: Map<keyof A, any> = new Map();

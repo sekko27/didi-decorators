@@ -1,16 +1,16 @@
-import { ClassMetadataSetter } from "../../ClassMetadataSetter.ts";
-import { IAOPMetadata } from "./IAOPMetadata.ts";
-import { IAroundAOPHandler } from "./IAroundAOPHandler.ts";
-import { IBeforeAOPHandler } from "./IBeforeAOPHandler.ts";
-import { IAfterAOPHandler } from "./IAfterAOPHandler.ts";
-import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { ITagsPredicate } from "../../modules/didi-tags/types/ITagsPredicate.ts";
-import { Name } from "../../modules/didi-commons/Name.ts";
-import { TaggedTypeQuery } from "../../modules/didi-tags/TaggedTypeQuery.ts";
-import { PredicateSupport } from "../../modules/didi-predicates/PredicateSupport.ts";
+import { ClassMetadataSetter } from "../ClassMetadataSetter.ts";
+import { IAOPMetadata } from "./types/IAOPMetadata.ts";
+import { IAroundAOPHandler } from "./types/IAroundAOPHandler.ts";
+import { IBeforeAOPHandler } from "./types/IBeforeAOPHandler.ts";
+import { IAfterAOPHandler } from "./types/IAfterAOPHandler.ts";
+import { BeanType } from "../modules/didi-commons/BeanType.ts";
+import { ITagsPredicate } from "../modules/didi-tags/types/ITagsPredicate.ts";
+import { Name } from "../modules/didi-commons/Name.ts";
+import { TaggedTypeQuery } from "../modules/didi-tags/TaggedTypeQuery.ts";
+import { PredicateSupport } from "../modules/didi-predicates/PredicateSupport.ts";
 
 export class AOPDecorators {
-    private static readonly METADATA_KEY: string = "metrix:aop:around";
+    private static readonly METADATA_KEY: string = "metrix:decorators:aop";
     private static readonly SETTER: ClassMetadataSetter<IAOPMetadata<any, any>[]> = new ClassMetadataSetter(
         AOPDecorators.METADATA_KEY,
         () => []

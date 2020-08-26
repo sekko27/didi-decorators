@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "https://deno.land/std@0.63.0/testing/asserts.ts";
+import { assertStrictEquals } from "../deps.ts";
 import { ClassMetadataSetter } from "../lib/ClassMetadataSetter.ts";
 
 const TEST_METADATA_KEY = "test";
