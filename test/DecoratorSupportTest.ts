@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "../deps.ts";
-import { DecoratorSupport } from "../lib/DecoratorSupport.ts";
+import { DecoratorSupport } from "../lib/modules/didi-commons/metadata/DecoratorSupport.ts";
 
 const fieldTypes: Map<keyof A, any> = new Map();
 const returnTypes: Map<keyof A, any> = new Map();

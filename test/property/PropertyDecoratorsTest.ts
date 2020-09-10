@@ -1,5 +1,5 @@
 import { assertStrictEquals, assertEquals } from "../../deps.ts";
-import { PropertyDecorators } from "../../lib/property/PropertyDecorators.ts";
+import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 
 Deno.test("non-decorated flag", () => {
     class A {}

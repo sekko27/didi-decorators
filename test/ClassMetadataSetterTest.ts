@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "../deps.ts";
-import { ClassMetadataSetter } from "../lib/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../lib/modules/didi-commons/metadata/ClassMetadataSetter.ts";
 
 const TEST_METADATA_KEY = "test";
 interface A_MD {

@@ -1,8 +1,8 @@
 import { assertEquals, assertThrows } from "../../deps.ts";
 
-import { ParamDecorators } from "../../lib/param/ParamDecorators.ts";
+import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
 import { ConstantPredicate } from "../../lib/modules/didi-predicates/ConstantPredicate.ts";
-import { MissingParameterDecorationError } from "../../lib/param/MissingParameterDecorationError.ts";
+import { MissingParameterDecorationError } from "../../lib/decorators/param/MissingParameterDecorationError.ts";
 import { TagsPredicates } from "../../lib/modules/didi-tags/TagsPredicates.ts";
 import { ITagsPredicate } from "../../lib/modules/didi-tags/types/ITagsPredicate.ts";
 import { Tags } from "../../lib/modules/didi-tags/types/Tags.ts";

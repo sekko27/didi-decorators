@@ -1,4 +1,4 @@
-export { ClassMetadataSetter } from "./lib/ClassMetadataSetter.ts";
-export { PropertyMetadataSetter } from "./lib/PropertyMetadataSetter.ts";
-export { DecoratorSupport } from "./lib/DecoratorSupport.ts";
-export { InitMethodDecorators } from "./lib/init-destroy-method/InitMethodDecorators.ts";
+export { ClassMetadataSetter } from "./lib/modules/didi-commons/metadata/ClassMetadataSetter.ts";
+export { PropertyMetadataSetter } from "./lib/modules/didi-commons/metadata/PropertyMetadataSetter.ts";
+export { DecoratorSupport } from "./lib/modules/didi-commons/metadata/DecoratorSupport.ts";
+export { InitMethodDecorators } from "./lib/decorators/init-destroy-method/InitMethodDecorators.ts";

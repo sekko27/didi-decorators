@@ -1,7 +1,7 @@
 import { assertStrictEquals, assertEquals } from "../../deps.ts";
-import { PropertyDecorators } from "../../lib/property/PropertyDecorators.ts";
-import { SetterDecorators } from "../../lib/setter/SetterDecorators.ts";
-import { ParamDecorators } from "../../lib/param/ParamDecorators.ts";
+import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
+import { SetterDecorators } from "../../lib/decorators/setter/SetterDecorators.ts";
+import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
 import { ITagsPredicate } from "../../lib/modules/didi-tags/types/ITagsPredicate.ts";
 import { Tags } from "../../lib/modules/didi-tags/types/Tags.ts";
 

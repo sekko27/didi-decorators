@@ -1,5 +1,5 @@
 import { assertEquals } from "../deps.ts";
-import { PropertyMetadataSetter } from "../lib/PropertyMetadataSetter.ts";
+import { PropertyMetadataSetter } from "../lib/modules/didi-commons/metadata/PropertyMetadataSetter.ts";
 
 interface MD {
     tmp: string;

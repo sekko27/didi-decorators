@@ -1,4 +1,4 @@
-import { InitMethodDecorators } from "../../lib/init-destroy-method/InitMethodDecorators.ts";
+import { InitMethodDecorators } from "../../lib/decorators/init-destroy-method/InitMethodDecorators.ts";
 import { assertEquals } from "../../deps.ts";
 
 Deno.test("should sort properly", () => {
