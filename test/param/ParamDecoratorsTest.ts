@@ -13,7 +13,7 @@ Deno.test("paramName is undefined by default", () => {
     }
 
     assertEquals(
-        ParamDecorators.resolveParamsMetadata(ParamNameUndefinedByDefault.prototype, "method"),
+        ParamDecorators.methodParams(ParamNameUndefinedByDefault.prototype, "method"),
         [{
             target: ParamNameUndefinedByDefault.prototype,
             type: String,
@@ -30,7 +30,7 @@ Deno.test("paramName is configurable", () => {
     }
 
     assertEquals(
-        ParamDecorators.resolveParamsMetadata(ParamNameIsConfigurable.prototype, "method"),
+        ParamDecorators.methodParams(ParamNameIsConfigurable.prototype, "method"),
         [{
             target: ParamNameIsConfigurable.prototype,
             type: String,
@@ -48,7 +48,7 @@ Deno.test("resolution resolve non-annotated params too", () => {
     }
 
     assertEquals(
-        ParamDecorators.resolveParamsMetadata(NonAnnotatedParamResolution.prototype, "method"),
+        ParamDecorators.methodParams(NonAnnotatedParamResolution.prototype, "method"),
         [{
             target: NonAnnotatedParamResolution.prototype,
             type: String,
@@ -72,7 +72,7 @@ Deno.test("should throw error on non-decorated params at all", () => {
             method(p1: string, p2: number) {}
         }
 
-        ParamDecorators.resolveParamsMetadata(NonDecoratedAtAll.prototype, "method");
+        ParamDecorators.methodParams(NonDecoratedAtAll.prototype, "method");
     }, MissingParameterDecorationError);
 });
 
@@ -83,7 +83,7 @@ Deno.test("should not throw error on method annotated but no param annotated cas
     }
 
     assertEquals(
-        ParamDecorators.resolveParamsMetadata(MethodDecorated.prototype, "method"),
+        ParamDecorators.methodParams(MethodDecorated.prototype, "method"),
         [{
             target: MethodDecorated.prototype,
             type: String,
@@ -110,7 +110,7 @@ Deno.test("injection filter can be configurable by Query decorator", () => {
     }
 
     assertEquals(
-        ParamDecorators.resolveParamsMetadata(QueryFilter.prototype, "method")[0]
+        ParamDecorators.methodParams(QueryFilter.prototype, "method")[0]
             .query.test(new Map([[tKey, tValue]])),
         true
     );

@@ -33,7 +33,7 @@ export class SetterDecorators {
     }
 
     private static extendMetadata<T>(md: ISetterMetadata<T>, target: any): ITaggedSetterMetadata<T> {
-        const parameterMetadata = ParamDecorators.resolveParamsMetadata(target, md.id)[0];
+        const parameterMetadata = ParamDecorators.methodParams(target, md.id)[0];
         return {...md, tags: parameterMetadata.query};
     }
 }

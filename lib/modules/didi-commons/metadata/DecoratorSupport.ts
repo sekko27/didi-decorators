@@ -10,11 +10,13 @@ export class DecoratorSupport {
         return Reflect.getMetadata("design:returntype", constructorOrPrototype, method);
     }
 
-    public static paramTypes(constructorOrPrototype: any, method: Name): any[] | undefined {
-        return Reflect.getMetadata("design:paramtypes", constructorOrPrototype, method);
+    public static paramTypes(constructorOrPrototype: any, method: Name | undefined): any[] | undefined {
+        return method === undefined
+            ? Reflect.getMetadata("design:paramtypes", constructorOrPrototype)
+            : Reflect.getMetadata("design:paramtypes", constructorOrPrototype, method);
     }
 
-    public static paramType(constructorOrPrototype: any, method: Name, index: number): any {
+    public static paramType(constructorOrPrototype: any, method: Name | undefined, index: number): any {
         const paramTypes = DecoratorSupport.paramTypes(constructorOrPrototype, method) || [];
         if (index < 0 || index >= paramTypes.length) {
             throw new ReferenceError(`E_INDEX_OUT_OF_BOUND: ${constructorOrPrototype.constructor ? constructorOrPrototype.constructor.name : constructorOrPrototype.name}.${String(method)} has no param at index ${index}`);

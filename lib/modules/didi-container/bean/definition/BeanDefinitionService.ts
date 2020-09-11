@@ -1,10 +1,10 @@
 import { IBeanDefinition } from "./IBeanDefinition.ts";
 import { TaggedTypeQuery } from "../../../didi-tags/TaggedTypeQuery.ts";
-import { IBeanCollection } from "../IBeanCollection.ts";
+import { IBeanDefinitionCollection } from "../IBeanDefinitionCollection.ts";
 
 export interface IBeanDefinitionInstantiation<T> {
     definition: IBeanDefinition<T>;
-    beanCollection: IBeanCollection;
+    beanCollection: IBeanDefinitionCollection;
     paramResolver: IParamResolver<T>;
 }
 export class BeanDefinitionService {

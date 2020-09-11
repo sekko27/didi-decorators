@@ -45,7 +45,7 @@ export class ParamDecorators {
         return (target: any, method: Name) => {};
     }
 
-    public static resolveParamsMetadata(target: any, method: Name) : IParamDecoratorMetadata<any>[] {
+    public static methodParams(target: any, method?: Name) : IParamDecoratorMetadata<any>[] {
         const rawParameters: BeanType<any>[] | undefined = DecoratorSupport.paramTypes(target, method);
         if (rawParameters === undefined && TypeSupport.hasParameter(method === undefined ? target : target[method])) {
             throw new MissingParameterDecorationError(target, method);
@@ -60,7 +60,7 @@ export class ParamDecorators {
         })
     }
 
-    private static getOrCreateMetadata<T>(target: any, methodName: Name, index: number): IParamDecoratorMetadata<T> {
+    private static getOrCreateMetadata<T>(target: any, methodName: Name | undefined, index: number): IParamDecoratorMetadata<T> {
         const md = ParamDecorators.SETTER.metadata(target);
         const current = md.find((pmd) => pmd.index === index && pmd.methodName === methodName);
         if (current === undefined) {
