@@ -11,7 +11,7 @@ import { Singleton } from "../../scope/Singleton.ts";
 import { ITagsPredicate } from "../../../../didi-tags/types/ITagsPredicate.ts";
 import { InstanceOf } from "../../factory/InstanceOf.ts";
 import { Name } from "../../../../didi-commons/Name.ts";
-import { IBeanFactoryClass } from "../../factory/IBeanFactoryClass.ts";
+import { BeanFactoryClass } from "../../factory/BeanFactoryClass.ts";
 
 export class DefaultBeanDefinitionBuilderAPI<T> implements IBeanDefinitionBuilderAPI<T> {
     constructor(
@@ -23,7 +23,7 @@ export class DefaultBeanDefinitionBuilderAPI<T> implements IBeanDefinitionBuilde
         return this.createBuilder(new Constant(this.type, value), new Singleton());
     }
 
-    factory<F extends IBeanFactoryClass<T>>(
+    factory<F extends BeanFactoryClass<T>>(
         factoryClass: BeanType<F>,
         method: Name = "create", tagsPredicate?: ITagsPredicate,
     ): IBeanDefinitionBuilder<T> {

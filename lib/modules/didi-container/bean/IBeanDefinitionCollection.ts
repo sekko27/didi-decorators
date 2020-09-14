@@ -1,6 +1,6 @@
-import { IPredicate } from "../../didi-predicates/IPredicate.ts";
 import { IBeanDefinition } from "./definition/IBeanDefinition.ts";
+import { BeanDefinitionQuery } from "./BeanDefinitionQuery.ts";
 
 export interface IBeanDefinitionCollection {
-    filter<B>(query: IPredicate<IBeanDefinition<B>>): Promise<IBeanDefinition<B>[]>;
+    filter<B>(query: BeanDefinitionQuery<B>): Promise<IBeanDefinition<B>[]>;
 }

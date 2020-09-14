@@ -1,10 +1,10 @@
 import { IPredicate } from "../../didi-predicates/IPredicate.ts";
-import { IBeanDefinition } from "./definition/IBeanDefinition.ts";
 import { IBean } from "./IBean.ts";
 import { IParamDecoratorMetadata } from "../../../decorators/param/IParamDecoratorMetadata.ts";
+import { BeanDefinitionQuery } from "./BeanDefinitionQuery.ts";
 
 export interface IBeanProvider {
-    getBean<B>(query: IPredicate<IBeanDefinition<B>>): IBean<B>;
+    getBean<B>(query: BeanDefinitionQuery<B>): IBean<B>;
     resolveParams(paramMetadata: IParamDecoratorMetadata<any>[]): Promise<any[]>;
 }
 /*

@@ -12,6 +12,7 @@ export interface IBeanDefinition<T> {
     readonly paramResolverContext?: IParamResolverContext;
     readonly optional?: boolean;
 }
+/*
 
 @Model("a")
 class AModel {}
@@ -35,3 +36,4 @@ container.instanceOf(AnOtherPricelistComponentImpl).overwrite(PricelistModule.Pr
 class Configuration {
 
 }
+*/
