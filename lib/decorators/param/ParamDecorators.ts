@@ -3,14 +3,14 @@ import { IParamDecoratorMetadata } from "./IParamDecoratorMetadata.ts";
 import { Name } from "../../modules/didi-commons/Name.ts";
 import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
 import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { PredicateSupport } from "../../modules/didi-predicates/PredicateSupport.ts";
-import { ITagsPredicate } from "../../modules/didi-tags/types/ITagsPredicate.ts";
-import { TagsPredicates } from "../../modules/didi-tags/TagsPredicates.ts";
-import { TaggedTypeQuery } from "../../modules/didi-tags/TaggedTypeQuery.ts";
 import { TypeSupport } from "../../modules/didi-commons/TypeSupport.ts";
 import { MissingParameterDecorationError } from "./MissingParameterDecorationError.ts";
+import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
+import { Query } from "../../modules/didi-queries/Query.ts";
+import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 
 export class ParamDecorators {
+    public static readonly NAME_TAG = "__name__";
     public static readonly METADATA_KEY: string = "metrix:decorators:param";
     private static readonly SETTER: ClassMetadataSetter<IParamDecoratorMetadata<any>[]> =
         new ClassMetadataSetter(
@@ -21,21 +21,19 @@ export class ParamDecorators {
     public static Inject<T>(paramName?: string) {
         return (target: any, methodName: Name, index: number) => {
             const md = ParamDecorators.getOrCreateMetadata<T>(target, methodName, index);
-            if (paramName !== undefined) {
-                md.paramName = paramName;
-            }
+            md.paramName = paramName ?? DecoratorSupport.paramName(target, methodName, index);
         }
     }
 
-    public static Query<T>(tagsPredicate: ITagsPredicate) {
+    public static Query<T>(tagsQuery: ITagsQuery) {
         return (target: any, methodName: Name, index: number) => {
             const md = this.getOrCreateMetadata<T>(target, methodName, index);
-            md.query = PredicateSupport.and(md.query, tagsPredicate);
+            md.query = md.query.mergeTagsOnly(tagsQuery);
         }
     }
 
     public static ByName<T>(name: Name) {
-        return ParamDecorators.Query(TagsPredicates.strict(TaggedTypeQuery.NAME_TAG, name));
+        return ParamDecorators.Query(TagsQuery.tagQuery(ParamDecorators.NAME_TAG, name));
     }
 
     /**
@@ -65,7 +63,8 @@ export class ParamDecorators {
         const current = md.find((pmd) => pmd.index === index && pmd.methodName === methodName);
         if (current === undefined) {
             const type = DecoratorSupport.paramType(target, methodName, index) as BeanType<T>;
-            const param = {index, methodName, query: PredicateSupport.TRUE, target, type};
+            const paramName = DecoratorSupport.paramName(target, methodName, index);
+            const param: IParamDecoratorMetadata<T> = {index, methodName, query: new Query<T>(type), target, paramName};
             md.push(param);
             return param;
         } else {

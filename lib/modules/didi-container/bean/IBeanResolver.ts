@@ -1,13 +1,32 @@
-import { IPredicate } from "../../didi-predicates/IPredicate.ts";
 import { IBean } from "./IBean.ts";
-import { IParamDecoratorMetadata } from "../../../decorators/param/IParamDecoratorMetadata.ts";
-import { BeanDefinitionQuery } from "./BeanDefinitionQuery.ts";
+import { IQuery } from "../../didi-queries/interfaces/IQuery.ts";
 
-export interface IBeanProvider {
-    getBean<B>(query: BeanDefinitionQuery<B>): IBean<B>;
-    resolveParams(paramMetadata: IParamDecoratorMetadata<any>[]): Promise<any[]>;
+export interface IBeanResolver {
+    /**
+     *
+     * @param query
+     * @throws BeanNotFoundResolutionError | AmbiguousBeansResolutionError
+     */
+    resolve<B>(query: IQuery<B>): IBean<B>;
 }
 /*
+
+class A {
+    @Property(query)
+    public prop: string;
+    public static readonly fmp: symbol = Symbol.of("LALA");
+    public static readonly smp: symbol = Symbol.of("LALA");
+
+    factoryMethod(@Inject("qualifyName") @Query(Tags) param: string, k: number) {}
+    set lala(@Inject("name2") p: number);
+}
+
+A.factoryMethod(k: 2, param: '100');
+
+configuration.register(String).insteanceOf(A).qualify("factoryMethod", 0, customTags = {});
+
+.resolve() <=> (string, tags + customTags)
+/!*
 
 class A {
     beanDefinitions: [];
@@ -42,4 +61,5 @@ if (!container.exists(definition)) {
         throw szopo();
     }
 }
+*!/
 */

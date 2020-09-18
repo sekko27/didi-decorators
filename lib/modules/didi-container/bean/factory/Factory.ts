@@ -1,6 +1,6 @@
 import { IBeanFactory } from "./IBeanFactory.ts";
 import { BeanType } from "../../../didi-commons/BeanType.ts";
-import { IBeanProvider } from "../IBeanProvider.ts";
+import { IBeanResolver } from "../IBeanResolver.ts";
 import { IBean } from "../IBean.ts";
 import { BeanFactoryClass } from "./BeanFactoryClass.ts";
 import { TaggedTypeQuery } from "../../../didi-tags/TaggedTypeQuery.ts";
@@ -16,7 +16,7 @@ export class Factory<T, K extends string, F extends BeanFactoryClass<K, T>> impl
     ) {
     }
 
-    async create(beanProvider: IBeanProvider): Promise<IBean<T>> {
+    async create(beanProvider: IBeanResolver): Promise<IBean<T>> {
         const factoryBean = await beanProvider.getBean(this.query);
         const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.methodParams(
             factoryBean.constructor.prototype,

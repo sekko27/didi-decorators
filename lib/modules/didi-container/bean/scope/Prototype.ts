@@ -1,10 +1,10 @@
 import { IScope } from "./IScope.ts";
 import { IBean } from "../IBean.ts";
 import { IBeanFactory } from "../factory/IBeanFactory.ts";
-import { IBeanProvider } from "../IBeanProvider.ts";
+import { IBeanResolver } from "../IBeanResolver.ts";
 
 export class Prototype<T> implements IScope<T>{
-    get(factory: IBeanFactory<T>, beanProvider: IBeanProvider): Promise<IBean<T>> {
+    get(factory: IBeanFactory<T>, beanProvider: IBeanResolver): Promise<IBean<T>> {
         return factory.create(beanProvider);
     }
 }

@@ -1,6 +1,6 @@
 import { IBeanFactory } from "./IBeanFactory.ts";
 import { BeanType } from "../../../didi-commons/BeanType.ts";
-import { IBeanProvider } from "../IBeanProvider.ts";
+import { IBeanResolver } from "../IBeanResolver.ts";
 import { IBean } from "../IBean.ts";
 
 export class Constant<T> implements IBeanFactory<T> {
@@ -10,7 +10,7 @@ export class Constant<T> implements IBeanFactory<T> {
     ) {
     }
 
-    async create(beanProvider: IBeanProvider): Promise<IBean<T>> {
+    async create(beanProvider: IBeanResolver): Promise<IBean<T>> {
         return {
             value: await this.value
         };

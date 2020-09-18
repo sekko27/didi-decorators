@@ -24,6 +24,20 @@ export class DecoratorSupport {
         return paramTypes[index];
     }
 
+    public static paramNames(constructorOrPrototype: any, method: Name | undefined): string[] | undefined {
+        return method === undefined
+            ? Reflect.getMetadata("design:paramnames", constructorOrPrototype)
+            : Reflect.getMetadata("design:paramnames", constructorOrPrototype, method);
+    }
+
+    public static paramName(constructorOrPrototype: any, method: Name | undefined, index: number): string {
+        const paramNames = DecoratorSupport.paramNames(constructorOrPrototype, method) || [];
+        if (index < 0 || index >= paramNames.length) {
+            throw new ReferenceError(`E_INDEX_OUT_OF_BOUND: ${constructorOrPrototype.constructor ? constructorOrPrototype.constructor.name : constructorOrPrototype.name}.${String(method)} has no param at index ${index}`);
+        }
+        return paramNames[index];
+    }
+
     public static setterType(prototype: any, method: string): any {
         return DecoratorSupport.paramType(prototype, method, 0);
     }

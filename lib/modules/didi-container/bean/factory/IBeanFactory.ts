@@ -1,6 +1,6 @@
-import { IBeanProvider } from "../IBeanProvider.ts";
+import { IBeanResolver } from "../IBeanResolver.ts";
 import { IBean } from "../IBean.ts";
 
 export interface IBeanFactory<T> {
-    create(beanProvider: IBeanProvider): Promise<IBean<T>>;
+    create(beanProvider: IBeanResolver): Promise<IBean<T>>;
 }

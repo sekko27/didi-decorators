@@ -1,4 +1,5 @@
 import { Name } from "./Name.ts";
+import { BeanType } from "./BeanType.ts";
 
 export type PrimitiveType = string | number | boolean | Date;
 
@@ -54,9 +55,18 @@ export class TypeSupport {
         return TypeSupport.subTypeOf(type, Array);
     }
 
+    public static isDefaultParam<T>(target: any, methodName: Name | undefined, index: number): boolean {
+        if (methodName === undefined) {
+            return index >= target.length;
+        } else {
+            return index >= target[methodName].length;
+        }
+    }
+
     private static _subTypeOf(sub: any, sup: any): boolean {
         return (sub !== null)
             && (sub !== undefined)
             && (sub === sup || sub.__proto__ === sup || TypeSupport._subTypeOf(sub.__proto__, sup));
     }
+
 }

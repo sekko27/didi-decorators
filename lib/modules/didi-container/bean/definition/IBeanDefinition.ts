@@ -1,15 +1,14 @@
 import { TaggedType } from "../../../didi-tags/TaggedType.ts";
 import { IScope } from "../scope/IScope.ts";
 import { IBeanFactory } from "../factory/IBeanFactory.ts";
-import { IPredicate } from "../../../didi-predicates/IPredicate.ts";
-import { IParamResolverContext } from "../../param/IParamResolverContext.ts";
+import { IParamListResolverContext } from "../../param/interfaces/IParamListResolverContext.ts";
 
 export interface IBeanDefinition<T> {
     // TODO Separate tags and type
     readonly taggedType: TaggedType<T>;
     readonly factory: IBeanFactory<T>;
     readonly scope: IScope<T>;
-    readonly paramResolverContext?: IParamResolverContext;
+    readonly paramResolverContext?: IParamListResolverContext;
     readonly optional?: boolean;
 }
 /*
