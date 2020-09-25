@@ -1,13 +1,14 @@
-import { IBeanDefinitionBuilder } from "./IBeanDefinitionBuilder.ts";
 import { BeanType } from "../../../../didi-commons/BeanType.ts";
-import { ITagsPredicate } from "../../../../didi-tags/types/ITagsPredicate.ts";
-import { ConstantPredicate } from "../../../../didi-predicates/ConstantPredicate.ts";
-import { Name } from "../../../../didi-commons/Name.ts";
+import { SupplyBeanDefinitionBuilder } from "./SupplyBeanDefinitionBuilder.ts";
+import { ConstantBeanDefinitionBuilder } from "./ConstantBeanDefinitionBuilder.ts";
+import { FactoryBeanDefinitionBuilder } from "./FactoryBeanDefinitionBuilder.ts";
+import { InstanceOfBeanDefinitionBuilder } from "./InstanceOfBeanDefinitionBuilder.ts";
+import { BeanFactoryClass } from "../../factory/BeanFactoryClass.ts";
 
 export interface IBeanDefinitionBuilderAPI<T> {
-    supply(supplier: () => T | Promise<T>): IBeanDefinitionBuilder<T>;
-    constant(value: T | Promise<T>): IBeanDefinitionBuilder<T>;
-    factory<F extends {create(...args: any[]): T | Promise<T>}>(factoryClass: BeanType<F>, method?: Name, tagsPredicate?: ITagsPredicate): IBeanDefinitionBuilder<T>;
-    instanceOf(): IBeanDefinitionBuilder<T>;
+    supply(supplier: () => T | Promise<T>): SupplyBeanDefinitionBuilder<T>;
+    constant(value: T | Promise<T>): ConstantBeanDefinitionBuilder<T>;
+    factory<K extends string, F extends BeanFactoryClass<K, T>>(factoryClass: BeanType<F>, method: K): FactoryBeanDefinitionBuilder<T, K, F>;
+    instanceOf(): InstanceOfBeanDefinitionBuilder<T>;
 
 }

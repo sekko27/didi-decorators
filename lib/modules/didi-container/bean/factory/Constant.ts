@@ -5,12 +5,11 @@ import { IBean } from "../IBean.ts";
 
 export class Constant<T> implements IBeanFactory<T> {
     constructor(
-        private readonly type: BeanType<T>,
         private readonly value: T | Promise<T>,
     ) {
     }
 
-    async create(beanProvider: IBeanResolver): Promise<IBean<T>> {
+    async create(beanResolver: IBeanResolver): Promise<IBean<T>> {
         return {
             value: await this.value
         };

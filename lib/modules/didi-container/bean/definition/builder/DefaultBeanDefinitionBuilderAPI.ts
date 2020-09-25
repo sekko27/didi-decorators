@@ -1,17 +1,10 @@
 import { IBeanDefinitionBuilderAPI } from "./IBeanDefinitionBuilderAPI.ts";
-import { IBeanDefinitionBuilder } from "./IBeanDefinitionBuilder.ts";
 import { BeanType } from "../../../../didi-commons/BeanType.ts";
-import { DefaultBeanDefinitionBuilder } from "./DefaultBeanDefinitionBuilder.ts";
-import { Supply } from "../../factory/Supply.ts";
-import { TaggedType } from "../../../../didi-tags/TaggedType.ts";
-import { Constant } from "../../factory/Constant.ts";
-import { IBeanFactory } from "../../factory/IBeanFactory.ts";
-import { IScope } from "../../scope/IScope.ts";
-import { Singleton } from "../../scope/Singleton.ts";
-import { ITagsPredicate } from "../../../../didi-tags/types/ITagsPredicate.ts";
-import { InstanceOf } from "../../factory/InstanceOf.ts";
-import { Name } from "../../../../didi-commons/Name.ts";
 import { BeanFactoryClass } from "../../factory/BeanFactoryClass.ts";
+import { FactoryBeanDefinitionBuilder } from "./FactoryBeanDefinitionBuilder.ts";
+import { ConstantBeanDefinitionBuilder } from "./ConstantBeanDefinitionBuilder.ts";
+import { InstanceOfBeanDefinitionBuilder } from "./InstanceOfBeanDefinitionBuilder.ts";
+import { SupplyBeanDefinitionBuilder } from "./SupplyBeanDefinitionBuilder.ts";
 
 export class DefaultBeanDefinitionBuilderAPI<T> implements IBeanDefinitionBuilderAPI<T> {
     constructor(
@@ -19,26 +12,20 @@ export class DefaultBeanDefinitionBuilderAPI<T> implements IBeanDefinitionBuilde
     ) {
     }
 
-    constant(value: Promise<T> | T): IBeanDefinitionBuilder<T> {
-        return this.createBuilder(new Constant(this.type, value), new Singleton());
+    constant(value: Promise<T> | T): ConstantBeanDefinitionBuilder<T> {
+        return new ConstantBeanDefinitionBuilder(this.type, value);
     }
 
-    factory<F extends BeanFactoryClass<T>>(
-        factoryClass: BeanType<F>,
-        method: Name = "create", tagsPredicate?: ITagsPredicate,
-    ): IBeanDefinitionBuilder<T> {
-        return undefined;
+    factory<K extends string, F extends BeanFactoryClass<K, T>>(factoryClass: BeanType<F>, method: K): FactoryBeanDefinitionBuilder<T, K, F> {
+        return new FactoryBeanDefinitionBuilder(this.type, factoryClass, method);
     }
 
-    instanceOf(): IBeanDefinitionBuilder<T> {
-        return this.createBuilder(new InstanceOf(this.type));
+
+    instanceOf(): InstanceOfBeanDefinitionBuilder<T> {
+        return new InstanceOfBeanDefinitionBuilder(this.type);
     }
 
-    supply(supplier: () => (Promise<T> | T)): IBeanDefinitionBuilder<T> {
-        return this.createBuilder(new Supply(this.type, supplier));
-    }
-
-    private createBuilder(factory: IBeanFactory<T>, scope?: IScope<T>): IBeanDefinitionBuilder<T> {
-        return new DefaultBeanDefinitionBuilder(factory, new TaggedType<T>(this.type, new Map()), scope);
+    supply(supplier: () => (Promise<T> | T)): SupplyBeanDefinitionBuilder<T> {
+        return new SupplyBeanDefinitionBuilder(this.type, supplier);
     }
 }

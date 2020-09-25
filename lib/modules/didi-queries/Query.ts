@@ -4,7 +4,7 @@ import { ITagsQuery } from "./interfaces/ITagsQuery.ts";
 import { TagsQuery } from "./TagsQuery.ts";
 
 export class Query<T> implements IQuery<T> {
-    constructor(readonly type: BeanType<T>, readonly tags: ITagsQuery = TagsQuery.EMPTY) {
+    constructor(readonly type: BeanType<T> | undefined, readonly tags: ITagsQuery = TagsQuery.EMPTY) {
     }
 
     merge<O extends T>(other: IQuery<O>): IQuery<O> {
@@ -15,6 +15,11 @@ export class Query<T> implements IQuery<T> {
     mergeTagsOnly(tags: ITagsQuery): IQuery<T> {
         return tags.isEmpty ? this : new Query(this.type, this.tags.merge(tags));
     }
+
+    concretiseType<O extends T>(type: BeanType<O>): IQuery<O> {
+        return new Query(type, this.tags);
+    }
+
 
 }
 
