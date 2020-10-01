@@ -1,0 +1,13 @@
+import { IParamResolver } from "./interfaces/IParamResolver.ts";
+import { IParamDecoratorMetadata } from "../../../../../decorators/param/IParamDecoratorMetadata.ts";
+import { NonResponsibleParamResolverError } from "./errors/NonResponsibleParamResolverError.ts";
+import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+
+export class DefaultParamResolver implements IParamResolver {
+    async resolve(paramMetadata: IParamDecoratorMetadata<any>): Promise<any> {
+        if (TypeSupport.isDefaultParam(paramMetadata.target, paramMetadata.methodName, paramMetadata.index)) {
+            return undefined;
+        }
+        throw new NonResponsibleParamResolverError();
+    }
+}
