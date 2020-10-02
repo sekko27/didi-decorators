@@ -1,11 +1,11 @@
 import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { ITagsPredicate } from "../../modules/didi-tags/types/ITagsPredicate.ts";
 import { Name } from "../../modules/didi-commons/Name.ts";
+import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 
 export interface IPropertyMetadata<T> {
     type: BeanType<T>;
     name: Name;
-    tags: ITagsPredicate;
+    tags: ITagsQuery;
     readonly?: boolean;
     enumerable?: boolean;
 }

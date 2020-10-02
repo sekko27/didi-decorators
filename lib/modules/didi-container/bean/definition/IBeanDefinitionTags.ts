@@ -2,6 +2,7 @@ import { Name } from "../../../didi-commons/Name.ts";
 
 export interface IBeanDefinitionTags {
     set(key: Name, value: any): void;
+    get(key: Name): any;
     has(key: Name): boolean;
 }
 

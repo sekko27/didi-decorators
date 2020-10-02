@@ -5,6 +5,9 @@ import { NonResponsibleParamResolverError } from "./errors/NonResponsibleParamRe
 import { ParamListResolverError } from "./errors/ParamListResolverError.ts";
 import { IParamResolver } from "./interfaces/IParamResolver.ts";
 import { IBeanResolver } from "../builder/interfaces/IBeanResolver.ts";
+import { ClientDefinedValueParamResolver } from "./ClientDefinedValueParamResolver.ts";
+import { BeanParamResolver } from "./BeanParamResolver.ts";
+import { DefaultParamResolver } from "./DefaultParamResolver.ts";
 
 /**
  * 1. Local param resolver
@@ -13,6 +16,19 @@ import { IBeanResolver } from "../builder/interfaces/IBeanResolver.ts";
  * 1. Chain -> error
  */
 export class ParamListResolverChain implements IParamListResolver {
+    private static DEFAULT_INSTANCE: IParamListResolver;
+
+    public static getDefault(): IParamListResolver {
+        if (this.DEFAULT_INSTANCE === undefined) {
+            this.DEFAULT_INSTANCE = new ParamListResolverChain([
+                new ClientDefinedValueParamResolver(),
+                new BeanParamResolver(),
+                new DefaultParamResolver()
+            ]);
+        }
+        return this.DEFAULT_INSTANCE;
+    }
+
     constructor(private readonly resolvers: IParamResolver[]) {
     }
 
@@ -24,10 +40,10 @@ export class ParamListResolverChain implements IParamListResolver {
         return resolvedParams;
     }
 
-    private resolveParam(paramMetadata: IParamDecoratorMetadata<any>, beanResolver: IBeanResolver, context: IParamListResolverContext): Promise<any> {
+    private async resolveParam(paramMetadata: IParamDecoratorMetadata<any>, beanResolver: IBeanResolver, context: IParamListResolverContext): Promise<any> {
         for (const resolver of this.resolvers) {
             try {
-                return resolver.resolve(paramMetadata, context, beanResolver);
+                return await resolver.resolve(paramMetadata, context, beanResolver);
             } catch (err) {
                 NonResponsibleParamResolverError.rethrowIfResponsible(err, paramMetadata, context);
             }

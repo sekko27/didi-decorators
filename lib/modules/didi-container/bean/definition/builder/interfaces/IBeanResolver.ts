@@ -30,7 +30,6 @@ export interface IBeanResolver {
     /**
      *
      * @param query
-     * @throws BeanNotFoundResolutionError | AmbiguousBeansResolutionError
      */
-    resolve<B>(query: IQuery<B>): B;
+    resolve<B>(query: IQuery<B>): Promise<B>;
 }

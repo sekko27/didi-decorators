@@ -64,9 +64,11 @@ export class TypeSupport {
     }
 
     private static _subTypeOf(sub: any, sup: any): boolean {
-        return (sub !== null)
-            && (sub !== undefined)
-            && (sub === sup || sub.__proto__ === sup || TypeSupport._subTypeOf(sub.__proto__, sup));
+        if (sub === null || sub === undefined) {
+            return false;
+        }
+        const subProto = Object.getPrototypeOf(sub);
+        return sub === sup || subProto === sup || TypeSupport._subTypeOf(subProto, sup);
     }
 
 }

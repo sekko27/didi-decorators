@@ -1,11 +1,9 @@
 import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
 import { IPropertyMetadata } from "./IPropertyMetadata.ts";
 import { Name } from "../../modules/didi-commons/Name.ts";
-import { TypeSupport } from "../../modules/didi-commons/TypeSupport.ts";
 import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
-import { TagsPredicates } from "../../modules/didi-tags/TagsPredicates.ts";
-import { PredicateSupport } from "../../modules/didi-predicates/PredicateSupport.ts";
-import { ITagsPredicate } from "../../modules/didi-tags/types/ITagsPredicate.ts";
+import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
+import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 
 export class PropertyDecorators {
     public static readonly METADATA_KEY: string = "metrix:decorators:property";
@@ -15,7 +13,7 @@ export class PropertyDecorators {
             () => []
         );
 
-    public static Property(tags: ITagsPredicate = PredicateSupport.TRUE) {
+    public static Property(tags: ITagsQuery = TagsQuery.EMPTY) {
         return (target: any, name: Name) => {
             PropertyDecorators.getOrCreateMetadata(target, name).tags = tags;
         }
@@ -59,7 +57,7 @@ export class PropertyDecorators {
 
         if (md === undefined) {
             const type = DecoratorSupport.fieldType(target, name);
-            const md = {name, type, enumerable: true, readonly: false, tags: PredicateSupport.TRUE};
+            const md = {name, type, enumerable: true, readonly: false, tags: TagsQuery.EMPTY};
             PropertyDecorators.SETTER.metadata(target).push(md);
             return md;
         } else {

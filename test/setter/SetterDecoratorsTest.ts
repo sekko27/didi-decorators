@@ -1,9 +1,5 @@
 import { assertStrictEquals, assertEquals } from "../../deps.ts";
-import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 import { SetterDecorators } from "../../lib/decorators/setter/SetterDecorators.ts";
-import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
-import { ITagsPredicate } from "../../lib/modules/didi-tags/types/ITagsPredicate.ts";
-import { Tags } from "../../lib/modules/didi-tags/types/Tags.ts";
 
 Deno.test("should resolve type properly", () => {
     class TypeClass {
@@ -12,8 +8,9 @@ Deno.test("should resolve type properly", () => {
     }
 
     const all = Array.from(SetterDecorators.all(TypeClass.prototype));
+    console.log(all);
     assertStrictEquals(all.length, 1);
-    assertStrictEquals(all[0].type, Number);
+    assertStrictEquals(all[0].query.type, Number);
 });
 
 Deno.test("should sort by dependencies", () => {
@@ -27,21 +24,3 @@ Deno.test("should sort by dependencies", () => {
     
     assertEquals(Array.from(SetterDecorators.all(SortClass.prototype)).map(i => i.id), ["v2", "v1"]);
 });
-
-Deno.test("should support tags", () => {
-    const tags: ITagsPredicate = {
-        stringify(): string {
-            return "test";
-        },
-        test(value: Tags): boolean {
-            return true;
-        }
-    }
-    class TagClass {
-        @SetterDecorators.Setter()
-        set value(@ParamDecorators.Query(tags) value: number) {}
-    }
-
-    assertEquals(Array.from(SetterDecorators.all(TagClass.prototype))[0].tags.stringify(), "test");
-});
-
