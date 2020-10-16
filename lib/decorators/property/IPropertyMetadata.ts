@@ -6,6 +6,7 @@ export interface IPropertyMetadata<T> {
     type: BeanType<T>;
     name: Name;
     tags: ITagsQuery;
+    enableDefault?: boolean;
     readonly?: boolean;
     enumerable?: boolean;
 }

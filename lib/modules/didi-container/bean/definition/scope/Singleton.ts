@@ -5,9 +5,9 @@ import { IBeanFactory } from "../builder/interfaces/IBeanFactory.ts";
 export class Singleton<T> implements IScope<T>{
     private instance: Promise<T> | undefined = undefined;
 
-    get(factory: IBeanFactory<T>, factoryResolverContext: IFactoryResolverContext): Promise<T> {
+    async get(factory: IBeanFactory<T>, factoryResolverContext: IFactoryResolverContext): Promise<T> {
         if (this.instance === undefined) {
-            this.instance = factory.create(factoryResolverContext);
+            this.instance = factoryResolverContext.createNewInstance(factory);
         }
         return this.instance;
     }

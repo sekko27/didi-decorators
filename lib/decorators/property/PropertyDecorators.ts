@@ -32,6 +32,11 @@ export class PropertyDecorators {
 
     }
 
+    public static EnableDefault() {
+        return (target: any, name: Name) => {
+            PropertyDecorators.getOrCreateMetadata(target, name).enableDefault = true;
+        }
+    }
     public static isTargetDecorated(target: any): boolean {
         return PropertyDecorators.SETTER.metadata(target).length > 0;
     }

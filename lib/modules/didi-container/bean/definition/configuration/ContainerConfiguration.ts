@@ -9,9 +9,11 @@ import { IContainer } from "../../container/IContainer.ts";
 import { ApplicationContainer } from "../../container/ApplicationContainer.ts";
 import { IBeanDefinitionRepository } from "../../container/IBeanDefinitionRepository.ts";
 import { NaiveBeanDefinitionRepository } from "../../container/NaiveBeanDefinitionRepository.ts";
+import { ActivationHandlerChain } from "../activation-handler/ActivationHandlerChain.ts";
 
 export class ContainerConfiguration implements IContainerConfiguration {
     private readonly builders: IBeanDefinitionBuilder<any>[] = [];
+    public readonly activationHandler: ActivationHandlerChain = ActivationHandlerChain.default();
 
     constructor(
         private readonly paramListResolver: IParamListResolver = ParamListResolverChain.getDefault(),
@@ -31,7 +33,7 @@ export class ContainerConfiguration implements IContainerConfiguration {
         this.builders.forEach(builder => {
             beanDefinitions.set(builder.build());
         });
-        return new ApplicationContainer(beanDefinitions, this.paramListResolver);
+        return new ApplicationContainer(beanDefinitions, this.paramListResolver, this.activationHandler);
     }
 
 

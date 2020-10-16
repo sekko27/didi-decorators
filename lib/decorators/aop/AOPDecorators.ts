@@ -4,10 +4,11 @@ import { IAroundAOPHandler } from "./types/IAroundAOPHandler.ts";
 import { IBeforeAOPHandler } from "./types/IBeforeAOPHandler.ts";
 import { IAfterAOPHandler } from "./types/IAfterAOPHandler.ts";
 import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { ITagsPredicate } from "../../modules/didi-tags/types/ITagsPredicate.ts";
 import { Name } from "../../modules/didi-commons/Name.ts";
-import { TaggedTypeQuery } from "../../modules/didi-tags/TaggedTypeQuery.ts";
 import { PredicateSupport } from "../../modules/didi-predicates/PredicateSupport.ts";
+import { Query } from "../../modules/didi-queries/Query.ts";
+import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
+import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 
 export class AOPDecorators {
     private static readonly METADATA_KEY: string = "metrix:decorators:aop";
@@ -22,43 +23,44 @@ export class AOPDecorators {
     >(
         kind: "around" | "after" | "before",
         handleType: BeanType<T>,
-        tagsPredicate: ITagsPredicate,
+        tags: ITagsQuery,
         handlerArgs?: A,
     ) {
         return (target: any, name: Name) => {
             AOPDecorators.SETTER.metadata(target).push({
-                handler: new TaggedTypeQuery(handleType, tagsPredicate),
+                handlerQuery: new Query<T>(handleType, tags),
                 handlerArgs,
                 kind,
                 name,
-                type: target
-            })
+            } as IAOPMetadata<T, A>)
         }
     }
 
     public static Around<T extends IAroundAOPHandler<A>, A = void>(
-        handlerType: BeanType<T>, handlerArgs?: A, tagsPredicate: ITagsPredicate = PredicateSupport.TRUE
+        handlerType: BeanType<T>,
+        handlerArgs?: A,
+        tags: ITagsQuery = TagsQuery.EMPTY,
     ) {
-        return AOPDecorators.aop<IAroundAOPHandler<A>, A>("around", handlerType, tagsPredicate, handlerArgs);
+        return AOPDecorators.aop<IAroundAOPHandler<A>, A>("around", handlerType, tags, handlerArgs);
     }
 
     public static Before<T extends IBeforeAOPHandler<A>, A = void>(
         handlerType: BeanType<T>,
         handlerArgs?: A,
-        tagsPredicate: ITagsPredicate = PredicateSupport.TRUE,
+        tags: ITagsQuery = TagsQuery.EMPTY,
     ) {
-        return AOPDecorators.aop<IBeforeAOPHandler<A>, A>("before", handlerType, tagsPredicate, handlerArgs);
+        return AOPDecorators.aop<IBeforeAOPHandler<A>, A>("before", handlerType, tags, handlerArgs);
     }
 
     public static After<T extends IAfterAOPHandler<A>, A = void>(
         handlerType: BeanType<T>,
         handlerArgs?: A,
-        tagsPredicate: ITagsPredicate = PredicateSupport.TRUE,
+        tags: ITagsQuery = TagsQuery.EMPTY,
     ) {
-        return AOPDecorators.aop<IAfterAOPHandler<A>, A>("after", handlerType, tagsPredicate, handlerArgs);
+        return AOPDecorators.aop<IAfterAOPHandler<A>, A>("after", handlerType, tags, handlerArgs);
     }
 
-    public static all(target: BeanType<any>): IterableIterator<IAOPMetadata<any, any>> {
+    public static all(target: any): IterableIterator<IAOPMetadata<any, any>> {
         return AOPDecorators.SETTER.metadata(target)[Symbol.iterator]();
     }
 

@@ -7,6 +7,8 @@ import { BeanDefinitionNotFoundError } from "./errors/BeanDefinitionNotFoundErro
 import { AmbiguousBeanDefinitionQueryError } from "./errors/AmbiguousBeanDefinitionQueryError.ts";
 import { IParamListResolver } from "../definition/param/interfaces/IParamListResolver.ts";
 import { IBeanDefinitionResolver } from "../definition/builder/interfaces/IBeanDefinitionResolver.ts";
+import { ActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
+import { IReadonlyActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
 
 interface ResolverMapEntry<T> {
     readonly beans: Set<IBean<any>>;
@@ -19,6 +21,7 @@ export class ApplicationContainer implements IContainer {
     constructor(
         private readonly beanDefinitionRepository: IBeanDefinitionRepository,
         private readonly paramListResolver: IParamListResolver,
+        readonly activationHandler: IReadonlyActivationHandlerChain
     ) {
     }
 
@@ -33,7 +36,7 @@ export class ApplicationContainer implements IContainer {
             this.resolveMap.set(beanDefinition, {resolver, beans: new Set()});
         }
         const entry: ResolverMapEntry<B> = this.resolveMap.get(beanDefinition) as ResolverMapEntry<B>;
-        const value = await entry.resolver.resolve()
+        const value = await entry.resolver.resolve();
         entry.beans.add({value});
         return value;
     }

@@ -3,12 +3,11 @@ import { Name } from "../../../modules/didi-commons/Name.ts";
 import { IAroundAOPHandler } from "./IAroundAOPHandler.ts";
 import { IBeforeAOPHandler } from "./IBeforeAOPHandler.ts";
 import { IAfterAOPHandler } from "./IAfterAOPHandler.ts";
-import { TaggedTypeQuery } from "../../../modules/didi-tags/TaggedTypeQuery.ts";
+import { IQuery } from "../../../modules/didi-queries/interfaces/IQuery.ts";
 
-export interface IAOPMetadata<T, A> {
-    type: BeanType<T>;
+export interface IAOPMetadata<T extends IAroundAOPHandler<A> | IBeforeAOPHandler<A> | IAfterAOPHandler<A>, A> {
     name: Name;
     kind: "around" | "before" | "after";
-    handler: TaggedTypeQuery<IAroundAOPHandler<T> | IBeforeAOPHandler<T> | IAfterAOPHandler<T>>;
+    handlerQuery: IQuery<T>;
     handlerArgs: A;
 }
