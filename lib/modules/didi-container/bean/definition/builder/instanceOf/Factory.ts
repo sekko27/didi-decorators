@@ -8,7 +8,7 @@ export class Factory<T> implements IBeanFactory<T> {
     constructor(private readonly type: BeanType<T>) {
     }
 
-    public async create(context: IFactoryResolverContext): Promise<T> {
+    public async create(context: IFactoryResolverContext<T>): Promise<T> {
         const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.methodParams(this.type, undefined);
         const params = await context.paramList(paramMetadata);
         return new (this.type)(...params) as T;

@@ -7,17 +7,17 @@ import { Name } from "../../../../didi-commons/Name.ts";
 import { IQuery } from "../../../../didi-queries/interfaces/IQuery.ts";
 
 export class PropertyDefaultValueNotEnabledError extends Error {
-    constructor(readonly constructor: any, readonly property: Name, readonly query: IQuery<any>) {
-        super(`Bean not found for property injection but default value is not explicit enabled: ${constructor.name}.${String(property)} - ${query.stringify()}`);
+    constructor(readonly ctr: any, readonly property: Name, readonly query: IQuery<any>) {
+        super(`Bean not found for property injection but default value is not explicit enabled: ${ctr.name}.${String(property)} - ${query.stringify()}`);
     }
 }
 export class PropertyInjectionActivationHandler implements IActivationHandler {
     public static readonly ID: string = "PropertyInjection";
     readonly id: string = PropertyInjectionActivationHandler.ID;
 
-    async apply<T extends ObjectConstructor>(instance: T, resolverContext: IFactoryResolverContext): Promise<T> {
+    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>): Promise<T> {
         const constructor = instance.constructor;
-        for (const property of PropertyDecorators.all(constructor)) {
+        for (const property of PropertyDecorators.all(constructor.prototype)) {
             const query = new Query(property.type, property.tags);
             try {
                 Object.defineProperty(

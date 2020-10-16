@@ -12,21 +12,22 @@ export class AOPActivationHandler implements IActivationHandler {
 
     readonly id: string = AOPActivationHandler.ID;
 
-    async apply<T extends ObjectConstructor>(instance: T, resolverContext: IFactoryResolverContext): Promise<T> {
+    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>): Promise<T> {
         const constructor = instance.constructor;
         let decorated = instance;
-        for (const aop of AOPDecorators.all(constructor)) {
+        for (const aop of AOPDecorators.all(constructor.prototype)) {
             decorated = await this.applyAOP(decorated, resolverContext, aop);
         }
         return decorated;
     }
 
-    private async applyAOP<T>(instance: T, resolverContext: IFactoryResolverContext, aop: IAOPMetadata<any, any>): Promise<T> {
+    private async applyAOP<T>(instance: T, resolverContext: IFactoryResolverContext<T>, aop: IAOPMetadata<any, any>): Promise<T> {
         const aopHandler = await resolverContext.bean(aop.handlerQuery);
         const handler = {
             get(target: any, property: PropertyKey, receiver: any) {
                 const original = Reflect.get(target, property, receiver);
                 if (property === aop.name) {
+                    // TODO Can it be promise-based?
                     return (...args: any[]) => {
                         const joinCut: IJoinCut<T> = {
                             args,
@@ -38,7 +39,9 @@ export class AOPActivationHandler implements IActivationHandler {
                             case "around":
                                 return (aopHandler as IAroundAOPHandler).apply(joinCut, original, aop.handlerArgs);
                             case "after":
-                                return (aopHandler as IAfterAOPHandler).apply(joinCut, original(...args), aop.handlerArgs);
+                                const result = original(...args);
+                                (aopHandler as IAfterAOPHandler).apply(joinCut, result, aop.handlerArgs);
+                                return result;
                             case "before":
                                 (aopHandler as IBeforeAOPHandler).apply(joinCut, aop.handlerArgs);
                                 return original(...args);

@@ -3,5 +3,5 @@ import { IBean } from "../../IBean.ts";
 import { IBeanFactory } from "../builder/interfaces/IBeanFactory.ts";
 
 export interface IScope<T> {
-    get(factory: IBeanFactory<T>, factoryResolverContext: IFactoryResolverContext): Promise<T>;
+    get(factoryResolverContext: IFactoryResolverContext<T>): Promise<T>;
 }

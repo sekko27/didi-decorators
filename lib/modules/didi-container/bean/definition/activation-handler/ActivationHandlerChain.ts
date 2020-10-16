@@ -19,7 +19,7 @@ export class ActivationHandlerChain implements IReadonlyActivationHandlerChain {
         return this;
     }
 
-    async apply<T extends ObjectConstructor>(instance: T, resolverContext: IFactoryResolverContext): Promise<T> {
+    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>): Promise<T> {
         let decorated = instance;
         for (const handler of this.handlers.sort()) {
             decorated = await handler.apply(decorated, resolverContext);

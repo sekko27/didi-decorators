@@ -10,7 +10,7 @@ export class Factory<T, K extends string, F extends BeanFactoryClass<K, T>> impl
     constructor(private readonly type: BeanType<T>, private readonly query: IQuery<F>, private readonly method: K) {
     }
 
-    public async create(context: IFactoryResolverContext): Promise<T> {
+    public async create(context: IFactoryResolverContext<T>): Promise<T> {
         const factoryBean = await context.bean(this.query);
         const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.methodParams(
             factoryBean.constructor.prototype,

@@ -6,16 +6,19 @@ import { IParamListResolver } from "../../param/interfaces/IParamListResolver.ts
 import { ActivationHandlerChain } from "../../activation-handler/ActivationHandlerChain.ts";
 import { IReadonlyActivationHandlerChain } from "../../activation-handler/ActivationHandlerChain.ts";
 import { IBeanFactory } from "./IBeanFactory.ts";
+import { IBeanDefinitionResolver } from "./IBeanDefinitionResolver.ts";
+import { IScope } from "../../scope/IScope.ts";
 
-export interface IFactoryResolverContext {
+export interface IFactoryResolverContext<T> extends IBeanDefinitionResolver<T> {
     bean<B>(query: IQuery<B>): Promise<B>;
     paramList(parametersMetadata: IParamDecoratorMetadata<any>[]): Promise<any[]>;
-    createNewInstance<B>(factory: IBeanFactory<B>): Promise<B>;
-    // applyActivationHandlers<T extends ObjectConstructor>(instance: T): Promise<T>;
+    createNewInstance<B>(): Promise<B>;
 }
 
-export class FactoryResolverContext implements IFactoryResolverContext {
+export class FactoryResolverContext<T> implements IFactoryResolverContext<T> {
     constructor(
+        private readonly scope: IScope<T>,
+        private readonly factory: IBeanFactory<T>,
         private readonly beanResolver: IBeanResolver,
         private readonly paramListResolver: IParamListResolver,
         private readonly paramListResolverContext: IParamListResolverContext,
@@ -30,9 +33,15 @@ export class FactoryResolverContext implements IFactoryResolverContext {
         return this.paramListResolver.resolve(parametersMetadata, this.beanResolver, this.paramListResolverContext);
     }
 
-    async createNewInstance<B>(factory: IBeanFactory<B>): Promise<B> {
-        return this.beanResolver.activationHandler.apply(await factory.create(this) as any, this);
+    async createNewInstance<B>(): Promise<B> {
+        return this.beanResolver.activationHandler.apply(await this.factory.create(this) as any, this);
     }
+
+    resolve(): Promise<T> {
+        return this.scope.get(this);
+    }
+
+
 }
 
 export interface IBeanResolver {
