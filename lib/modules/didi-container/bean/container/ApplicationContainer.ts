@@ -8,6 +8,10 @@ import { AmbiguousBeanDefinitionQueryError } from "./errors/AmbiguousBeanDefinit
 import { IParamListResolver } from "../definition/param/interfaces/IParamListResolver.ts";
 import { IBeanDefinitionResolver } from "../definition/builder/interfaces/IBeanDefinitionResolver.ts";
 import { IReadonlyActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
+import { IBeanResolverContext } from "../definition/builder/interfaces/IBeanResolverForFactory.ts";
+import { BeanResolverContext } from "./BeanResolverContext.ts";
+import { Query } from "../../../didi-queries/Query.ts";
+import { TagsQuery } from "../../../didi-queries/TagsQuery.ts";
 
 interface ResolverMapEntry<T> {
     readonly beans: Set<IBean<any>>;
@@ -24,26 +28,44 @@ export class ApplicationContainer implements IContainer {
     ) {
     }
 
-    async resolve<B>(query: IQuery<B>): Promise<B> {
-        return this.resolveBeanDefinition(await this.beanDefinition(query));
+    /**
+     * Resolver for client.
+     * @param query
+     */
+    async bean<B>(query: IQuery<B>): Promise<B> {
+        return this.resolve(query, this.newBeanResolverContext());
     }
 
-    private async resolveBeanDefinition<B>(beanDefinition: IBeanDefinition<B>): Promise<B> {
+    /**
+     * Resolver for factories.
+     * @param query
+     * @param context
+     */
+    async resolve<B>(query: IQuery<B>, context: IBeanResolverContext): Promise<B> {
+        const nextBeanResolverContext = context.next(query);
+        return this.resolveBeanDefinition(await this.beanDefinition(query, nextBeanResolverContext), nextBeanResolverContext);
+    }
+
+    private newBeanResolverContext(): IBeanResolverContext {
+        return new BeanResolverContext();
+    }
+
+    private async resolveBeanDefinition<B>(beanDefinition: IBeanDefinition<B>, context: IBeanResolverContext): Promise<B> {
         if (!this.resolveMap.has(beanDefinition)) {
-            // TODO Change this to specific IBeanResolver
+            // TODO Change this to specific IBeanResolverForFactory
             const resolver = beanDefinition.resolverFactory(this, this.paramListResolver);
             this.resolveMap.set(beanDefinition, {resolver, beans: new Set()});
         }
         const entry: ResolverMapEntry<B> = this.resolveMap.get(beanDefinition) as ResolverMapEntry<B>;
-        const value = await entry.resolver.resolve();
+        const value = await entry.resolver.resolve(context);
         entry.beans.add({value});
         return value;
     }
 
-    private async beanDefinition<B>(query: IQuery<B>): Promise<IBeanDefinition<B>> {
+    private async beanDefinition<B>(query: IQuery<B>, context: IBeanResolverContext): Promise<IBeanDefinition<B>> {
         const definitions = await this.beanDefinitions(query);
         if (definitions.length === 0) {
-            throw new BeanDefinitionNotFoundError(query);
+            throw new BeanDefinitionNotFoundError(context);
         } else if (definitions.length > 1) {
             throw new AmbiguousBeanDefinitionQueryError(query, definitions);
         } else {
@@ -57,7 +79,7 @@ export class ApplicationContainer implements IContainer {
 
     async boot(): Promise<this> {
         for (const bd of this.beanDefinitionRepository) {
-            await this.resolveBeanDefinition(bd);
+            await this.resolveBeanDefinition(bd, this.newBeanResolverContext().next(new Query(bd.meta.type, new TagsQuery(bd.meta.tags))));
         }
         return this;
     }

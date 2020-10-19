@@ -4,7 +4,7 @@ import { InitMethodActivationHandler } from "./InitMethodActivationHandler.ts";
 import { SetterInjectionActivationHandler } from "./SetterInjectionActivationHandler.ts";
 import { PropertyInjectionActivationHandler } from "./PropertyInjectionActivationHandler.ts";
 import { AOPActivationHandler } from "./AOPActivationHandler.ts";
-import { IFactoryResolverContext } from "../builder/interfaces/IBeanResolver.ts";
+import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interfaces/IBeanResolverForFactory.ts";
 
 export interface IReadonlyActivationHandlerChain extends Omit<IActivationHandler, "id"> {
 }
@@ -19,10 +19,10 @@ export class ActivationHandlerChain implements IReadonlyActivationHandlerChain {
         return this;
     }
 
-    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>): Promise<T> {
+    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         let decorated = instance;
         for (const handler of this.handlers.sort()) {
-            decorated = await handler.apply(decorated, resolverContext);
+            decorated = await handler.apply(decorated, resolverContext, beanResolverContext);
         }
         return decorated;
     }

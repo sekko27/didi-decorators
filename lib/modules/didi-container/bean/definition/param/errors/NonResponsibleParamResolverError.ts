@@ -3,13 +3,17 @@ import { IParamDecoratorMetadata } from "../../../../../../decorators/param/IPar
 import { IParamListResolverContext } from "../interfaces/IParamListResolverContext.ts";
 
 export class NonResponsibleParamResolverError extends Error {
+    constructor(cause: Error) {
+        super(`${cause.message}`);
+    }
+
     public static responsible(error: Error) {
         return ! (error instanceof NonResponsibleParamResolverError);
     }
 
     public static rethrowIfResponsible(error: Error, parameterMetadata: IParamDecoratorMetadata<any>, context: IParamListResolverContext) {
         if (this.responsible(error)) {
-            throw new ParamListResolverError(`Param resolver fatal error`, parameterMetadata, context, error);
+            throw new ParamListResolverError(`Param resolver fatal error`, parameterMetadata, context, [error]);
         }
     }
 }

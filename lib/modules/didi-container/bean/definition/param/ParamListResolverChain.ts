@@ -4,7 +4,7 @@ import { IParamDecoratorMetadata } from "../../../../../decorators/param/IParamD
 import { NonResponsibleParamResolverError } from "./errors/NonResponsibleParamResolverError.ts";
 import { ParamListResolverError } from "./errors/ParamListResolverError.ts";
 import { IParamResolver } from "./interfaces/IParamResolver.ts";
-import { IBeanResolver } from "../builder/interfaces/IBeanResolver.ts";
+import { IBeanResolverContext, IBeanResolverForFactory } from "../builder/interfaces/IBeanResolverForFactory.ts";
 import { ClientDefinedValueParamResolver } from "./ClientDefinedValueParamResolver.ts";
 import { BeanParamResolver } from "./BeanParamResolver.ts";
 import { DefaultParamResolver } from "./DefaultParamResolver.ts";
@@ -32,22 +32,24 @@ export class ParamListResolverChain implements IParamListResolver {
     constructor(private readonly resolvers: IParamResolver[]) {
     }
 
-    async resolve(paramsMetadata: IParamDecoratorMetadata<any>[], beanResolver: IBeanResolver, context: IParamListResolverContext): Promise<any[]> {
+    async resolve(paramsMetadata: IParamDecoratorMetadata<any>[], beanResolver: IBeanResolverForFactory, context: IParamListResolverContext, beanResolverContext: IBeanResolverContext): Promise<any[]> {
         const resolvedParams = [];
         for (const paramMetadata of paramsMetadata) {
-            resolvedParams.push(await this.resolveParam(paramMetadata, beanResolver, context));
+            resolvedParams.push(await this.resolveParam(paramMetadata, beanResolver, context, beanResolverContext));
         }
         return resolvedParams;
     }
 
-    private async resolveParam(paramMetadata: IParamDecoratorMetadata<any>, beanResolver: IBeanResolver, context: IParamListResolverContext): Promise<any> {
+    private async resolveParam(paramMetadata: IParamDecoratorMetadata<any>, beanResolver: IBeanResolverForFactory, context: IParamListResolverContext, beanResolverContext: IBeanResolverContext): Promise<any> {
+        const errors: Error[] = [];
         for (const resolver of this.resolvers) {
             try {
-                return await resolver.resolve(paramMetadata, context, beanResolver);
+                return await resolver.resolve(paramMetadata, context, beanResolver, beanResolverContext);
             } catch (err) {
                 NonResponsibleParamResolverError.rethrowIfResponsible(err, paramMetadata, context);
+                errors.push(err);
             }
         }
-        throw ParamListResolverError.nonResolvable(paramMetadata, context);
+        throw ParamListResolverError.nonResolvable(paramMetadata, context, errors);
     }
 }

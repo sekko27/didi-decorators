@@ -7,7 +7,7 @@ import { IQuery } from "../../../../../didi-queries/interfaces/IQuery.ts";
 import { Query } from "../../../../../didi-queries/Query.ts";
 import { ITagsQuery } from "../../../../../didi-queries/interfaces/ITagsQuery.ts";
 import { IBeanDefinitionResolverFactory } from "../interfaces/IBeanDefinitionResolverFactory.ts";
-import { FactoryResolverContext, IBeanResolver } from "../interfaces/IBeanResolver.ts";
+import { FactoryResolverContext, IBeanResolverForFactory } from "../interfaces/IBeanResolverForFactory.ts";
 import { IBeanFactory } from "../interfaces/IBeanFactory.ts";
 import { IParamListResolver } from "../../param/interfaces/IParamListResolver.ts";
 
@@ -53,7 +53,7 @@ export abstract class ParameterizedBeanDefinitionBuilder<T> extends BaseBeanDefi
 
 
     protected resolverFactory(): IBeanDefinitionResolverFactory<T> {
-        return (beanResolver: IBeanResolver) => new FactoryResolverContext(
+        return (beanResolver: IBeanResolverForFactory) => new FactoryResolverContext(
             this.scope,
             this.createFactory(),
             beanResolver,

@@ -58,7 +58,15 @@ export class TypeSupport {
         if (methodName === undefined) {
             return index >= target.length;
         } else {
-            return index >= target[methodName].length;
+            const descriptor = Object.getOwnPropertyDescriptor(target, methodName);
+            switch (true) {
+                case descriptor === undefined: // Something fucked
+                case descriptor?.get !== undefined: // Getter case
+                case descriptor?.set !== undefined: // Setter case
+                    return false;
+                default:
+                    return index >= target[methodName].length;
+            }
         }
     }
 

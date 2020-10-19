@@ -1,7 +1,7 @@
-import { IQuery } from "../../../../didi-queries/interfaces/IQuery.ts";
+import { IBeanResolverContext } from "../../definition/builder/interfaces/IBeanResolverForFactory.ts";
 
 export class BeanDefinitionNotFoundError extends Error {
-    constructor(readonly query: IQuery<any>) {
-        super(`Bean definition not found: ${query.stringify()}`);
+    constructor(readonly context: IBeanResolverContext) {
+        super(`Bean definition not found: ${context.stringify()}`);
     }
 }

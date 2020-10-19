@@ -1,4 +1,4 @@
 import { IBeanDefinitionResolver } from "./IBeanDefinitionResolver.ts";
-import { IBeanResolver } from "./IBeanResolver.ts";
+import { IBeanResolverForFactory } from "./IBeanResolverForFactory.ts";
 
-export type IBeanDefinitionResolverFactory<T> = (beanResolver: IBeanResolver) => IBeanDefinitionResolver<T>;
+export type IBeanDefinitionResolverFactory<T> = (beanResolver: IBeanResolverForFactory) => IBeanDefinitionResolver<T>;

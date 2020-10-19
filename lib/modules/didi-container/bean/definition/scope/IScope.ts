@@ -1,5 +1,5 @@
-import { IFactoryResolverContext } from "../builder/interfaces/IBeanResolver.ts";
+import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interfaces/IBeanResolverForFactory.ts";
 
 export interface IScope<T> {
-    get(factoryResolverContext: IFactoryResolverContext<T>): Promise<T>;
+    get(factoryResolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T>;
 }

@@ -85,7 +85,7 @@ Deno.test("katyvasz", async () => {
 
     configuration.register(Number).constant(4).as("four");
     configuration.register(Number).constant(1001).as("num");
-    configuration.register(Number).constant(27).as("setter");
+    configuration.register(Number).constant(27).as("setter2");
     configuration.register(Number).constant(3).as("init");
     configuration.register(String).constant("PRE").as("prefix");
     configuration.register(String).constant("SUF").as("suffix");
@@ -96,9 +96,9 @@ Deno.test("katyvasz", async () => {
     configuration.register(GigaFactory).instanceOf();
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
 
-    const container = await configuration.buildContainer();// .boot();
-    const num = await container.resolve(Query.byName("four"));
-    const bean = await container.resolve(Query.byName("bean"));
-    const keszitettem = await container.resolve(new Query(Keszitettem));
+    const container = await configuration.buildContainer().boot();
+    const num = await container.bean(Query.byName("four"));
+    const bean = await container.bean(Query.byName("bean"));
+    const keszitettem = await container.bean(new Query(Keszitettem));
     console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"));
 });

@@ -1,5 +1,5 @@
 import { IActivationHandler } from "./IActivationHandler.ts";
-import { IFactoryResolverContext } from "../builder/interfaces/IBeanResolver.ts";
+import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interfaces/IBeanResolverForFactory.ts";
 import { AOPDecorators } from "../../../../../decorators/aop/AOPDecorators.ts";
 import { IAOPMetadata } from "../../../../../decorators/aop/types/IAOPMetadata.ts";
 import { IJoinCut } from "../../../../../decorators/aop/types/IJoinCut.ts";
@@ -12,17 +12,17 @@ export class AOPActivationHandler implements IActivationHandler {
 
     readonly id: string = AOPActivationHandler.ID;
 
-    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>): Promise<T> {
+    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         const constructor = instance.constructor;
         let decorated = instance;
         for (const aop of AOPDecorators.all(constructor.prototype)) {
-            decorated = await this.applyAOP(decorated, resolverContext, aop);
+            decorated = await this.applyAOP(decorated, resolverContext, aop, beanResolverContext);
         }
         return decorated;
     }
 
-    private async applyAOP<T>(instance: T, resolverContext: IFactoryResolverContext<T>, aop: IAOPMetadata<any, any>): Promise<T> {
-        const aopHandler = await resolverContext.bean(aop.handlerQuery);
+    private async applyAOP<T>(instance: T, resolverContext: IFactoryResolverContext<T>, aop: IAOPMetadata<any, any>, beanResolverContext: IBeanResolverContext): Promise<T> {
+        const aopHandler = await resolverContext.bean(aop.handlerQuery, beanResolverContext);
         const handler = {
             get(target: any, property: PropertyKey, receiver: any) {
                 const original = Reflect.get(target, property, receiver);
