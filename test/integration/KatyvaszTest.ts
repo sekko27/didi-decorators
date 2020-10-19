@@ -2,8 +2,6 @@ import { ContainerConfiguration } from "../../lib/modules/didi-container/bean/de
 import { Query } from "../../lib/modules/didi-queries/Query.ts";
 import { TagsQuery } from "../../lib/modules/didi-queries/TagsQuery.ts";
 import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
-import { TypeSupport } from "../../lib/modules/didi-commons/TypeSupport.ts";
-import { Prototype } from "../../lib/modules/didi-container/bean/definition/scope/Prototype.ts";
 import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 import { SetterDecorators } from "../../lib/decorators/setter/SetterDecorators.ts";
 import { InitMethodDecorators } from "../../lib/decorators/init-destroy-method/InitMethodDecorators.ts";
@@ -12,6 +10,9 @@ import { IJoinCut } from "../../lib/decorators/aop/types/IJoinCut.ts";
 import { Invocation } from "../../lib/decorators/aop/types/Invocation.ts";
 import { AOPDecorators } from "../../lib/decorators/aop/AOPDecorators.ts";
 import { IAfterAOPHandler } from "../../lib/decorators/aop/types/IAfterAOPHandler.ts";
+import { IPostConfigurator } from "../../lib/modules/didi-container/bean/definition/configuration/post-configurator/IPostConfigurator.ts";
+import { IPostConfiguratorTarget } from "../../lib/modules/didi-container/bean/definition/configuration/post-configurator/IPostConfiguratorTarget.ts";
+import { PostConfiguratorDecorators } from "../../lib/decorators/post-configurator/PostConfiguratorDecorators.ts";
 
 Deno.test("katyvasz", async () => {
     interface IBean {
@@ -76,8 +77,38 @@ Deno.test("katyvasz", async () => {
             return new Keszitettem(bean, this.str, this.num, def);
         }
     }
+
+    class SamplePostConfigurator implements IPostConfigurator {
+        async configure(target: IPostConfiguratorTarget): Promise<void> {
+            target.register(Twice).instanceOf();
+            for (const num of await target.filter(new Query(Number))) {
+                if (num.meta.tags.has(ParamDecorators.NAME_TAG)) {
+                    const name = num.meta.tags.get(ParamDecorators.NAME_TAG);
+                    target.register(Number).factory(Twice, "factory")
+                        .qualifyParam("source", Query.byName(name))
+                        .as(`twice-${name}`);
+                }
+            }
+            return Promise.resolve(undefined);
+        }
+
+    }
+
+    function EnableSample() {
+        return (target: any) => {
+            PostConfiguratorDecorators.register(target, "sample", new SamplePostConfigurator());
+        };
+    }
+
+    @EnableSample()
     class ApplicationConfiguration extends ContainerConfiguration {
 
+    }
+
+    class Twice {
+        async factory(@ParamDecorators.Inject() source: number): Promise<number> {
+            return source * 2;
+        }
     }
 
     const configuration = new ApplicationConfiguration();
@@ -85,7 +116,7 @@ Deno.test("katyvasz", async () => {
 
     configuration.register(Number).constant(4).as("four");
     configuration.register(Number).constant(1001).as("num");
-    configuration.register(Number).constant(27).as("setter2");
+    configuration.register(Number).constant(27).as("setter");
     configuration.register(Number).constant(3).as("init");
     configuration.register(String).constant("PRE").as("prefix");
     configuration.register(String).constant("SUF").as("suffix");
@@ -96,9 +127,13 @@ Deno.test("katyvasz", async () => {
     configuration.register(GigaFactory).instanceOf();
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
 
-    const container = await configuration.buildContainer().boot();
+    const container = await (await configuration.buildContainer()).boot();
+    // @ts-ignore
+    // console.log(container.beanDefinitionRepository.storage.map(({meta}) => meta.tags));
+    console.log("anyasd");
     const num = await container.bean(Query.byName("four"));
     const bean = await container.bean(Query.byName("bean"));
+    const twice_four = await container.bean(Query.byName("twice-four"));
     const keszitettem = await container.bean(new Query(Keszitettem));
-    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"));
+    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"), twice_four);
 });

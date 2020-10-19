@@ -4,5 +4,5 @@ import { IContainer } from "../../container/IContainer.ts";
 
 export interface IContainerConfiguration {
     register<T>(type: BeanType<T>): IBeanDefinitionBuilderAPI<T>;
-    buildContainer(): IContainer;
+    buildContainer(): Promise<IContainer>;
 }

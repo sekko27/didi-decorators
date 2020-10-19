@@ -1,5 +1,4 @@
 import { IContainer } from "./IContainer.ts";
-import { IBeanDefinitionRepository } from "./IBeanDefinitionRepository.ts";
 import { IQuery } from "../../../didi-queries/interfaces/IQuery.ts";
 import { IBean } from "../IBean.ts";
 import { IBeanDefinition } from "../definition/IBeanDefinition.ts";
@@ -8,10 +7,14 @@ import { AmbiguousBeanDefinitionQueryError } from "./errors/AmbiguousBeanDefinit
 import { IParamListResolver } from "../definition/param/interfaces/IParamListResolver.ts";
 import { IBeanDefinitionResolver } from "../definition/builder/interfaces/IBeanDefinitionResolver.ts";
 import { IReadonlyActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
-import { IBeanResolverContext } from "../definition/builder/interfaces/IBeanResolverForFactory.ts";
+import {
+    IBeanResolverContext,
+    IBeanResolverForFactory
+} from "../definition/builder/interfaces/IBeanResolverForFactory.ts";
 import { BeanResolverContext } from "./BeanResolverContext.ts";
 import { Query } from "../../../didi-queries/Query.ts";
 import { TagsQuery } from "../../../didi-queries/TagsQuery.ts";
+import { IMetaRepository } from "./IMetaRepository.ts";
 
 interface ResolverMapEntry<T> {
     readonly beans: Set<IBean<any>>;
@@ -20,12 +23,19 @@ interface ResolverMapEntry<T> {
 
 export class ApplicationContainer implements IContainer {
     private readonly resolveMap: Map<IBeanDefinition<any>, ResolverMapEntry<any>> = new Map();
+    private readonly interfaceForFactories: IBeanResolverForFactory;
 
     constructor(
-        private readonly beanDefinitionRepository: IBeanDefinitionRepository,
+        private readonly beanDefinitionRepository: IMetaRepository<IBeanDefinition<any>>,
         private readonly paramListResolver: IParamListResolver,
-        readonly activationHandler: IReadonlyActivationHandlerChain
+        activationHandler: IReadonlyActivationHandlerChain
     ) {
+        this.interfaceForFactories = {
+            activationHandler,
+            resolve: <B>(query: IQuery<B>, context: IBeanResolverContext): Promise<B> => {
+                return this.resolve(query, context);
+            }
+        }
     }
 
     /**
@@ -41,7 +51,7 @@ export class ApplicationContainer implements IContainer {
      * @param query
      * @param context
      */
-    async resolve<B>(query: IQuery<B>, context: IBeanResolverContext): Promise<B> {
+    private async resolve<B>(query: IQuery<B>, context: IBeanResolverContext): Promise<B> {
         const nextBeanResolverContext = context.next(query);
         return this.resolveBeanDefinition(await this.beanDefinition(query, nextBeanResolverContext), nextBeanResolverContext);
     }
@@ -52,8 +62,7 @@ export class ApplicationContainer implements IContainer {
 
     private async resolveBeanDefinition<B>(beanDefinition: IBeanDefinition<B>, context: IBeanResolverContext): Promise<B> {
         if (!this.resolveMap.has(beanDefinition)) {
-            // TODO Change this to specific IBeanResolverForFactory
-            const resolver = beanDefinition.resolverFactory(this, this.paramListResolver);
+            const resolver = beanDefinition.resolverFactory(this.interfaceForFactories, this.paramListResolver);
             this.resolveMap.set(beanDefinition, {resolver, beans: new Set()});
         }
         const entry: ResolverMapEntry<B> = this.resolveMap.get(beanDefinition) as ResolverMapEntry<B>;
@@ -79,7 +88,11 @@ export class ApplicationContainer implements IContainer {
 
     async boot(): Promise<this> {
         for (const bd of this.beanDefinitionRepository) {
-            await this.resolveBeanDefinition(bd, this.newBeanResolverContext().next(new Query(bd.meta.type, new TagsQuery(bd.meta.tags))));
+            const query = new Query(bd.meta.type, new TagsQuery(bd.meta.tags));
+            await this.resolveBeanDefinition(
+                bd,
+                this.newBeanResolverContext().next(query)
+            );
         }
         return this;
     }

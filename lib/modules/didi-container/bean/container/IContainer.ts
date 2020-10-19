@@ -1,8 +1,7 @@
 import {
     IBeanResolverForClient,
-    IBeanResolverForFactory
 } from "../definition/builder/interfaces/IBeanResolverForFactory.ts";
 
-export interface IContainer extends IBeanResolverForFactory, IBeanResolverForClient {
+export interface IContainer extends IBeanResolverForClient {
     boot(): Promise<this>;
 }

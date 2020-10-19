@@ -16,7 +16,7 @@ export class ClientDefinedValueParamResolver implements IParamResolver {
         const param = context.values.get(paramMetadata.paramName);
         if (!TypeSupport.subTypeOf(param?.constructor, paramMetadata.query.type)) {
             throw new ParamResolverError(
-                `Expected "${paramMetadata.query.type?.name}" got "${param?.constructor}"`,
+                `${StringifyParamDecoratorMetadata(paramMetadata)}: Expected "${paramMetadata.query.type?.name}" got "${param?.constructor}"`,
                 paramMetadata,
                 context,
             );

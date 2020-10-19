@@ -27,7 +27,7 @@ export abstract class BaseBeanDefinitionBuilder<T> {
         return this;
     }
 
-    private get meta(): IBeanDefinitionMeta<T> {
+    get meta(): IBeanDefinitionMeta<T> {
         return {
             type: this.type,
             tags: this.tags,

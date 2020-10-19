@@ -38,7 +38,7 @@ export abstract class ParameterizedBeanDefinitionBuilder<T> extends BaseBeanDefi
             const current = this.paramQualifiers.get(paramName) as IQuery<any>;
             this.paramQualifiers.set(paramName, current.merge(qualifier));
         } else {
-            this.paramValues.set(paramName, qualifier);
+            this.paramQualifiers.set(paramName, qualifier);
         }
         return this;
     }
