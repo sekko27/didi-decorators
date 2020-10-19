@@ -7,7 +7,7 @@ export class ConstantPredicate<T = any> implements IPredicate<T> {
     constructor(private readonly constant: boolean) {
     }
 
-    test(value: T): boolean | Promise<boolean> {
+    test(): boolean | Promise<boolean> {
         return this.constant;
     }
 

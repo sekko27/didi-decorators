@@ -5,7 +5,6 @@ import { IBeforeAOPHandler } from "./types/IBeforeAOPHandler.ts";
 import { IAfterAOPHandler } from "./types/IAfterAOPHandler.ts";
 import { BeanType } from "../../modules/didi-commons/BeanType.ts";
 import { Name } from "../../modules/didi-commons/Name.ts";
-import { PredicateSupport } from "../../modules/didi-predicates/PredicateSupport.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";

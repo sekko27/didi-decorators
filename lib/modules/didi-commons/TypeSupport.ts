@@ -1,5 +1,4 @@
 import { Name } from "./Name.ts";
-import { BeanType } from "./BeanType.ts";
 
 export type PrimitiveType = string | number | boolean | Date;
 

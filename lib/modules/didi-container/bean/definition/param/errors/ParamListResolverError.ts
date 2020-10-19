@@ -1,6 +1,5 @@
 import { IParamDecoratorMetadata } from "../../../../../../decorators/param/IParamDecoratorMetadata.ts";
 import { IParamListResolverContext } from "../interfaces/IParamListResolverContext.ts";
-import { ParamResolverError } from "./ParamResolverError.ts";
 
 export class ParamListResolverError extends Error {
     constructor(

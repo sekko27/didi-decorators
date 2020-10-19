@@ -1,4 +1,3 @@
-import { IBeanResolver } from "../builder/interfaces/IBeanResolver.ts";
 import { BeanType } from "../../../../didi-commons/BeanType.ts";
 import { IBeanDefinitionBuilderAPI } from "../builder/api/IBeanDefinitionBuilderAPI.ts";
 import { IContainer } from "../../container/IContainer.ts";

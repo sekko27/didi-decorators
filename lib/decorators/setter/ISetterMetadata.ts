@@ -1,4 +1,3 @@
-import { BeanType } from "../../modules/didi-commons/BeanType.ts";
 import { IEntity } from "../../modules/didi-commons/IEntity.ts";
 import { IQuery } from "../../modules/didi-queries/interfaces/IQuery.ts";
 

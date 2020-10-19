@@ -7,7 +7,6 @@ import { BeanDefinitionNotFoundError } from "./errors/BeanDefinitionNotFoundErro
 import { AmbiguousBeanDefinitionQueryError } from "./errors/AmbiguousBeanDefinitionQueryError.ts";
 import { IParamListResolver } from "../definition/param/interfaces/IParamListResolver.ts";
 import { IBeanDefinitionResolver } from "../definition/builder/interfaces/IBeanDefinitionResolver.ts";
-import { ActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
 import { IReadonlyActivationHandlerChain } from "../definition/activation-handler/ActivationHandlerChain.ts";
 
 interface ResolverMapEntry<T> {

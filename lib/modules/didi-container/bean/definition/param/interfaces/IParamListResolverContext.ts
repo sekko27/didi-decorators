@@ -1,4 +1,3 @@
-import { IBeanResolver } from "../../builder/interfaces/IBeanResolver.ts";
 import { IQuery } from "../../../../../didi-queries/interfaces/IQuery.ts";
 
 export interface IParamListResolverContext {

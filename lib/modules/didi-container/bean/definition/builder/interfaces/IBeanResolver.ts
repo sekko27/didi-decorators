@@ -1,9 +1,7 @@
-import { IBean } from "../../../IBean.ts";
 import { IQuery } from "../../../../../didi-queries/interfaces/IQuery.ts";
 import { IParamDecoratorMetadata } from "../../../../../../decorators/param/IParamDecoratorMetadata.ts";
 import { IParamListResolverContext } from "../../param/interfaces/IParamListResolverContext.ts";
 import { IParamListResolver } from "../../param/interfaces/IParamListResolver.ts";
-import { ActivationHandlerChain } from "../../activation-handler/ActivationHandlerChain.ts";
 import { IReadonlyActivationHandlerChain } from "../../activation-handler/ActivationHandlerChain.ts";
 import { IBeanFactory } from "./IBeanFactory.ts";
 import { IBeanDefinitionResolver } from "./IBeanDefinitionResolver.ts";

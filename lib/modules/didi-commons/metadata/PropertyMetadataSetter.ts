@@ -10,7 +10,7 @@ interface IPropertyTarget<C = any> {
     readonly property: PropertyName<C>;
 }
 
-export class PropertyMetadataSetter<MD> extends MetadataSetter<IPropertyTarget<any>, MD>{
+export class PropertyMetadataSetter<MD> extends MetadataSetter<IPropertyTarget, MD>{
     private static readonly ANNOTATED_PROPERTIES_METADATA_KEY = "metrix:__annotated_properties__";
     private static readonly ANNOTATED_PROPERTY_REGISTRY: ClassMetadataSetter<Set<string>> =
         new ClassMetadataSetter(
