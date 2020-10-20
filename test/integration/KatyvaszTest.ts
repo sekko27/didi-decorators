@@ -13,6 +13,15 @@ import { IAfterAOPHandler } from "../../lib/decorators/aop/types/IAfterAOPHandle
 import { IPostConfigurator } from "../../lib/modules/didi-container/bean/definition/configuration/post-configurator/IPostConfigurator.ts";
 import { IPostConfiguratorTarget } from "../../lib/modules/didi-container/bean/definition/configuration/post-configurator/IPostConfiguratorTarget.ts";
 import { PostConfiguratorDecorators } from "../../lib/decorators/post-configurator/PostConfiguratorDecorators.ts";
+import {
+    Color,
+    EnableLogger,
+    IHoustonConfiguration,
+    Logger,
+    LoggerMetadataSetter,
+    LoggerType, LogLevel,
+    ConsoleTransport, Format, TimePrefix, LogLevelDisplay,
+} from "../../lib/modules/didi-logger/mod.ts";
 
 Deno.test("katyvasz", async () => {
     interface IBean {
@@ -49,6 +58,9 @@ Deno.test("katyvasz", async () => {
         constructor(readonly bean: IBean, readonly str: string, readonly num: number, readonly def: boolean = false) {
         }
 
+        @LoggerMetadataSetter.Logger()
+        private readonly logger: Logger;
+
         @AOPDecorators.After(AfterAOPHandler)
         @AOPDecorators.Around(AOPHandler)
         aopMethod(s1: string, s2: string): string {
@@ -62,6 +74,7 @@ Deno.test("katyvasz", async () => {
 
         @InitMethodDecorators.Init()
         init(@ParamDecorators.Inject() @ParamDecorators.Query(TagsQuery.byName("init")) value: number) {
+            this.logger?.info("!!!!!!!!!!!!!!! Hello from init method !!!!!!!!!!!!!!!");
             this._init = this._setter * value;
         }
     }
@@ -100,6 +113,25 @@ Deno.test("katyvasz", async () => {
         };
     }
 
+    @EnableLogger(LoggerType.HOUSTON, new Map<string, IHoustonConfiguration>([
+        [
+            LoggerMetadataSetter.DEFAULT_LOGGER_NAME,
+            {
+                transports: [new ConsoleTransport()],
+                options: {
+                    format: Format.text,
+                    prefix: new TimePrefix(),
+                    logLevelDisplay: LogLevelDisplay.Icon,
+                    logColors: {
+                        [LogLevel.Info]: Color.Green,
+                        [LogLevel.Error]: Color.Red,
+                        [LogLevel.Success]: Color.White,
+                        [LogLevel.Warning]: Color.Cyan,
+                    }
+                }
+            }
+        ]
+    ]))
     @EnableSample()
     class ApplicationConfiguration extends ContainerConfiguration {
 
@@ -128,9 +160,6 @@ Deno.test("katyvasz", async () => {
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
 
     const container = await (await configuration.buildContainer()).boot();
-    // @ts-ignore
-    // console.log(container.beanDefinitionRepository.storage.map(({meta}) => meta.tags));
-    console.log("anyasd");
     const num = await container.bean(Query.byName("four"));
     const bean = await container.bean(Query.byName("bean"));
     const twice_four = await container.bean(Query.byName("twice-four"));
