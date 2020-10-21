@@ -2,5 +2,5 @@ import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interf
 import { IEntity } from "../../../../didi-commons/IEntity.ts";
 
 export interface IActivationHandler extends IEntity {
-    apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T>;
+    apply<T>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T>;
 }

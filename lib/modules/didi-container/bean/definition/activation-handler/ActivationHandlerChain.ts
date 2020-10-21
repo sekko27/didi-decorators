@@ -5,6 +5,7 @@ import { SetterInjectionActivationHandler } from "./SetterInjectionActivationHan
 import { PropertyInjectionActivationHandler } from "./PropertyInjectionActivationHandler.ts";
 import { AOPActivationHandler } from "./AOPActivationHandler.ts";
 import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interfaces/IBeanResolverForFactory.ts";
+import { ConstructorPropertyInjectionActivationHandler } from "./ConstructorPropertyInjectionActivationHandler.ts";
 
 export interface IReadonlyActivationHandlerChain extends Omit<IActivationHandler, "id"> {
 }
@@ -19,7 +20,7 @@ export class ActivationHandlerChain implements IReadonlyActivationHandlerChain {
         return this;
     }
 
-    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
+    async apply<T>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         let decorated = instance;
         for (const handler of this.handlers.sort()) {
             decorated = await handler.apply(decorated, resolverContext, beanResolverContext);
@@ -27,10 +28,10 @@ export class ActivationHandlerChain implements IReadonlyActivationHandlerChain {
         return decorated;
     }
 
-
     public static default(): ActivationHandlerChain {
         return new ActivationHandlerChain()
-            .register(new PropertyInjectionActivationHandler())
+            .register(new ConstructorPropertyInjectionActivationHandler())
+            .register(new PropertyInjectionActivationHandler(), p => p.after(ConstructorPropertyInjectionActivationHandler.ID))
             .register(new SetterInjectionActivationHandler(), p => p.after(PropertyInjectionActivationHandler.ID))
             .register(new InitMethodActivationHandler(), p => p.after(SetterInjectionActivationHandler.ID))
             .register(new AOPActivationHandler(), p => p.after(InitMethodActivationHandler.ID));

@@ -2,7 +2,7 @@ import { ContainerConfiguration } from "../../lib/modules/didi-container/bean/de
 import { Query } from "../../lib/modules/didi-queries/Query.ts";
 import { TagsQuery } from "../../lib/modules/didi-queries/TagsQuery.ts";
 import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
-import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
+import { ConstructorPropertyDecorators, PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 import { SetterDecorators } from "../../lib/decorators/setter/SetterDecorators.ts";
 import { InitMethodDecorators } from "../../lib/decorators/init-destroy-method/InitMethodDecorators.ts";
 import { IAroundAOPHandler } from "../../lib/decorators/aop/types/IAroundAOPHandler.ts";
@@ -29,6 +29,10 @@ Deno.test("katyvasz", async () => {
     }
     class Bean implements IBean {
         constructor(@ParamDecorators.Inject() @ParamDecorators.Query(TagsQuery.byName("four")) readonly num: number) {
+        }
+
+        multiply(other: number): number {
+            return this.num * other;
         }
     }
 
@@ -146,6 +150,16 @@ Deno.test("katyvasz", async () => {
     const configuration = new ApplicationConfiguration();
 
 
+    class AModel {
+
+        @ConstructorPropertyDecorators.Property()
+        @Pina()
+        private readonly bean: Bean;
+
+        test(value: number) {
+            return this.bean.multiply(value);
+        }
+    }
     configuration.register(Number).constant(4).as("four");
     configuration.register(Number).constant(1001).as("num");
     configuration.register(Number).constant(27).as("setter");
@@ -153,16 +167,23 @@ Deno.test("katyvasz", async () => {
     configuration.register(String).constant("PRE").as("prefix");
     configuration.register(String).constant("SUF").as("suffix");
     configuration.register(String).constant("munkas").as("munkas");
+    configuration.register(Function).constant(AModel).as("a-model");
+
     configuration.register(Bean).instanceOf().as("bean");
     configuration.register(AOPHandler).instanceOf();
     configuration.register(AfterAOPHandler).instanceOf();
     configuration.register(GigaFactory).instanceOf();
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
 
+    Object.getOwnPropertyDescriptor("lala", "length").;
+
     const container = await (await configuration.buildContainer()).boot();
     const num = await container.bean(Query.byName("four"));
     const bean = await container.bean(Query.byName("bean"));
     const twice_four = await container.bean(Query.byName("twice-four"));
     const keszitettem = await container.bean(new Query(Keszitettem));
-    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"), twice_four);
+    const modelClass = await container.bean(Query.byName("a-model"));
+    const model: AModel = new modelClass();
+
+    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"), twice_four, model.test(111));
 });

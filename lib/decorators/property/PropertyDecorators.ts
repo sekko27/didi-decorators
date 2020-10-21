@@ -5,68 +5,73 @@ import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorS
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 
-export class PropertyDecorators {
-    public static readonly METADATA_KEY: string = "metrix:decorators:property";
-    private static SETTER: ClassMetadataSetter<IPropertyMetadata<any>[]>
-        = new ClassMetadataSetter(
-            PropertyDecorators.METADATA_KEY,
-            () => []
-        );
+class PropertyDecoratorsImpl {
+    private readonly setter: ClassMetadataSetter<IPropertyMetadata<any>[]>;
 
-    public static Property(tags: ITagsQuery = TagsQuery.EMPTY) {
+    constructor(
+        metadataKey: string,
+    ) {
+        this.setter = new ClassMetadataSetter(metadataKey, () => []);
+    }
+
+    public Property(tags: ITagsQuery = TagsQuery.EMPTY) {
         return (target: any, name: Name) => {
-            PropertyDecorators.getOrCreateMetadata(target, name).tags = tags;
+            this.getOrCreateMetadata(target, name).tags = tags;
         }
     }
 
-    public static ReadOnly(readonly: boolean = true) {
+    public ReadOnly(readonly: boolean = true) {
         return (target: any, name: Name) => {
-            PropertyDecorators.getOrCreateMetadata(target, name).readonly = readonly;
+            this.getOrCreateMetadata(target, name).readonly = readonly;
         }
     }
 
-    public static Enumerable(enumerable: boolean = true) {
+    public Enumerable(enumerable: boolean = true) {
         return (target: any, name: Name) => {
-            PropertyDecorators.getOrCreateMetadata(target, name).enumerable = enumerable;
+            this.getOrCreateMetadata(target, name).enumerable = enumerable;
         }
 
     }
 
-    public static EnableDefault() {
+    public EnableDefault() {
         return (target: any, name: Name) => {
-            PropertyDecorators.getOrCreateMetadata(target, name).enableDefault = true;
+            this.getOrCreateMetadata(target, name).enableDefault = true;
         }
     }
-    public static isTargetDecorated(target: any): boolean {
-        return PropertyDecorators.SETTER.metadata(target).length > 0;
+    public isTargetDecorated(target: any): boolean {
+        return this.setter.metadata(target).length > 0;
     }
 
-    public static isPropertyDecorated(target: any, name: Name): boolean {
-        return PropertyDecorators.realPropertyMetadata(target, name) !== undefined;
+    public isPropertyDecorated(target: any, name: Name): boolean {
+        return this.realPropertyMetadata(target, name) !== undefined;
     }
 
-    public static all(target: any): IterableIterator<IPropertyMetadata<any>> {
-        return PropertyDecorators.SETTER.metadata(target)[Symbol.iterator]();
+    public all(target: any): IterableIterator<IPropertyMetadata<any>> {
+        return this.setter.metadata(target)[Symbol.iterator]();
     }
 
-    public static propertyMetadata(target: any, name: Name): IPropertyMetadata<any> {
-        return PropertyDecorators.getOrCreateMetadata(target, name);
+    public propertyMetadata(target: any, name: Name): IPropertyMetadata<any> {
+        return this.getOrCreateMetadata(target, name);
     }
 
-    private static realPropertyMetadata(target: any, name: Name): IPropertyMetadata<any> | undefined {
-        return PropertyDecorators.SETTER.metadata(target).find(md => md.name === name);
+    private realPropertyMetadata(target: any, name: Name): IPropertyMetadata<any> | undefined {
+        return this.setter.metadata(target).find(md => md.name === name);
     }
 
-    private static getOrCreateMetadata(target: any, name: Name): IPropertyMetadata<any> {
-        const md = PropertyDecorators.realPropertyMetadata(target, name);
+    private getOrCreateMetadata(target: any, name: Name): IPropertyMetadata<any> {
+        const md = this.realPropertyMetadata(target, name);
 
         if (md === undefined) {
             const type = DecoratorSupport.fieldType(target, name);
             const md = {name, type, enumerable: true, readonly: false, tags: TagsQuery.EMPTY};
-            PropertyDecorators.SETTER.metadata(target).push(md);
+            this.setter.metadata(target).push(md);
             return md;
         } else {
             return md;
         }
     }
 }
+
+export const PropertyDecorators = new PropertyDecoratorsImpl("metrix:decorators:property");
+export const ConstructorPropertyDecorators = new PropertyDecoratorsImpl("metrix:decorators:constructor-property");
+

@@ -7,8 +7,8 @@ export class InitMethodActivationHandler implements IActivationHandler {
     public static readonly ID: string = "InitMethod";
     readonly id: string = InitMethodActivationHandler.ID;
 
-    async apply<T extends {constructor: ObjectConstructor}>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
-        const prototype = instance.constructor.prototype;
+    async apply<T >(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
+        const prototype = (instance as any).constructor.prototype;
         for (const initMethod of InitMethodDecorators.all(prototype)) {
             const params = await resolverContext.paramList(ParamDecorators.methodParams(prototype, initMethod), beanResolverContext);
             await (instance as any)[initMethod](...params);

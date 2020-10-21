@@ -14,6 +14,7 @@ export interface IFactoryResolverContext<T> extends IBeanDefinitionResolver<T> {
     createNewInstance<B>(beanResolverContext: IBeanResolverContext): Promise<B>;
 }
 
+// TODO Move to proper place
 export class FactoryResolverContext<T> implements IFactoryResolverContext<T> {
     constructor(
         private readonly scope: IScope<T>,
