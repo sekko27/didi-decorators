@@ -11,6 +11,10 @@ export class Query<T> implements IQuery<T> {
         return new Query(undefined, TagsQuery.byName(name));
     }
 
+    public static byTag(tagName: Name, value: any): IQuery<any> {
+        return new Query(undefined, TagsQuery.byTag(tagName, value));
+    }
+
     constructor(readonly type: BeanType<T> | undefined, readonly tags: ITagsQuery = TagsQuery.EMPTY) {
     }
 

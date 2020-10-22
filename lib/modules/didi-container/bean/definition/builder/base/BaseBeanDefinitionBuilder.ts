@@ -5,12 +5,16 @@ import { IBeanDefinitionMeta } from "../../IBeanDefinitionMeta.ts";
 import { IBeanDefinition } from "../../IBeanDefinition.ts";
 import { IBeanDefinitionResolverFactory } from "../interfaces/IBeanDefinitionResolverFactory.ts";
 import { ParamDecorators } from "../../../../../../decorators/param/ParamDecorators.ts";
+import { TagDecorator } from "../../../../../../decorators/tag/TagDecorator.ts";
+import { TagsQuery } from "../../../../../didi-queries/TagsQuery.ts";
 
 export abstract class BaseBeanDefinitionBuilder<T> {
     private readonly tags: IBeanDefinitionTags = newBeanDefinitionTags();
     private required: boolean = true;
+    private tagTargets: any[];
 
     protected constructor(readonly type: BeanType<T>) {
+        this.tagTargets = [type];
     }
 
     public as(value: Name): this {
@@ -27,10 +31,15 @@ export abstract class BaseBeanDefinitionBuilder<T> {
         return this;
     }
 
+    public useTagsOn(target: any): this {
+        this.tagTargets.push(target);
+        return this;
+    }
+
     get meta(): IBeanDefinitionMeta<T> {
         return {
             type: this.type,
-            tags: this.tags,
+            tags: this.calculateTags(),
             optional: !this.required,
         };
     }
@@ -40,6 +49,22 @@ export abstract class BaseBeanDefinitionBuilder<T> {
             meta: this.meta,
             resolverFactory: this.resolverFactory()
         }
+    }
+
+    private calculateTags(): IBeanDefinitionTags {
+        const mergedMap = this.tagTargets.reduce(
+            (memo, tagTarget) => {
+                try {
+                    return TagDecorator.tags(tagTarget).merge(memo);
+                } catch (err) {
+                    console.error(`Unable to merge tags using tag target "${tagTarget}. Using client defined tags only.`);
+                    return memo;
+
+                }
+            },
+            new TagsQuery(this.tags)
+        );
+        return newBeanDefinitionTags(mergedMap.entries());
     }
 
     protected abstract resolverFactory(): IBeanDefinitionResolverFactory<T>;

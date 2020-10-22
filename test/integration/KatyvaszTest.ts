@@ -22,11 +22,18 @@ import {
     LoggerType, LogLevel,
     ConsoleTransport, Format, TimePrefix, LogLevelDisplay,
 } from "../../lib/modules/didi-logger/mod.ts";
+import { TagDecorator } from "../../lib/decorators/tag/TagDecorator.ts";
 
 Deno.test("katyvasz", async () => {
     interface IBean {
 
     }
+
+    @TagDecorator.Tag("i", "am")
+    class BeanTags {
+
+    }
+    @TagDecorator.Tag("kind", "bean")
     class Bean implements IBean {
         constructor(@ParamDecorators.Inject() @ParamDecorators.Query(TagsQuery.byName("four")) readonly num: number) {
         }
@@ -149,17 +156,21 @@ Deno.test("katyvasz", async () => {
 
     const configuration = new ApplicationConfiguration();
 
+    @TagDecorator.Tag("kind", "model")
+    class ModelTagProto {
+
+    }
 
     class AModel {
 
         @ConstructorPropertyDecorators.Property()
-        @Pina()
         private readonly bean: Bean;
 
         test(value: number) {
             return this.bean.multiply(value);
         }
     }
+
     configuration.register(Number).constant(4).as("four");
     configuration.register(Number).constant(1001).as("num");
     configuration.register(Number).constant(27).as("setter");
@@ -167,15 +178,15 @@ Deno.test("katyvasz", async () => {
     configuration.register(String).constant("PRE").as("prefix");
     configuration.register(String).constant("SUF").as("suffix");
     configuration.register(String).constant("munkas").as("munkas");
-    configuration.register(Function).constant(AModel).as("a-model");
+    configuration.register(Function).constant(AModel).as("a-model")
+        .useTagsOn(ModelTagProto)
+        .tag("x", "y");
 
-    configuration.register(Bean).instanceOf().as("bean");
+    configuration.register(Bean).instanceOf().as("bean").useTagsOn(BeanTags);
     configuration.register(AOPHandler).instanceOf();
     configuration.register(AfterAOPHandler).instanceOf();
     configuration.register(GigaFactory).instanceOf();
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
-
-    Object.getOwnPropertyDescriptor("lala", "length").;
 
     const container = await (await configuration.buildContainer()).boot();
     const num = await container.bean(Query.byName("four"));
@@ -185,5 +196,8 @@ Deno.test("katyvasz", async () => {
     const modelClass = await container.bean(Query.byName("a-model"));
     const model: AModel = new modelClass();
 
-    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"), twice_four, model.test(111));
+    const taggedBean = await container.bean(Query.byTag("i", "am"));
+    const taggedBean2 = await container.bean(Query.byTag("kind", "bean"));
+
+    console.log(num, bean, keszitettem, keszitettem.aopMethod("lala", "mama"), twice_four, model.test(111), taggedBean, taggedBean2);
 });

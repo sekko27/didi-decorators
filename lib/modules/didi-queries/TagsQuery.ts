@@ -13,8 +13,13 @@ export class TagsQuery implements ITagsQuery {
     public static pairEntry(name: Name, value: any): Map<Name, any> {
         return new Map([this.pair(name, value)]);
     }
+
+    public static byTag(name: Name, value: any): TagsQuery {
+        return new TagsQuery(this.pairEntry(name, value));
+    }
+
     public static byName(name: Name): TagsQuery {
-        return new TagsQuery(this.pairEntry(ParamDecorators.NAME_TAG, name));
+        return this.byTag(ParamDecorators.NAME_TAG, name);
     }
 
     private stringRepresentationCache?: string;
@@ -34,6 +39,11 @@ export class TagsQuery implements ITagsQuery {
                     )
                 );
     }
+
+    entries(): [Name, any][] {
+        return Array.from(this.map.entries());
+    }
+
 
     get isEmpty(): boolean {
         return this.map.size === 0;
