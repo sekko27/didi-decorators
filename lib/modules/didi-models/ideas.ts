@@ -1,37 +1,55 @@
-import { PropertyDecorators } from "../../decorators/property/PropertyDecorators.ts";
+import { TypeSupport } from "../didi-commons/TypeSupport.ts";
 
-class AB {
-    service: number | undefined;
+class Base {
+    e: number = 5;
+}
 
-    x: number = 10;
+class A extends Base {
+    private _c: number;
+    public readonly b: number;
 
-    y: number = 10;
+    constructor(private readonly a: number) {
+        super();
+    }
 
-    lala() {
-        // @ts-ignore
-        console.log(this.service);
+    get c(): number {
+        return this._c;
+    }
+
+    set c(value: number) {
+        this._c = value * 2;
     }
 }
 
-Object.defineProperty(AB.prototype, "service", {value: 10, writable: false});
-Object.defineProperty(AB.prototype, "y", {
-    get() {
-        return this._y;
-    },
-    set(value) {
-        this._y = value;
-    },
-})
+const state = {_c: 2, b: 3, a: 4};
 
-class D {
+// deser
+const instance0 = Object.create(A.prototype);
+Object.assign(instance0, state);
+instance0.constructor = A;
 
+// hand-made
+const instance = new A(6);
+instance.c = 4;
+
+const names = [];
+let ix = 0;
+for (let current = instance; current.constructor !== Object; current = Object.getPrototypeOf(current)) {
+    console.log(ix++, current);
+    console.log(Object.getOwnPropertyDescriptors(current));
+    names.push(...Array.from(Object.entries(Object.getOwnPropertyDescriptors(current))).filter(([name, pd]) => pd.get === undefined && pd.set === undefined && name !== "constructor").map(([name]) => name));
+    // names.push(...(Object.getOwnPropertyNames(current) ?? []));
 }
 
-// @ts-ignore
-const ab = (new AB());
-const cd = (new AB());
-cd.y = 15;
-ab.y = 2;
-console.log(cd.y);
+const serState = names.reduce((memo, name) => {
+    return {...memo, [name]: (instance as any)[name]};
+}, {});
 
-configurator.register(AModel).constant(AModel)
+console.log(names, instance instanceof A, TypeSupport.subTypeOf(instance.constructor, A), instance, Object.getOwnPropertyNames(instance), serState);
+
+// deser again
+const instance2 = Object.create(A.prototype);
+Object.assign(instance2, serState);
+instance0.constructor = A;
+
+console.log(instance2);
