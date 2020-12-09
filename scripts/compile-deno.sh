@@ -2,8 +2,10 @@
 
 node_version=""
 default_node_version="10.13.0"
-ts_folder="/media/bazsi/5e1ae754-76a4-4a16-978b-d4a1977f486d/Backups/WORK/NODE/TypeScript"
-deno_folder="/development/deno"
+default_ts_folder=${TS_SRC_FOLDER:-"/media/bazsi/5e1ae754-76a4-4a16-978b-d4a1977f486d/Backups/WORK/NODE/TypeScript"}
+ts_folder=""
+default_deno_folder=${DENO_SRC_FOLDER:-"/development/deno"}
+deno_folder=""
 deno_version=""
 ts_version=""
 
@@ -19,10 +21,54 @@ function subtitle {
     echo -e "⟶$(title $1)"
 }
 
+function check_npm {
+    if ! command -v npm &> /dev/null
+    then
+	echo "NPM does not exists, please install it. Exiting..."
+	exit 0
+    fi
+}
+
+function check_deno {
+    if ! command -v deno &> /dev/null
+    then
+	echo "Deno does not exist. Install it..."
+	curl -fsSL https://deno.land/x/install/install.sh | sh
+    fi
+}
+
+function define_ts_folder {
+    title "Defining ts folder"
+    read -p "Please provide ts folder [$(blink $default_ts_folder)]: " ts_folder
+    if [[ "x${ts_folder}" == "x" ]]; then
+	ts_folder="${default_ts_folder}"
+    fi
+    if ! [[ -d "${ts_folder}" ]]; then
+	subtitle "TS folder does not exist, creating a new one"
+	git clone https://github.com/microsoft/TypeScript.git "${ts_folder}"
+	pushd "${ts_folder}"
+	git remote rename master upstream
+	git remote add sekko git@github.com:sekko27/TypeScript.git
+	popd
+    fi
+}
+
+function define_deno_folder {
+    title "Defining deno folder"
+    read -p "Please provide deno folder [$(blink $default_deno_folder)]: " deno_folder
+    if [[ "x${deno_folder}" == "x" ]]; then
+	deno_folder="${default_deno_folder}"
+    fi
+    if ! [[ -d "${deno_folder}" ]]; then
+	subtitle "Deno folder does not exist, creating a new one"
+	git clone https://github.com/denoland/deno.git "${deno_folder}"
+    fi
+}
+
 function calculating_node_version {
     title "Calculating node version"
-    read -p "Please provide node version [$(blink $default_node_version)]: "
-	if [[ "x${node_version}" == "x" ]]; then
+    read -p "Please provide node version [$(blink $default_node_version)]: " node_version
+    if [[ "x${node_version}" == "x" ]]; then
 	node_version="${default_node_version}"
     fi
     nvm use "${node_version}"
@@ -83,6 +129,10 @@ function compile_deno {
     popd
 }
 
+check_npm
+check_deno
+define_ts_folder
+define_deno_folder
 calculating_node_version
 upgrade_deno
 compile_ts
