@@ -122,10 +122,15 @@ function compile_deno {
     git checkout "v${deno_version}"
     subtitle "Syncing compiled ts"
     pushd "${ts_folder}"
-    rsync lib/typescript.js "${deno_folder}/cli/tsc/00_typescript.js"
-    rsync --exclude=protocol.d.ts --exclude=tsserverlibrary.d.ts --exclude=typescriptServices.d.ts lib/*.d.ts "${deno_folder}/cli/dts/"
+    rsync built/local/typescript.js "${deno_folder}/cli/tsc/00_typescript.js"
+    rsync --exclude=protocol.d.ts --exclude=tsserverlibrary.d.ts --exclude=typescriptServices.d.ts built/local/*.d.ts "${deno_folder}/cli/dts/"
     popd
-    cargo install deno
+    pushd cli
+    cargo clean
+    cargo install --force --path .
+    mkdir -p ~/.deno/bin
+    cp ~/.cargo/bin/deno ~/.deno/bin/deno
+    popd
     popd
 }
 
@@ -135,5 +140,5 @@ define_ts_folder
 define_deno_folder
 calculating_node_version
 upgrade_deno
-compile_ts
+#compile_ts
 compile_deno

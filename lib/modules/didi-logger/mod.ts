@@ -1,7 +1,9 @@
 export {
     Houston,
-    Options, ITransport, ConsoleTransport, LogLevel, Format, Color, TimePrefix, LogLevelDisplay
+    ConsoleTransport, LogLevel, Format, Color, TimePrefix, LogLevelDisplay
 } from "https://deno.land/x/houston/mod.ts";
+
+export type { ITransport, Options } from "https://deno.land/x/houston/mod.ts";
 
 import { IHoustonConfiguration } from "./houston/IHoustonConfiguration.ts";
 import { EnableHouston } from "./houston/EnableHouston.ts";
@@ -27,8 +29,8 @@ export function EnableLogger<T extends LoggerType>(
 }
 
 export { EnableHouston } from "./houston/EnableHouston.ts";
-export { IHoustonConfiguration } from "./houston/IHoustonConfiguration.ts";
-export { ILogger } from "./interfaces/ILogger.ts";
+export type { IHoustonConfiguration } from "./houston/IHoustonConfiguration.ts";
+export type { ILogger } from "./interfaces/ILogger.ts";
 export { LoggerMetadataSetter } from "./decorators/LoggerMetadataSetter.ts";
 
 export type Logger = ILogger | undefined;
