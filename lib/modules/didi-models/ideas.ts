@@ -1,55 +1,98 @@
-import { TypeSupport } from "../didi-commons/TypeSupport.ts";
+import { Name } from "../didi-commons/Name.ts";
+import { BeanType } from "../didi-commons/BeanType.ts";
 
-class Base {
-    e: number = 5;
+interface IDeSerMetadata<T> {
+    field: string;
+    alias?: string;
+    type: BeanType<T>;
+    transient?: boolean;
+    definition: IDeSerDef;
+    optional?: boolean;
+    default?: T | (() => T | Promise<T>);
+    index?: boolean | "unique";
 }
 
-class A extends Base {
-    private _c: number;
-    public readonly b: number;
+interface IDeSerDef {
 
-    constructor(private readonly a: number) {
-        super();
-    }
+}
 
-    get c(): number {
-        return this._c;
-    }
-
-    set c(value: number) {
-        this._c = value * 2;
+class ArrayDeSerDef implements IDeSerDef {
+    constructor(private readonly elementDef: IDeSerDef) {
     }
 }
 
-const state = {_c: 2, b: 3, a: 4};
-
-// deser
-const instance0 = Object.create(A.prototype);
-Object.assign(instance0, state);
-instance0.constructor = A;
-
-// hand-made
-const instance = new A(6);
-instance.c = 4;
-
-const names = [];
-let ix = 0;
-for (let current = instance; current.constructor !== Object; current = Object.getPrototypeOf(current)) {
-    console.log(ix++, current);
-    console.log(Object.getOwnPropertyDescriptors(current));
-    names.push(...Array.from(Object.entries(Object.getOwnPropertyDescriptors(current))).filter(([name, pd]) => pd.get === undefined && pd.set === undefined && name !== "constructor").map(([name]) => name));
-    // names.push(...(Object.getOwnPropertyNames(current) ?? []));
+class PrimitiveDeSerDef implements IDeSerDef {
+    constructor(private readonly cls: BeanType<Number | Boolean | String | Date>) {
+    }
 }
 
-const serState = names.reduce((memo, name) => {
-    return {...memo, [name]: (instance as any)[name]};
-}, {});
+class DeSerDefUtil {
+    public static Array(elementDef: IDeSerDef) {
+        return new ArrayDeSerDef(elementDef);
+    }
 
-console.log(names, instance instanceof A, TypeSupport.subTypeOf(instance.constructor, A), instance, Object.getOwnPropertyNames(instance), serState);
+    public static Number() {
+        return new PrimitiveDeSerDef(Number);
+    }
+}
 
-// deser again
-const instance2 = Object.create(A.prototype);
-Object.assign(instance2, serState);
-instance0.constructor = A;
+function DeSer(def: IDeSerDef) {
+    return (cls: any, name: Name) => {
 
-console.log(instance2);
+    }
+}
+
+function Transient() {
+    return (cls: any, name: Name) => {
+
+    }
+}
+
+function Field(name: string) {
+    return (cls: any, name: Name) => {
+
+    }
+}
+
+function Id(auto: boolean = true) {
+    return (cls: any, name: Name) => {
+
+    }
+}
+
+function Ref<T>(type: BeanType<T>) {
+    return (cls: any, name: Name) => {
+
+    }
+}
+
+class B {
+    private b0: string;
+}
+
+class E {
+    private ix: number;
+}
+
+class R {
+    @Field("_id")
+    @Id()
+    private readonly id: string;
+
+    private name: string;
+}
+
+class A {
+    private field1?: number; // Primitive
+
+    private b: B; // Embedded
+
+    @Ref(R)
+    private r: string; // Reference by id
+
+    @DeSer(DeSerDefUtil.Array(DeSerDefUtil.Number()))
+    private list: E[];
+
+    @Transient()
+    private readonly skipped: boolean;
+}

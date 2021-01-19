@@ -70,6 +70,14 @@ export class TypeSupport {
         }
     }
 
+    public static findSuperClass(cls: any, predicate: (cls: any) => boolean): any {
+        for (let current = cls; current !== undefined; current = Object.getPrototypeOf(current)) {
+            if (predicate(current)) {
+                return current;
+            }
+        }
+    }
+
     private static _subTypeOf(sub: any, sup: any): boolean {
         if (sub === null || sub === undefined) {
             return false;
@@ -77,5 +85,7 @@ export class TypeSupport {
         const subProto = Object.getPrototypeOf(sub);
         return sub === sup || subProto === sup || TypeSupport._subTypeOf(subProto, sup);
     }
+
+
 
 }
