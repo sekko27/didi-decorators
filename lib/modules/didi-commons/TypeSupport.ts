@@ -71,7 +71,7 @@ export class TypeSupport {
     }
 
     public static findSuperClass(cls: any, predicate: (cls: any) => boolean): any {
-        for (let current = cls; current !== undefined; current = Object.getPrototypeOf(current)) {
+        for (let current = cls; current !== null; current = Object.getPrototypeOf(current)) {
             if (predicate(current)) {
                 return current;
             }

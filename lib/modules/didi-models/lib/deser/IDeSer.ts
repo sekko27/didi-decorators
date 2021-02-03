@@ -1,4 +1,4 @@
-import { BeanType } from "../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/BeanType.ts";
 
 export interface IDeSer {
     serialize<M>(instance: M): object;

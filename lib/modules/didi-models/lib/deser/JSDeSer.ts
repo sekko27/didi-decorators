@@ -1,8 +1,8 @@
 import { IDeSer } from "./IDeSer.ts";
-import { BeanType } from "../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/BeanType.ts";
 import { DeSerUtil } from "./DeSerUtil.ts";
-import { Name } from "../../didi-commons/Name.ts";
-import { TypeSupport } from "../../didi-commons/TypeSupport.ts";
+import { Name } from "../../../didi-commons/Name.ts";
+import { TypeSupport } from "../../../didi-commons/TypeSupport.ts";
 
 class ArrDeSer implements IDeSer {
     constructor(elementDeSer: IDeSer, baseDeSer: IDeSer) {

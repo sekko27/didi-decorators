@@ -1,11 +1,11 @@
-import { ClassMetadataSetter } from "../../didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../../didi-commons/metadata/ClassMetadataSetter.ts";
 import { IModelMetadata } from "../interfaces/IModelMetadata.ts";
 import { IDeSerDefinition } from "../interfaces/IDeSerDefinition.ts";
-import { Name } from "../../didi-commons/Name.ts";
+import { Name } from "../../../didi-commons/Name.ts";
 import { IModelFieldMetadata } from "../interfaces/IModelFieldMetadata.ts";
 import { ArrayDeSerDefinition } from "../interfaces/ArrayDeSerDefinition.ts";
-import { TypeSupport } from "../../didi-commons/TypeSupport.ts";
-import { DecoratorSupport } from "../../didi-commons/metadata/DecoratorSupport.ts";
+import { TypeSupport } from "../../../didi-commons/TypeSupport.ts";
+import { DecoratorSupport } from "../../../didi-commons/metadata/DecoratorSupport.ts";
 import { PrimitiveDeSerDefinition } from "../interfaces/PrimitiveDeSerDefinition.ts";
 
 export class ModelDecorators {
