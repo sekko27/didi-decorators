@@ -1,6 +1,6 @@
 import { Name } from "./Name.ts";
 
-export type PrimitiveType = string | number | boolean | Date;
+export type PrimitiveType = string | number | boolean | Date | StringConstructor | NumberConstructor | DateConstructor;
 
 export class TypeSupport {
     public static isStringifiable(value: any): boolean {

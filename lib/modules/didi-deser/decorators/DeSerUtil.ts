@@ -1,15 +1,16 @@
 export class DeSerUtil {
     public static propertyNames(instance: any): string[] {
-        return DeSerUtil.walkOnPrototypes(instance, (proto) =>
-            DeSerUtil.getPropertyDescriptorsAsArray(proto)
-                .filter(DeSerUtil.isPropertyFilter)
-                .map(([name]) => name)
+        return DeSerUtil.walkOnPrototypes(instance, (proto) => {
+                return DeSerUtil.getPropertyDescriptorsAsArray(proto)
+                    .filter(DeSerUtil.isPropertyFilter)
+                    .map(([name]) => name)
+            }
         );
     }
 
     public static walkOnPrototypes<T>(instance: any, iteratee: (proto: any) => T[]): T[] {
         const result: T[] = [];
-        for (let current = instance; current.constructor !== null; current = Object.getPrototypeOf(current)) {
+        for (let current = instance; current !== null && current.constructor !== null; current = Object.getPrototypeOf(current)) {
             result.push(...iteratee(current));
         }
         return result;
