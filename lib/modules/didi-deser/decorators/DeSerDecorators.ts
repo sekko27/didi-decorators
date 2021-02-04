@@ -6,13 +6,10 @@ import { IDeSerDefinition } from "../definition/IDeSerDefinition.ts";
 import { PrimitiveDeSerDefinition } from "../definition/PrimitiveDeSerDefinition.ts";
 import { ArrayDeSerDefinition } from "../definition/ArrayDeSerDefinition.ts";
 import { ClassDeSerDefinition } from "../definition/ClassDeSerDefinition.ts";
-import { TransientDeSerDefinition } from "../definition/TransientDeSerDefinition.ts";
-import { OptionalDeSerDefinition } from "../definition/OptionalDeSerDefinition.ts";
-import { AutoDeSerDefinition } from "../definition/AutoDeSerDefinition.ts";
 import { BeanType } from "../../didi-commons/BeanType.ts";
 import { InvalidFieldDeSerDefinitionError } from "../errors/InvalidFieldDeSerDefinitionError.ts";
 import { FieldDeSerAutoDetectionError } from "../errors/FieldDeSerAutoDetectionError.ts";
-import { Array, Auto, Class, Optional, Primitive, Transient } from "../definition/package.ts";
+import { Arr, Auto, Class, Optional, Primitive, Transient } from "../definition/package.ts";
 
 export class DeSerDecorators {
     public static readonly NAME_TAG = "__name__";
@@ -31,7 +28,7 @@ export class DeSerDecorators {
 
     public static Array(elementDefinition: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
         return (cls: any, field: string) => {
-            DeSerDecorators.DeSer(Array(elementDefinition), options)(cls, field);
+            DeSerDecorators.DeSer(Arr(elementDefinition), options)(cls, field);
         };
     }
 
@@ -97,14 +94,14 @@ export class DeSerDecorators {
                     throw new InvalidFieldDeSerDefinitionError(`Primitive de-ser definition type does not match to type: "${type}" != "${(definition as PrimitiveDeSerDefinition).type}" of definition`);
                 }
                 break;
-            case TypeSupport.subTypeOf(type, Array):
+            case TypeSupport.isArrayType(type):
                 if (con !== ArrayDeSerDefinition) {
                     throw new InvalidFieldDeSerDefinitionError(`Expected array de-ser definition for "${type?.name}": "${con.name}"`);
                 }
-                break
+                break;
             case TypeSupport.subTypeOf(type, Object):
                 if (con !== ClassDeSerDefinition) {
-                    throw new InvalidFieldDeSerDefinitionError(`Expected class de-ser definition fro "${type?.name}": "${con.name}`)
+                    throw new InvalidFieldDeSerDefinitionError(`Expected class de-ser definition from "${type?.name}": "${con.name}`)
                 } else if (!TypeSupport.subTypeOf(type, (definition as ClassDeSerDefinition<any>).type)) {
                     throw new InvalidFieldDeSerDefinitionError(`Field type must extend the de-ser definitional class: "${type?.name}" - "${(definition as ClassDeSerDefinition<any>).type?.name}`);
                 }
@@ -121,7 +118,7 @@ export class DeSerDecorators {
         switch (true) {
             case TypeSupport.isPrimitiveType(type):
                 return new PrimitiveDeSerDefinition(type as any);
-            case TypeSupport.subTypeOf(type, Array):
+            case TypeSupport.isArrayType(type):
                 throw new FieldDeSerAutoDetectionError(`Unable to auto-detect de-ser definition for arrays. Element definition is required.`);
             case TypeSupport.subTypeOf(type, Object):
                 return new ClassDeSerDefinition(type);

@@ -1,5 +1,6 @@
 import { Name } from "./Name.ts";
 
+// TODO Should XConstructor be enough
 export type PrimitiveType = string | number | boolean | Date | StringConstructor | NumberConstructor | DateConstructor;
 
 export class TypeSupport {

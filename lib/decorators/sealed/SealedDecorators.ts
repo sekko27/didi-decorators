@@ -64,6 +64,18 @@ export class SealedDecorators {
         }
     }
 
+    // TODO Should move to DefaultClassDeSer to pre-initialize map for them
+    //  - getImplementationAlias + getImplementationClass
+    public static getImplementationAlias(base: any, implementation: any): string | undefined {
+        const match = SealedDecorators.getSealedClasses(base).find(nsc => nsc.type === implementation);
+        return match === undefined ? undefined : match[named];
+    }
+
+    public static getImplementationClass(base: any, alias: string): BeanType<any> | undefined {
+        const match = SealedDecorators.getSealedClasses(base).find(nsc => nsc[named] === alias);
+        return match?.type;
+    }
+
     private static wrap(descriptor: SealedClassDescriptor, base: BeanType<any>) {
         if (isNamedSealedDescriptor(descriptor)) {
             SealedDecorators.ensureInheritance(descriptor.type, base);

@@ -8,7 +8,7 @@ import { OptionalDeSerDefinition } from "./OptionalDeSerDefinition.ts";
 import { AutoDeSerDefinition } from "./AutoDeSerDefinition.ts";
 import { TransientDeSerDefinition } from "./TransientDeSerDefinition.ts";
 
-export function Array(elementDefinition: IDeSerDefinition): ArrayDeSerDefinition {
+export function Arr(elementDefinition: IDeSerDefinition): ArrayDeSerDefinition {
     return new ArrayDeSerDefinition(elementDefinition);
 }
 
