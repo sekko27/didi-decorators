@@ -12,7 +12,6 @@ import { FieldDeSerAutoDetectionError } from "../errors/FieldDeSerAutoDetectionE
 import { Arr, Auto, Class, Optional, Primitive, Transient } from "../definition/package.ts";
 
 export class DeSerDecorators {
-    public static readonly NAME_TAG = "__name__";
     public static readonly METADATA_KEY: string = "metrix:decorators:deser";
     private static readonly SETTER: ClassMetadataSetter<IDeSerDecoratorMetadata[]> =
         new ClassMetadataSetter(
@@ -143,7 +142,7 @@ export class DeSerDecorators {
             const param: IDeSerDecoratorMetadata = {
                 name: field,
                 definition,
-                options
+                options: {alias: field, ...options}
             };
             md.push(param);
             return param;
