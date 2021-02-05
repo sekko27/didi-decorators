@@ -7,6 +7,7 @@ import { DateComparator } from "./DateComparator.ts";
 import { ArrayComparator } from "./ArrayComparator.ts";
 import { ObjectComparator } from "./ObjectComparator.ts";
 import { RegExpComparator } from "./RegExpComparator.ts";
+import { NullComparator } from "./NullComparator.ts";
 
 export class CompositeComparator {
     constructor(private readonly comparators: IConditionalComparator[]) {
@@ -28,6 +29,7 @@ export class CompositeComparator {
     public static comparator() {
         return new CompositeComparator([
             new UndefinedComparator(),
+            new NullComparator(),
             new PrimitiveComparator(),
             new ObjectComparator(),
             new ArrayComparator(),
