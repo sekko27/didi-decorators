@@ -1,8 +1,6 @@
 import { DeSerDecorators } from "../decorators/DeSerDecorators.ts";
 import { Arr, Class, Primitive } from "../definition/package.ts";
 import { DefaultDeSerBuilder } from "../builder/default/DefaultDeSerBuilder.ts";
-import { DefaultDeSerBuilderContext } from "../builder/default/DefaultDeSerBuilderContext.ts";
-import { TypeSupport } from "../../didi-commons/TypeSupport.ts";
 import { SealedDecorators } from "../../../decorators/sealed/SealedDecorators.ts";
 
 class Base {
@@ -44,7 +42,7 @@ ds.embed = new EmbeddedReally();
 ds.embed.embeddedValue = 314;
 
 
-const deser = new DefaultDeSerBuilder().Class(Class(DeSerTest), new DefaultDeSerBuilderContext());
+const deser = new DefaultDeSerBuilder().Class(Class(DeSerTest));
 const serialized = deser.serialize(ds)
 const deserialized = deser.deserialize(serialized);
 console.log(serialized, deserialized, ds, deserialized instanceof DeSerTest);

@@ -28,6 +28,7 @@ export function Auto(value: IDeSerDefinition): AutoDeSerDefinition {
     return new AutoDeSerDefinition(value);
 }
 
+const transient = new TransientDeSerDefinition();
 export function Transient(): TransientDeSerDefinition {
-    return new TransientDeSerDefinition();
+    return transient;
 }

@@ -1,6 +1,5 @@
 import { IDeSerBuilder } from "../IDeSerBuilder.ts";
 import { ClassDeSerDefinition } from "../../definition/ClassDeSerDefinition.ts";
-import { IDeSerBuilderContext } from "../IDeSerBuilderContext.ts";
 import { IDeSer } from "../../definition/IDeSer.ts";
 import { DefaultClassDeSer, IDefaultClassFieldDeSerDescriptor } from "./DefaultClassDeSer.ts";
 import { ArrayDeSerDefinition } from "../../definition/ArrayDeSerDefinition.ts";
@@ -13,35 +12,48 @@ import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinit
 import { DefaultPrimitiveDeSer } from "./DefaultPrimitiveDeSer.ts";
 import { TransientDeSerDefinition } from "../../definition/TransientDeSerDefinition.ts";
 import { DefaultTransientDeSer } from "./DefaultTransientDeSer.ts";
+import { InMemoryCache } from "../../../didi-cache/InMemoryCache.ts";
+import { BeanType } from "../../../didi-commons/BeanType.ts";
+import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
 
 export class DefaultDeSerBuilder implements IDeSerBuilder {
-    Class(definition: ClassDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
-        const fieldDescriptors: IDefaultClassFieldDeSerDescriptor[] = context.metadata(definition.type)
+    private readonly classCache: InMemoryCache<BeanType<any>, DefaultClassDeSer>;
+
+    constructor() {
+        this.classCache = new InMemoryCache((cls: BeanType<any>) => this.classCacheProvider(cls));
+    }
+
+    private classCacheProvider(cls: BeanType<any>) {
+        const fieldDescriptors: IDefaultClassFieldDeSerDescriptor[] = DeSerDecorators.all(cls)
             .map(md => ({
                 alias: md.options.alias ?? md.name,
                 name: md.name,
-                deser: md.definition.build(this, context)
+                deser: md.definition.build(this)
             }));
-        return new DefaultClassDeSer(definition.type, fieldDescriptors);
+        return new DefaultClassDeSer(cls, fieldDescriptors);
     }
 
-    Array(definition: ArrayDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
-        return new DefaultArrayDeSer(definition.elementDefinition.build(this, context));
+    Class(definition: ClassDeSerDefinition): IDeSer {
+        return this.classCache.get(definition.type);
     }
 
-    Auto(definition: AutoDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
-        return new DefaultAutoDeSer(definition.valueDefinition.build(this, context));
+    Array(definition: ArrayDeSerDefinition): IDeSer {
+        return new DefaultArrayDeSer(definition.elementDefinition.build(this));
     }
 
-    Optional(definition: OptionalDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
-        return new DefaultOptionalDeSer(definition.valueDefinition.build(this, context));
+    Auto(definition: AutoDeSerDefinition): IDeSer {
+        return new DefaultAutoDeSer(definition.valueDefinition.build(this));
     }
 
-    Primitive(definition: PrimitiveDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
+    Optional(definition: OptionalDeSerDefinition): IDeSer {
+        return new DefaultOptionalDeSer(definition.valueDefinition.build(this));
+    }
+
+    Primitive(definition: PrimitiveDeSerDefinition): IDeSer {
         return new DefaultPrimitiveDeSer(definition.type);
     }
 
-    Transient(definition: TransientDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
+    Transient(definition: TransientDeSerDefinition): IDeSer {
         return new DefaultTransientDeSer();
     }
 }
