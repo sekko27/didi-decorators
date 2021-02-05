@@ -50,6 +50,11 @@ export class TypeSupport {
             TypeSupport.subTypeOf(type, Date);
     }
 
+    public static isPrimitiveValue(value: any): boolean {
+        const ctr = value?.constructor;
+        return ctr === String || ctr === Number || ctr === Boolean || ctr === Date;
+    }
+
     public static isArrayType(type: any): type is any[] {
         return TypeSupport.subTypeOf(type, Array);
     }
