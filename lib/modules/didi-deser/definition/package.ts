@@ -12,12 +12,12 @@ export function Arr(elementDefinition: IDeSerDefinition): ArrayDeSerDefinition {
     return new ArrayDeSerDefinition(elementDefinition);
 }
 
-export function Primitive(type: PrimitiveType): PrimitiveDeSerDefinition {
+export function Primitive(type: BeanType<PrimitiveType>): PrimitiveDeSerDefinition {
     return new PrimitiveDeSerDefinition(type);
 }
 
-export function Class<T>(type: BeanType<T>): ClassDeSerDefinition<T> {
-    return new ClassDeSerDefinition<T>(type);
+export function Class(type: BeanType<any>): ClassDeSerDefinition {
+    return new ClassDeSerDefinition(type);
 }
 
 export function Optional(value: IDeSerDefinition): OptionalDeSerDefinition {

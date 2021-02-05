@@ -4,10 +4,8 @@ import { IDeSerBuilder } from "../builder/IDeSerBuilder.ts";
 import { IDeSerBuilderContext } from "../builder/IDeSerBuilderContext.ts";
 import { IDeSer } from "./IDeSer.ts";
 
-export class ClassDeSerDefinition<T> implements IDeSerDefinition {
-    constructor(
-        readonly type: BeanType<T>
-    ) {
+export class ClassDeSerDefinition implements IDeSerDefinition {
+    constructor( readonly type: BeanType<any> ) {
     }
 
     build(specific: IDeSerBuilder, context: IDeSerBuilderContext): IDeSer {

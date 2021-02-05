@@ -9,7 +9,7 @@ import { PrimitiveDeSerDefinition } from "../definition/PrimitiveDeSerDefinition
 import { TransientDeSerDefinition } from "../definition/TransientDeSerDefinition.ts";
 
 export interface IDeSerBuilder {
-    Class(definition: ClassDeSerDefinition<any>, context: IDeSerBuilderContext): IDeSer;
+    Class(definition: ClassDeSerDefinition, context: IDeSerBuilderContext): IDeSer;
     Array(definition: ArrayDeSerDefinition, context: IDeSerBuilderContext ): IDeSer;
     Auto(definition: AutoDeSerDefinition, context: IDeSerBuilderContext): IDeSer;
     Optional(definition: OptionalDeSerDefinition, context: IDeSerBuilderContext): IDeSer;

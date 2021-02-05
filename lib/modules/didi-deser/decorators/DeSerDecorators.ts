@@ -101,8 +101,8 @@ export class DeSerDecorators {
             case TypeSupport.subTypeOf(type, Object):
                 if (con !== ClassDeSerDefinition) {
                     throw new InvalidFieldDeSerDefinitionError(`Expected class de-ser definition from "${type?.name}": "${con.name}`)
-                } else if (!TypeSupport.subTypeOf(type, (definition as ClassDeSerDefinition<any>).type)) {
-                    throw new InvalidFieldDeSerDefinitionError(`Field type must extend the de-ser definitional class: "${type?.name}" - "${(definition as ClassDeSerDefinition<any>).type?.name}`);
+                } else if (!TypeSupport.subTypeOf(type, (definition as ClassDeSerDefinition).type)) {
+                    throw new InvalidFieldDeSerDefinitionError(`Field type must extend the de-ser definitional class: "${type?.name}" - "${(definition as ClassDeSerDefinition).type?.name}`);
                 }
                 break;
             default:

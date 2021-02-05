@@ -1,7 +1,6 @@
 import { Name } from "./Name.ts";
 
-// TODO Should XConstructor be enough
-export type PrimitiveType = string | number | boolean | Date | StringConstructor | NumberConstructor | DateConstructor;
+export type PrimitiveType = string | number | boolean | Date;
 
 export class TypeSupport {
     public static isStringifiable(value: any): boolean {

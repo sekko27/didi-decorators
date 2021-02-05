@@ -15,7 +15,7 @@ import { TransientDeSerDefinition } from "../../definition/TransientDeSerDefinit
 import { DefaultTransientDeSer } from "./DefaultTransientDeSer.ts";
 
 export class DefaultDeSerBuilder implements IDeSerBuilder {
-    Class(definition: ClassDeSerDefinition<any>, context: IDeSerBuilderContext): IDeSer {
+    Class(definition: ClassDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
         const fieldDescriptors: IDefaultClassFieldDeSerDescriptor[] = context.metadata(definition.type)
             .map(md => ({
                 alias: md.options.alias ?? md.name,
@@ -44,8 +44,4 @@ export class DefaultDeSerBuilder implements IDeSerBuilder {
     Transient(definition: TransientDeSerDefinition, context: IDeSerBuilderContext): IDeSer {
         return new DefaultTransientDeSer();
     }
-
-
-
-
 }

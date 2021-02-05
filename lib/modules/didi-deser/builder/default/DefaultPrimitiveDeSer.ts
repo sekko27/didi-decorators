@@ -1,9 +1,10 @@
 import { IDeSer } from "../../definition/IDeSer.ts";
 import { PrimitiveType, TypeSupport } from "../../../didi-commons/TypeSupport.ts";
 import { DeSerError } from "../../errors/DeSerError.ts";
+import { BeanType } from "../../../didi-commons/BeanType.ts";
 
 export class DefaultPrimitiveDeSer implements IDeSer {
-    constructor(type: PrimitiveType) {
+    constructor(type: BeanType<PrimitiveType>) {
     }
 
     deserialize(source: any): any {
