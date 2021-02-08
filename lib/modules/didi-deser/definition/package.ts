@@ -7,6 +7,7 @@ import { ClassDeSerDefinition } from "./ClassDeSerDefinition.ts";
 import { OptionalDeSerDefinition } from "./OptionalDeSerDefinition.ts";
 import { AutoDeSerDefinition } from "./AutoDeSerDefinition.ts";
 import { TransientDeSerDefinition } from "./TransientDeSerDefinition.ts";
+import { MixedDeSerDefinition } from "./MixedDeSerDefinition.ts";
 
 export function Arr(elementDefinition: IDeSerDefinition): ArrayDeSerDefinition {
     return new ArrayDeSerDefinition(elementDefinition);
@@ -20,6 +21,9 @@ export function Class(type: BeanType<any>): ClassDeSerDefinition {
     return new ClassDeSerDefinition(type);
 }
 
+export function Mixed(): MixedDeSerDefinition {
+    return new MixedDeSerDefinition();
+}
 export function Optional(value: IDeSerDefinition): OptionalDeSerDefinition {
     return new OptionalDeSerDefinition(value);
 }

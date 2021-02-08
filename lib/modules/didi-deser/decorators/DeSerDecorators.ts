@@ -9,7 +9,8 @@ import { ClassDeSerDefinition } from "../definition/ClassDeSerDefinition.ts";
 import { BeanType } from "../../didi-commons/BeanType.ts";
 import { InvalidFieldDeSerDefinitionError } from "../errors/InvalidFieldDeSerDefinitionError.ts";
 import { FieldDeSerAutoDetectionError } from "../errors/FieldDeSerAutoDetectionError.ts";
-import { Arr, Auto, Class, Optional, Primitive, Transient } from "../definition/package.ts";
+import { Arr, Auto, Class, Mixed, Optional, Primitive, Transient } from "../definition/package.ts";
+import { MixedDeSerDefinition } from "../definition/MixedDeSerDefinition.ts";
 
 export class DeSerDecorators {
     public static readonly METADATA_KEY: string = "metrix:decorators:deser";
@@ -37,6 +38,11 @@ export class DeSerDecorators {
         };
     }
 
+    public static Mixed(options: IDeSerDecoratorMetadataOptions = {}) {
+        return (cls: any, field: string) => {
+            DeSerDecorators.DeSer(Mixed(), options)(cls, field);
+        }
+    }
     public static DeSer(valueDefinition?: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
         return (cls: any, field: string) => {
             DeSerDecorators.getOrCreateMetadata(
@@ -76,6 +82,7 @@ export class DeSerDecorators {
         }
     }
 
+
     private static detectAndValidateDefinition(cls: any, field: string, definition?: IDeSerDefinition): IDeSerDefinition {
         const type = DecoratorSupport.fieldType(cls, field);
         const detected = DeSerDecorators.detectDefinition(type, definition);
@@ -86,6 +93,8 @@ export class DeSerDecorators {
     private static validateDefinition(definition: IDeSerDefinition, type: BeanType<any>) {
         const con = definition.constructor;
         switch (true) {
+            case con === MixedDeSerDefinition:
+                break;
             case TypeSupport.isPrimitiveType(type):
                 if (con !== PrimitiveDeSerDefinition) {
                     throw new InvalidFieldDeSerDefinitionError(`Expected primitive de-ser definition for "${type}", but "${con.name}" definition specified`);
@@ -122,7 +131,7 @@ export class DeSerDecorators {
             case TypeSupport.subTypeOf(type, Object):
                 return new ClassDeSerDefinition(type);
             default:
-                throw new FieldDeSerAutoDetectionError(`Unable to auto detect de-ser definition for type: "${type}"`);
+                return new MixedDeSerDefinition();
         }
     }
 

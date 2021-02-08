@@ -15,6 +15,8 @@ import { DefaultTransientDeSer } from "./DefaultTransientDeSer.ts";
 import { InMemoryCache } from "../../../didi-cache/InMemoryCache.ts";
 import { BeanType } from "../../../didi-commons/BeanType.ts";
 import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
+import { MixedDeSerDefinition } from "../../definition/MixedDeSerDefinition.ts";
+import { DefaultMixedDeSer } from "./DefaultMixedDeSer.ts";
 
 export class DefaultDeSerBuilder implements IDeSerBuilder {
     private readonly classCache: InMemoryCache<BeanType<any>, DefaultClassDeSer>;
@@ -35,6 +37,10 @@ export class DefaultDeSerBuilder implements IDeSerBuilder {
 
     Class(definition: ClassDeSerDefinition): IDeSer {
         return this.classCache.get(definition.type);
+    }
+
+    Mixed(definition: MixedDeSerDefinition): IDeSer {
+        return new DefaultMixedDeSer();
     }
 
     Array(definition: ArrayDeSerDefinition): IDeSer {

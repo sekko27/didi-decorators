@@ -32,6 +32,9 @@ class DeSerTest extends Base {
 
     @DeSerDecorators.Class()
     embed: Embed;
+
+    @DeSerDecorators.Mixed()
+    mixed: any;
 }
 
 const ds: DeSerTest = new DeSerTest();
@@ -40,7 +43,12 @@ ds.temp = true;
 // ds.arr = [1, 2, 3];
 ds.embed = new EmbeddedReally();
 ds.embed.embeddedValue = 314;
-
+ds.mixed = {
+    a: "b",
+    c: {
+        d: 2
+    }
+}
 
 const deser = new DefaultDeSerBuilder().Class(Class(DeSerTest));
 const serialized = deser.serialize(ds)
