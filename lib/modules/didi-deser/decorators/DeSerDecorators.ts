@@ -9,8 +9,10 @@ import { ClassDeSerDefinition } from "../definition/ClassDeSerDefinition.ts";
 import { BeanType } from "../../didi-commons/BeanType.ts";
 import { InvalidFieldDeSerDefinitionError } from "../errors/InvalidFieldDeSerDefinitionError.ts";
 import { FieldDeSerAutoDetectionError } from "../errors/FieldDeSerAutoDetectionError.ts";
-import { Arr, Auto, Class, Mixed, Optional, Primitive, Transient } from "../definition/package.ts";
+import { Arr, Auto, AutoId, Class, CreatedAt, Mixed, Optional, Primitive, Transient } from "../definition/package.ts";
 import { MixedDeSerDefinition } from "../definition/MixedDeSerDefinition.ts";
+import { AutoIdDeSerDefinition } from "../definition/AutoIdDeSerDefinition.ts";
+import { assert } from "../../../../deps.ts";
 
 export class DeSerDecorators {
     public static readonly METADATA_KEY: string = "metrix:decorators:deser";
@@ -82,12 +84,36 @@ export class DeSerDecorators {
         }
     }
 
+    public static AutoId(valueDefinition?: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
+        return (cls: any, field: string) => {
+            DeSerDecorators.getOrCreateMetadata(
+                cls,
+                field,
+                Optional(AutoId(DeSerDecorators.detectAndValidateDefinition(cls, field, valueDefinition))),
+                options
+            )
+        }
+    }
 
-    private static detectAndValidateDefinition(cls: any, field: string, definition?: IDeSerDefinition): IDeSerDefinition {
+    public static CreatedAt(valueDefinition?: PrimitiveDeSerDefinition<Date>, options: IDeSerDecoratorMetadataOptions = {}) {
+        return (cls: any, field: string) => {
+            const definition = DeSerDecorators.detectAndValidateDefinition(cls, field, valueDefinition);
+            assert(definition.constructor === PrimitiveDeSerDefinition);
+            assert((definition as PrimitiveDeSerDefinition).type === Date);
+            DeSerDecorators.getOrCreateMetadata(
+                cls,
+                field,
+                CreatedAt(definition),
+                options
+            )
+        }
+    }
+
+    private static detectAndValidateDefinition<T extends IDeSerDefinition>(cls: any, field: string, definition?: T): T {
         const type = DecoratorSupport.fieldType(cls, field);
         const detected = DeSerDecorators.detectDefinition(type, definition);
         DeSerDecorators.validateDefinition(detected, type);
-        return detected;
+        return detected as T;
     }
 
     private static validateDefinition(definition: IDeSerDefinition, type: BeanType<any>) {

@@ -6,7 +6,11 @@ import { OptionalDeSerDefinition } from "../definition/OptionalDeSerDefinition.t
 import { PrimitiveDeSerDefinition } from "../definition/PrimitiveDeSerDefinition.ts";
 import { TransientDeSerDefinition } from "../definition/TransientDeSerDefinition.ts";
 import { MixedDeSerDefinition } from "../definition/MixedDeSerDefinition.ts";
+import { IDeSerDefinition } from "../definition/IDeSerDefinition.ts";
+import { IDeSerDecoratorMetadata } from "../decorators/IDeSerDecoratorMetadata.ts";
+import { IDeSerBuilderContext } from "./IDeSerBuilderContext.ts";
 
+/*
 export interface IDeSerBuilder {
     Class(definition: ClassDeSerDefinition): IDeSer;
     Mixed(definition: MixedDeSerDefinition): IDeSer;
@@ -15,4 +19,9 @@ export interface IDeSerBuilder {
     Optional(definition: OptionalDeSerDefinition): IDeSer;
     Primitive(definition: PrimitiveDeSerDefinition): IDeSer;
     Transient(definition: TransientDeSerDefinition): IDeSer;
+}
+*/
+
+export interface IDeSerBuilder {
+    build(definition: IDeSerDefinition, context?: IDeSerBuilderContext): IDeSer;
 }

@@ -8,6 +8,7 @@ import { ArrayComparator } from "./ArrayComparator.ts";
 import { ObjectComparator } from "./ObjectComparator.ts";
 import { RegExpComparator } from "./RegExpComparator.ts";
 import { NullComparator } from "./NullComparator.ts";
+import { MongoNativeComparator } from "./mongo/MongoNativeComparator.ts";
 
 export class CompositeComparator {
     constructor(private readonly comparators: IConditionalComparator[]) {
@@ -35,6 +36,19 @@ export class CompositeComparator {
             new ArrayComparator(),
             new DateComparator(),
             new RegExpComparator()
+        ]);
+    }
+
+    public static mongoComparator() {
+        return new CompositeComparator([
+            new UndefinedComparator(),
+            new NullComparator(),
+            new PrimitiveComparator(),
+            new ObjectComparator(),
+            new ArrayComparator(),
+            new DateComparator(),
+            new RegExpComparator(),
+            new MongoNativeComparator()
         ]);
     }
 }

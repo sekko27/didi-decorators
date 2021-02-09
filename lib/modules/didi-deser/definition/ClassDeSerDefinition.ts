@@ -6,10 +6,4 @@ import { IDeSer } from "./IDeSer.ts";
 export class ClassDeSerDefinition implements IDeSerDefinition {
     constructor( readonly type: BeanType<any> ) {
     }
-
-    build(specific: IDeSerBuilder): IDeSer {
-        return specific.Class(this);
-    }
-
-
 }

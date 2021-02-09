@@ -1,6 +1,6 @@
 import { IDeSer } from "../../definition/IDeSer.ts";
 
-export class DefaultMixedDeSer implements IDeSer {
+export class MixedDeSer implements IDeSer {
     deserialize(source: any): any {
         return source;
     }

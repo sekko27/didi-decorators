@@ -1,6 +1,6 @@
 import { IDeSer } from "../../definition/IDeSer.ts";
 
-export class DefaultTransientDeSer implements IDeSer {
+export class TransientDeSer implements IDeSer {
     constructor() {
     }
 

@@ -8,6 +8,8 @@ import { OptionalDeSerDefinition } from "./OptionalDeSerDefinition.ts";
 import { AutoDeSerDefinition } from "./AutoDeSerDefinition.ts";
 import { TransientDeSerDefinition } from "./TransientDeSerDefinition.ts";
 import { MixedDeSerDefinition } from "./MixedDeSerDefinition.ts";
+import { AutoIdDeSerDefinition } from "./AutoIdDeSerDefinition.ts";
+import { CreatedAtDeSerDefinition } from "./CreatedAtDeSerDefinition.ts";
 
 export function Arr(elementDefinition: IDeSerDefinition): ArrayDeSerDefinition {
     return new ArrayDeSerDefinition(elementDefinition);
@@ -32,6 +34,13 @@ export function Auto(value: IDeSerDefinition): AutoDeSerDefinition {
     return new AutoDeSerDefinition(value);
 }
 
+export function AutoId(value: IDeSerDefinition): AutoIdDeSerDefinition {
+    return new AutoIdDeSerDefinition(value);
+}
+
+export function CreatedAt(value: PrimitiveDeSerDefinition<Date>): CreatedAtDeSerDefinition {
+    return new CreatedAtDeSerDefinition(value);
+}
 const transient = new TransientDeSerDefinition();
 export function Transient(): TransientDeSerDefinition {
     return transient;

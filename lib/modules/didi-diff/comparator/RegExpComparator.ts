@@ -17,6 +17,6 @@ export class RegExpComparator implements IConditionalComparator {
     }
 
     compare(left: DiffComparable, right: DiffComparable, path: string[], ctx: IComparatorContext): IDiff[] {
-        return isRegExp(left) && isRegExp(right) && sameRegExp(left, right) ? [] : Modified(left, right, path);
+        return isRegExp(left) && isRegExp(right) && sameRegExp(left, right) ? [] : Modified(left, right, path, this);
     }
 }

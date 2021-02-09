@@ -17,6 +17,6 @@ export class DateComparator implements IConditionalComparator {
     }
 
     compare(left: DiffComparable, right: DiffComparable, path: string[], ctx: IComparatorContext): IDiff[] {
-        return isDate(left) && isDate(right) && sameDate(left, right) ? [] : Modified(left, right, path);
+        return isDate(left) && isDate(right) && sameDate(left, right) ? [] : Modified(left, right, path, this);
     }
 }

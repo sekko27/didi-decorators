@@ -10,6 +10,6 @@ export class NullComparator implements IConditionalComparator {
     }
 
     compare(left: DiffComparable, right: DiffComparable, path: string[], ctx: IComparatorContext): IDiff[] {
-        return left === right ? [] : Modified(left, right, path);
+        return left === right ? [] : Modified(left, right, path, this);
     }
 }

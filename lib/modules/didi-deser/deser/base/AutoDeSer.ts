@@ -1,6 +1,6 @@
 import { IDeSer } from "../../definition/IDeSer.ts";
 
-export class DefaultAutoDeSer implements IDeSer {
+export class AutoDeSer implements IDeSer {
     constructor(private readonly valueDeSer: IDeSer) {
     }
 

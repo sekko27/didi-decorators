@@ -1,7 +1,7 @@
 import { IDeSer } from "../../definition/IDeSer.ts";
 import { DeSerError } from "../../errors/DeSerError.ts";
 
-export class DefaultArrayDeSer implements IDeSer {
+export class ArrayDeSer implements IDeSer {
     constructor(private readonly elementDeSer: IDeSer) {
     }
 

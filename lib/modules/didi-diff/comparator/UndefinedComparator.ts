@@ -11,9 +11,9 @@ export class UndefinedComparator implements IConditionalComparator {
 
     compare(left: DiffComparable, right: DiffComparable, path: string[], ctx: IComparatorContext): IDiff[] {
         if (left === undefined) {
-            return right === undefined ? [] : Added(right, path);
+            return right === undefined ? [] : Added(right, path, this);
         } else {
-            return Removed(left, path);
+            return Removed(left, path, this);
         }
     }
 }

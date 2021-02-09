@@ -1,6 +1,7 @@
 import { IDiff, Modified } from "./types/IDiff.ts";
 import { DiffComparable } from "./types/DiffComparable.ts";
 import { DiffKind } from "./types/DiffKind.ts";
+import { IConditionalComparator } from "./types/IConditionalComparator.ts";
 
 export class DiffCollection {
     private diffs: IDiff[] = [];
@@ -17,10 +18,10 @@ export class DiffCollection {
         return this.diffs.find(d => d.kind === DiffKind.DEL) !== undefined;
     }
 
-    public summarize(left: DiffComparable, right: DiffComparable, path: string[]): IDiff[] {
+    public summarize(left: DiffComparable, right: DiffComparable, path: string[], comparator: IConditionalComparator): IDiff[] {
         if (this.hasModified) {
             if (!this.hasUnmodified) {
-                return Modified(left, right, path);
+                return Modified(left, right, path, comparator);
             } else {
                 return this.diffs;
             }

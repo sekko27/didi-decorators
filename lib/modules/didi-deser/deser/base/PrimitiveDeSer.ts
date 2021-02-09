@@ -3,7 +3,7 @@ import { PrimitiveType, TypeSupport } from "../../../didi-commons/TypeSupport.ts
 import { DeSerError } from "../../errors/DeSerError.ts";
 import { BeanType } from "../../../didi-commons/BeanType.ts";
 
-export class DefaultPrimitiveDeSer implements IDeSer {
+export class PrimitiveDeSer implements IDeSer {
     constructor(type: BeanType<PrimitiveType>) {
     }
 

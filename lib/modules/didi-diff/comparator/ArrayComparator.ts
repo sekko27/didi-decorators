@@ -12,7 +12,7 @@ export class ArrayComparator implements IConditionalComparator {
 
     compare(left: DiffComparable, right: DiffComparable, path: string[], ctx: IComparatorContext): IDiff[] {
         if (!Array.isArray(left) || !Array.isArray(right)) {
-            return Modified(left, right, path);
+            return Modified(left, right, path, this);
         }
         const maxLength = left.length >= right.length ? left.length : right.length;
         if (maxLength === 0) {
@@ -27,6 +27,6 @@ export class ArrayComparator implements IConditionalComparator {
             const elementDiffs = ctx.compare(lav, rav, nextPath);
             diffCollection.applyResult(elementDiffs);
         }
-        return diffCollection.hasRemoved ? Modified(left, right, path) : diffCollection.summarize(left, right, path);
+        return diffCollection.hasRemoved ? Modified(left, right, path, this) : diffCollection.summarize(left, right, path, this);
     }
 }

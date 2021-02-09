@@ -9,7 +9,7 @@ export interface IDefaultClassFieldDeSerDescriptor {
     deser: IDeSer;
 }
 
-export class DefaultClassDeSer implements IDeSer {
+export class ClassDeSer implements IDeSer {
     private static readonly DISCRIMINATOR_KEY: string = "__sealed__";
 
     constructor(
@@ -19,7 +19,7 @@ export class DefaultClassDeSer implements IDeSer {
     }
 
     deserialize(source: any): any {
-        const alias = source?.[DefaultClassDeSer.DISCRIMINATOR_KEY];
+        const alias = source?.[ClassDeSer.DISCRIMINATOR_KEY];
         const implementationClass = SealedDecorators.getImplementationClass(this.cls, alias);
         if (implementationClass === undefined) {
             throw new DeSerError(`No sealed implementation exists for class "${this.cls}" by alias ${alias}`);
@@ -42,7 +42,7 @@ export class DefaultClassDeSer implements IDeSer {
             throw new DeSerError(`Type ${source.constructor} does not belong to sealed classes of ${this.cls}`);
         }
         // TODO Key name should be parameter on somewhere
-        const entries = [[DefaultClassDeSer.DISCRIMINATOR_KEY, typeAlias]]
+        const entries = [[ClassDeSer.DISCRIMINATOR_KEY, typeAlias]]
             .concat(this.fieldDescriptors.map(fd => [fd.alias, fd.deser.serialize(source?.[fd.name])]))
             .filter(([k, v]) => v !== undefined);
         return Object.fromEntries(entries);

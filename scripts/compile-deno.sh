@@ -140,5 +140,5 @@ define_ts_folder
 define_deno_folder
 calculating_node_version
 upgrade_deno
-#compile_ts
+compile_ts
 compile_deno
