@@ -1,15 +1,15 @@
-import { IConditionalDeSerBuilder } from "./IConditionalDeSerBuilder.ts";
-import { ArrayDeSerDefinition } from "../definition/ArrayDeSerDefinition.ts";
-import { IDeSerBuilderContext } from "./IDeSerBuilderContext.ts";
-import { IDeSer } from "../definition/IDeSer.ts";
-import { ArrayDeSer } from "../deser/base/ArrayDeSer.ts";
-import { IDeSerDefinition } from "../definition/IDeSerDefinition.ts";
-import { AutoDeSerDefinition } from "../definition/AutoDeSerDefinition.ts";
-import { AutoDeSer } from "../deser/base/AutoDeSer.ts";
-import { DefinitionBasedConditionalDeSerBuilder } from "./DefinitionBasedConditionalDeSerBuilder.ts";
-import { AutoIdDeSerDefinition } from "../definition/AutoIdDeSerDefinition.ts";
+import { IConditionalDeSerBuilder } from "../lib/interfaces/IConditionalDeSerBuilder.ts";
+import { ArrayDeSerDefinition } from "../lib/implementation/array/ArrayDeSerDefinition.ts";
+import { IDeSerBuilderContext } from "../lib/interfaces/IDeSerBuilderContext.ts";
+import { IDeSer } from "../lib/interfaces/IDeSer.ts";
+import { ArrayDeSer } from "../lib/implementation/array/ArrayDeSer.ts";
+import { IDeSerDefinition } from "../lib/interfaces/IDeSerDefinition.ts";
+import { AutoDeSerDefinition } from "../lib/implementation/auto/AutoDeSerDefinition.ts";
+import { AutoDeSer } from "../lib/implementation/auto/AutoDeSer.ts";
+import { DefinitionBasedConditionalDeSerBuilder } from "../lib/implementation/base/DefinitionBasedConditionalDeSerBuilder.ts";
+import { AutoIdDeSerDefinition } from "../lib/implementation/autoId/AutoIdDeSerDefinition.ts";
 import { assert } from "../../../../deps.ts";
-import { PrimitiveDeSerDefinition } from "../definition/PrimitiveDeSerDefinition.ts";
+import { PrimitiveDeSerDefinition } from "../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { MongoAutoIdDeSer } from "../deser/mongo/MongoAutoIdDeSer.ts";
 
 export class MongoAutoIdDeSerBuilder extends DefinitionBasedConditionalDeSerBuilder<AutoIdDeSerDefinition> implements IConditionalDeSerBuilder {

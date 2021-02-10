@@ -1,12 +1,12 @@
-import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
-import { Primitive } from "../../definition/package.ts";
 import { oneElement, OptionalEquals } from "./DecoratorTestUtil.ts";
-import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinition.ts";
+import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { assertStrictEquals } from "../../../../../deps.ts";
+import { Optional } from "../../lib/implementation/optional/OptionalDeSerDecorators.ts";
+import { PrimitiveDef } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 
 Deno.test("optional decorator - nested definition", () => {
     class A {
-        @DeSerDecorators.Optional(Primitive(Number), {alias: "b"})
+        @Optional(PrimitiveDef(Number), {alias: "b"})
         private a: number;
     }
 

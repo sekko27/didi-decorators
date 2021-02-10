@@ -1,6 +1,4 @@
 import { CompositeComparator } from "./comparator/CompositeComparator.ts";
-import { DeSerDecorators } from "../didi-deser/decorators/DeSerDecorators.ts";
-import { Optional, Primitive } from "../didi-deser/definition/package.ts";
 
 const a = {
     x1: "lala", // not modified prim

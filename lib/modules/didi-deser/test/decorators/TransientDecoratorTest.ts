@@ -1,12 +1,9 @@
-import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
-import { Primitive } from "../../definition/package.ts";
 import { oneElement, OptionalEquals, TransientEquals } from "./DecoratorTestUtil.ts";
-import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinition.ts";
-import { assertStrictEquals } from "../../../../../deps.ts";
+import { Transient } from "../../lib/implementation/transient/TransientDeSerDecorators.ts";
 
 Deno.test("transient decorator - nested definition", () => {
     class A {
-        @DeSerDecorators.Transient()
+        @Transient()
         private a: number;
     }
 

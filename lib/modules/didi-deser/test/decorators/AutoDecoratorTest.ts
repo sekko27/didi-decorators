@@ -1,12 +1,12 @@
-import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
-import { Primitive } from "../../definition/package.ts";
 import { AutoEquals, oneElement, OptionalEquals } from "./DecoratorTestUtil.ts";
-import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinition.ts";
+import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { assertStrictEquals } from "../../../../../deps.ts";
+import { Auto } from "../../lib/implementation/auto/AutoDeSerDecorators.ts";
+import { PrimitiveDef } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 
 Deno.test("auto decorator - nested definition", () => {
     class A {
-        @DeSerDecorators.Auto(Primitive(Number), {alias: "b"})
+        @Auto(PrimitiveDef(Number), {alias: "b"})
         private a: number;
     }
 

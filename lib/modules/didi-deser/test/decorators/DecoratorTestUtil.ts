@@ -1,14 +1,14 @@
-import { IDeSerDecoratorMetadata } from "../../decorators/IDeSerDecoratorMetadata.ts";
+import { IDeSerDecoratorMetadata } from "../../lib/interfaces/IDeSerDecoratorMetadata.ts";
 import { BeanType } from "../../../didi-commons/BeanType.ts";
-import { IDeSerDefinition } from "../../definition/IDeSerDefinition.ts";
+import { IDeSerDefinition } from "../../lib/interfaces/IDeSerDefinition.ts";
 import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
-import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinition.ts";
-import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
-import { OptionalDeSerDefinition } from "../../definition/OptionalDeSerDefinition.ts";
-import { ArrayDeSerDefinition } from "../../definition/ArrayDeSerDefinition.ts";
-import { TransientDeSerDefinition } from "../../definition/TransientDeSerDefinition.ts";
-import { ClassDeSerDefinition } from "../../definition/ClassDeSerDefinition.ts";
-import { AutoDeSerDefinition } from "../../definition/AutoDeSerDefinition.ts";
+import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
+import { DeSerDecorators } from "../../lib/implementation/base/DeSerDecorators.ts";
+import { OptionalDeSerDefinition } from "../../lib/implementation/optional/OptionalDeSerDefinition.ts";
+import { ArrayDeSerDefinition } from "../../lib/implementation/array/ArrayDeSerDefinition.ts";
+import { TransientDeSerDefinition } from "../../lib/implementation/transient/TransientDeSerDefinition.ts";
+import { EmbeddedDeSerDefinition } from "../../lib/implementation/embedded/EmbeddedDeSerDefinition.ts";
+import { AutoDeSerDefinition } from "../../lib/implementation/auto/AutoDeSerDefinition.ts";
 
 export function BaseEquals(md: IDeSerDecoratorMetadata, name: string, alias: string, definitionClass: BeanType<IDeSerDefinition>) {
     assertEquals(md.name, name);
@@ -40,8 +40,8 @@ export function TransientEquals(md: IDeSerDecoratorMetadata, name: string) {
 }
 
 export function ClassEquals(md: IDeSerDecoratorMetadata, name: string, alias: string, type: BeanType<any>) {
-    BaseEquals(md, name, alias, ClassDeSerDefinition);
-    assertStrictEquals((md.definition as ClassDeSerDefinition).type, type);
+    BaseEquals(md, name, alias, EmbeddedDeSerDefinition);
+    assertStrictEquals((md.definition as EmbeddedDeSerDefinition).type, type);
 }
 export function ArrayEquals<V extends IDeSerDefinition>(md: IDeSerDecoratorMetadata, name: string, alias: string, elementDefinition: BeanType<V>): V {
     BaseEquals(md, name, alias, ArrayDeSerDefinition);

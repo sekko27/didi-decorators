@@ -1,14 +1,14 @@
-import { DeSerDecorators } from "../../decorators/DeSerDecorators.ts";
-import { Arr, Primitive } from "../../definition/package.ts";
-import { ArrayEquals, oneElement, OptionalEquals } from "./DecoratorTestUtil.ts";
-import { PrimitiveDeSerDefinition } from "../../definition/PrimitiveDeSerDefinition.ts";
+import { ArrayEquals, oneElement } from "./DecoratorTestUtil.ts";
+import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { assertStrictEquals, assertThrows } from "../../../../../deps.ts";
-import { InvalidFieldDeSerDefinitionError } from "../../errors/InvalidFieldDeSerDefinitionError.ts";
-import { ArrayDeSerDefinition } from "../../definition/ArrayDeSerDefinition.ts";
+import { InvalidFieldDeSerDefinitionError } from "../../lib/errors/InvalidFieldDeSerDefinitionError.ts";
+import { ArrayDeSerDefinition } from "../../lib/implementation/array/ArrayDeSerDefinition.ts";
+import { Arr, ArrDef } from "../../lib/implementation/array/ArrayDeSerDecorators.ts";
+import { PrimitiveDef } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 
 Deno.test("array decorator - nested definition", () => {
     class A {
-        @DeSerDecorators.Array(Primitive(Number), {alias: "b"})
+        @Arr(PrimitiveDef(Number), {alias: "b"})
         private a: number[];
     }
 
@@ -19,7 +19,7 @@ Deno.test("array decorator - nested definition", () => {
 Deno.test("array decorator - should throw error on non-array field - primitive", () => {
     assertThrows(() => {
         class A {
-            @DeSerDecorators.Array(Primitive(Number))
+            @Arr(PrimitiveDef(Number))
             private a: number; // Non-array
         }
     }, InvalidFieldDeSerDefinitionError);
@@ -29,7 +29,7 @@ Deno.test("array decorator - should throw error on non-array field - object", ()
     assertThrows(() => {
         class X {}
         class A {
-            @DeSerDecorators.Array(Primitive(Number))
+            @Arr(PrimitiveDef(Number))
             private a: X; // Non-array
         }
     }, InvalidFieldDeSerDefinitionError);
@@ -37,7 +37,7 @@ Deno.test("array decorator - should throw error on non-array field - object", ()
 
 Deno.test("array decorator - should support nested arrays", () => {
     class A {
-        @DeSerDecorators.Array(Arr(Primitive(Number)))
+        @Arr(ArrDef(PrimitiveDef(Number)))
         private a: number[][];
     }
     const nested = ArrayEquals(oneElement(A), "a", "a", ArrayDeSerDefinition);

@@ -1,25 +1,31 @@
-import { DeSerDecorators } from "../decorators/DeSerDecorators.ts";
-import { Arr, Class, Primitive } from "../definition/package.ts";
 import { SealedDecorators } from "../../../decorators/sealed/SealedDecorators.ts";
-import { DeSerBuilder } from "../builder/DeSerBuilder.ts";
-import { PrimitiveDeSerBuilder } from "../builder/PrimitiveDeSerBuilder.ts";
-import { ArrayDeSerBuilder } from "../builder/ArrayDeSerBuilder.ts";
-import { ClassDeSerBuilder } from "../builder/ClassDeSerBuilder.ts";
-import { OptionalDeSerBuilder } from "../builder/OptionalDeSerBuilder.ts";
-import { AutoDeSerBuilder } from "../builder/AutoDeSerBuilder.ts";
-import { TransientDeSerBuilder } from "../builder/TransientDeSerBuilder.ts";
-import { MixedDeSerBuilder } from "../builder/MixedDeSerBuilder.ts";
+import { DeSerBuilder } from "../lib/implementation/base/DeSerBuilder.ts";
+import { PrimitiveDeSerBuilder } from "../lib/implementation/primitive/PrimitiveDeSerBuilder.ts";
+import { ArrayDeSerBuilder } from "../lib/implementation/array/ArrayDeSerBuilder.ts";
+import { EmbeddedDeSerBuilder } from "../lib/implementation/embedded/EmbeddedDeSerBuilder.ts";
+import { OptionalDeSerBuilder } from "../lib/implementation/optional/OptionalDeSerBuilder.ts";
+import { AutoDeSerBuilder } from "../lib/implementation/auto/AutoDeSerBuilder.ts";
+import { TransientDeSerBuilder } from "../lib/implementation/transient/TransientDeSerBuilder.ts";
+import { MixedDeSerBuilder } from "../lib/implementation/mixed/MixedDeSerBuilder.ts";
 import { MongoAutoIdDeSerBuilder } from "../builder/MongoAutoIdDeSerBuilder.ts";
 import { CompositeComparator } from "../../didi-diff/comparator/CompositeComparator.ts";
-import { CreatedAtDeSerBuilder } from "../builder/CreatedAtDeSerBuilder.ts";
+import { CreatedAtDeSerBuilder } from "../lib/implementation/createdAt/CreatedAtDeSerBuilder.ts";
+import { AutoId } from "../lib/implementation/autoId/AutoIdDeSerDecorators.ts";
+import { Optional } from "../lib/implementation/optional/OptionalDeSerDecorators.ts";
+import { Transient } from "../lib/implementation/transient/TransientDeSerDecorators.ts";
+import { CreatedAt } from "../lib/implementation/createdAt/CreatedAtDeSerDecorators.ts";
+import { Mixed } from "../lib/implementation/mixed/MixedDeSerDecorators.ts";
+import { Embedded, EmbeddedDef } from "../lib/implementation/embedded/EmbeddedDeSerDecorators.ts";
+import { Arr, ArrDef } from "../lib/implementation/array/ArrayDeSerDecorators.ts";
+import { Primitive, PrimitiveDef } from "../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 
 class Base {
-    @DeSerDecorators.Optional(Primitive(Number))
+    @Optional(PrimitiveDef(Number))
     prim0: number;
 }
 
 class Embed {
-    @DeSerDecorators.Primitive()
+    @Primitive()
     embeddedValue: number;
 }
 
@@ -34,28 +40,28 @@ class EmbeddedReally extends Embed {
 class SealedEmbedded {}
 
 class DeSerTest extends Base {
-    @DeSerDecorators.AutoId()
+    @AutoId()
     _id: string;
 
-    @DeSerDecorators.Optional(Primitive(String))
+    @Optional(PrimitiveDef(String))
     prim: string;
 
-    @DeSerDecorators.Transient()
+    @Transient()
     temp: boolean;
 
-    @DeSerDecorators.Optional(Arr(Primitive(Number)), {alias: "array"})
+    @Optional(ArrDef(PrimitiveDef(Number)), {alias: "array"})
     arr: number[];
 
-    @DeSerDecorators.Class()
+    @Embedded()
     embed: Embed;
 
-    @DeSerDecorators.Mixed()
+    @Mixed()
     mixed: any;
 
-    @DeSerDecorators.Array(Class(Embed))
+    @Arr(EmbeddedDef(Embed))
     embeds: Embed[];
 
-    @DeSerDecorators.CreatedAt()
+    @CreatedAt()
     createdAt?: Date;
 }
 
@@ -76,7 +82,7 @@ ds.mixed = {
 const deserBuilder = new DeSerBuilder([
     new ArrayDeSerBuilder(),
     new PrimitiveDeSerBuilder(),
-    new ClassDeSerBuilder(),
+    new EmbeddedDeSerBuilder(),
     new OptionalDeSerBuilder(),
     new AutoDeSerBuilder(),
     new TransientDeSerBuilder(),
@@ -85,7 +91,7 @@ const deserBuilder = new DeSerBuilder([
     new CreatedAtDeSerBuilder()
 ]);
 
-const deser = deserBuilder.build(Class(DeSerTest));
+const deser = deserBuilder.build(EmbeddedDef(DeSerTest));
 const serialized1 = deser.serialize(ds);
 console.log(serialized1);
 Deno.exit();
