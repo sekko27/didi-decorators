@@ -11,6 +11,6 @@ export class PrimitiveDeSerBuilder extends DefinitionBasedConditionalDeSerBuilde
     }
 
     build(definition: PrimitiveDeSerDefinition, ctx: IDeSerBuilderContext): IDeSer {
-        return new PrimitiveDeSer(definition.type);
+        return new PrimitiveDeSer(definition.type, ctx.path);
     }
 }

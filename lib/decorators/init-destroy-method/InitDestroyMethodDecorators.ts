@@ -11,14 +11,20 @@ export class InitDestroyMethodDecorators {
 
     public decorator(positioning?: (position: PositionSupport<IInitDestroyMethodMetadata>) => void) {
         return (target: any, name: string) => {
-            const current = this.setter.metadata(target).elem({id: name});
+            const current = this.setter.ownMetadata(target).elem({id: name});
             if (positioning !== undefined) {
                 positioning(current);
             }
         }
     }
 
-    public all(target: any): IterableIterator<string> {
-        return this.setter.metadata(target).sort().map(md => md.id)[Symbol.iterator]();
+    public all(ctr: any): IterableIterator<string> {
+        const positioning = this.setter.metadata(
+            ctr.prototype,
+            PositionSupport.concatReducer,
+            new PositionSupport()
+        );
+        // console.log(ctr.name, positioning);
+        return positioning.sort().map((md: IInitDestroyMethodMetadata) => md.id)[Symbol.iterator]();
     }
 }

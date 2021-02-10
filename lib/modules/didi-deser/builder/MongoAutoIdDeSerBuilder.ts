@@ -20,10 +20,6 @@ export class MongoAutoIdDeSerBuilder extends DefinitionBasedConditionalDeSerBuil
     build(definition: AutoIdDeSerDefinition, ctx: IDeSerBuilderContext): IDeSer {
         assert(definition.valueDefinition.constructor === PrimitiveDeSerDefinition);
         assert((definition.valueDefinition as PrimitiveDeSerDefinition).type === String);
-        const valueDeSer = ctx.manager.build(definition.valueDefinition, {
-            manager: ctx.manager,
-            path: ctx.path.concat("<autoId>")
-        });
-        return new MongoAutoIdDeSer(valueDeSer);
+        return new MongoAutoIdDeSer();
     }
 }

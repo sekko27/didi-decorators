@@ -15,7 +15,7 @@ export class AOPActivationHandler implements IActivationHandler {
     async apply<T>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         const constructor = (instance as any).constructor;
         let decorated = instance;
-        for (const aop of AOPDecorators.all(constructor.prototype)) {
+        for (const aop of AOPDecorators.all(constructor)) {
             decorated = await this.applyAOP(decorated, resolverContext, aop, beanResolverContext);
         }
         return decorated;

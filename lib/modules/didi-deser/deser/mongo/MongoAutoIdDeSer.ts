@@ -3,9 +3,6 @@ import { PrimitiveDeSer } from "../../lib/implementation/primitive/PrimitiveDeSe
 import { assert, Bson } from "../../../../../deps.ts";
 
 export class MongoAutoIdDeSer implements IDeSer {
-    constructor(private readonly valueDeSer: PrimitiveDeSer) {
-    }
-
     deserialize(source: any): any {
         assert(source instanceof Bson.ObjectId);
         return source.toString();

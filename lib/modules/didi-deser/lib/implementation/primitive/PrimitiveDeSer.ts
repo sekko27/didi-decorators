@@ -4,19 +4,20 @@ import { DeSerError } from "../../errors/DeSerError.ts";
 import { BeanType } from "../../../../didi-commons/BeanType.ts";
 
 export class PrimitiveDeSer implements IDeSer {
-    constructor(type: BeanType<PrimitiveType>) {
+    // TODO Pass path for all de-ser impls
+    constructor(type: BeanType<PrimitiveType>, private readonly path: readonly string[]) {
     }
 
     deserialize(source: any): any {
         if (!TypeSupport.isPrimitiveType(source?.constructor)) {
-            throw new DeSerError(`De-serializing undefined for primitive. If it's ok, then use Optional`);
+            throw new DeSerError(`De-serializing undefined for primitive on path "${this.path.join(".")}". If it's ok, then use Optional`);
         }
         return source;
     }
 
     serialize(source: any): any {
         if (!TypeSupport.isPrimitiveType(source?.constructor)) {
-            throw new DeSerError(`Serializing undefined for primitive. If it's ok, then use Optional`);
+            throw new DeSerError(`Serializing undefined for primitive on path "${this.path.join(".")}". If it's ok, then use Optional`);
         }
         return source;
     }

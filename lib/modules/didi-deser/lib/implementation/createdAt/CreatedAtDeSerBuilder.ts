@@ -12,10 +12,6 @@ export class CreatedAtDeSerBuilder extends DefinitionBasedConditionalDeSerBuilde
     }
 
     build(definition: CreatedAtDeSerDefinition, ctx: IDeSerBuilderContext): IDeSer {
-        const valueDeSer = ctx.manager.build(definition.valueDefinition, {
-            manager: ctx.manager,
-            path: ctx.path.concat("<auto>")
-        });
-        return new CreatedAtDeSer(valueDeSer);
+        return new CreatedAtDeSer();
     }
 }

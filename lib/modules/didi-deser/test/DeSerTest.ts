@@ -18,6 +18,9 @@ import { Mixed } from "../lib/implementation/mixed/MixedDeSerDecorators.ts";
 import { Embedded, EmbeddedDef } from "../lib/implementation/embedded/EmbeddedDeSerDecorators.ts";
 import { Arr, ArrDef } from "../lib/implementation/array/ArrayDeSerDecorators.ts";
 import { Primitive, PrimitiveDef } from "../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
+import { MapDeSerBuilder } from "../lib/implementation/map/MapDeSerBuilder.ts";
+import { MapDef } from "../lib/implementation/map/MapDeSerDecorators.ts";
+import { DeSerDecorators } from "../lib/implementation/base/DeSerDecorators.ts";
 
 class Base {
     @Optional(PrimitiveDef(Number))
@@ -36,7 +39,23 @@ class EmbeddedReally extends Embed {
     }
 }
 
-@SealedDecorators.forClass(Embed)(SealedDecorators.named("really", EmbeddedReally))
+class EmbeddedHard extends Embed {
+    @Primitive()
+    stringValue: string;
+
+    constructor(value: number) {
+        super();
+        this.embeddedValue = value;
+        this.stringValue = value.toString(2);
+    }
+}
+
+console.log(DeSerDecorators.all(Embed)); Deno.exit();
+
+@SealedDecorators.forClass(Embed)(
+    SealedDecorators.named("really", EmbeddedReally),
+    SealedDecorators.named("hard", EmbeddedHard),
+)
 class SealedEmbedded {}
 
 class DeSerTest extends Base {
@@ -63,6 +82,9 @@ class DeSerTest extends Base {
 
     @CreatedAt()
     createdAt?: Date;
+
+    @Optional(MapDef(PrimitiveDef(String), EmbeddedDef(Embed)))
+    map?: Map<String, Embed>;
 }
 
 const ds: DeSerTest = new DeSerTest();
@@ -78,6 +100,10 @@ ds.mixed = {
         d: 2
     }
 }
+ds.map = new Map([
+    ["k1", new EmbeddedReally(1)],
+    ["k2", new EmbeddedHard(2)]
+]);
 
 const deserBuilder = new DeSerBuilder([
     new ArrayDeSerBuilder(),
@@ -88,7 +114,8 @@ const deserBuilder = new DeSerBuilder([
     new TransientDeSerBuilder(),
     new MixedDeSerBuilder(),
     new MongoAutoIdDeSerBuilder(),
-    new CreatedAtDeSerBuilder()
+    new CreatedAtDeSerBuilder(),
+    new MapDeSerBuilder()
 ]);
 
 const deser = deserBuilder.build(EmbeddedDef(DeSerTest));

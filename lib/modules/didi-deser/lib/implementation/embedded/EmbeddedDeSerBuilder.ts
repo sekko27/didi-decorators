@@ -34,6 +34,7 @@ export class EmbeddedDeSerBuilder extends DefinitionBasedConditionalDeSerBuilder
                     path: ctx.path.concat([md.name])
                 })
             }));
+        console.log(cls.name, fieldDescriptors);
         return new EmbeddedDeSer(cls, fieldDescriptors);
     }
 

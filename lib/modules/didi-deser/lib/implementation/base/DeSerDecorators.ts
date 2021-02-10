@@ -21,7 +21,7 @@ export class DeSerDecorators {
     }
 
     public static isDecorated(cls: any) {
-        return DeSerDecorators.SETTER.isDecorated(cls);
+        return DeSerDecorators.SETTER.isDecorated(cls.prototype);
     }
 
     public static all(cls: any): IDeSerDecoratorMetadata[] {
@@ -36,17 +36,14 @@ export class DeSerDecorators {
     ): IDeSerDecoratorMetadata {
         const md = DeSerDecorators.SETTER.metadata(target);
         const current = md.find((pmd) => pmd.name === field);
-        return current === undefined ? DeSerDecorators.addMetadata(md, field, definition, options) : current;
+        if (current === undefined) {
+            console.log(target.constructor.name, field, definition, md);
+            const param: IDeSerDecoratorMetadata = {name: field, definition, options: {alias: field, ...options}};
+            md.push(param);
+            return param;
+        } else {
+            return current;
+        }
     }
 
-    private static addMetadata(
-        md: IDeSerDecoratorMetadata[],
-        name: string,
-        definition: IDeSerDefinition,
-        options: IDeSerDecoratorMetadataOptions = {},
-    ): IDeSerDecoratorMetadata {
-        const param: IDeSerDecoratorMetadata = {name, definition, options: {alias: name, ...options}};
-        md.push(param);
-        return param;
-    }
 }
