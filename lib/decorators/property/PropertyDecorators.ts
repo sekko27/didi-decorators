@@ -4,6 +4,7 @@ import { Name } from "../../modules/didi-commons/Name.ts";
 import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
+import { ArrayUtil } from "../../modules/didi-commons/ArrayUtil.ts";
 
 class PropertyDecoratorsImpl {
     private readonly setter: ClassMetadataSetter<IPropertyMetadata<any>[]>;
@@ -39,7 +40,7 @@ class PropertyDecoratorsImpl {
         }
     }
     public isTargetDecorated(target: any): boolean {
-        return this.setter.metadata(target).length > 0;
+        return this.all(target).next() !== null;
     }
 
     public isPropertyDecorated(target: any, name: Name): boolean {
@@ -47,7 +48,7 @@ class PropertyDecoratorsImpl {
     }
 
     public all(target: any): IterableIterator<IPropertyMetadata<any>> {
-        return this.setter.metadata(target)[Symbol.iterator]();
+        return this.setter.metadata(target, ArrayUtil.concatReducer, [])[Symbol.iterator]();
     }
 
     public propertyMetadata(target: any, name: Name): IPropertyMetadata<any> {
@@ -55,7 +56,7 @@ class PropertyDecoratorsImpl {
     }
 
     private realPropertyMetadata(target: any, name: Name): IPropertyMetadata<any> | undefined {
-        return this.setter.metadata(target).find(md => md.name === name);
+        return this.setter.ownMetadata(target).find(md => md.name === name);
     }
 
     private getOrCreateMetadata(target: any, name: Name): IPropertyMetadata<any> {
@@ -64,7 +65,7 @@ class PropertyDecoratorsImpl {
         if (md === undefined) {
             const type = DecoratorSupport.fieldType(target, name);
             const md = {name, type, enumerable: true, readonly: false, tags: TagsQuery.EMPTY};
-            this.setter.metadata(target).push(md);
+            this.setter.ownMetadata(target).push(md);
             return md;
         } else {
             return md;

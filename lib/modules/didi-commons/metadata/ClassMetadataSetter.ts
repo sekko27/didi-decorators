@@ -23,15 +23,11 @@ export class ClassMetadataSetter<C> {
             Reflect.defineMetadata(this.metadataKey, metadata, prototype);
             return metadata;
         }
-        // TODO Check
         let result: C = initial;
-        let current = prototype;
-        while (current !== null) {
+        for (let current = prototype; current !== null; current = Object.getPrototypeOf(current)) {
             if (this.isOwnDecorated(current)) {
                 result = reducer(result, this.ownMetadata(current));
             }
-            // console.log(current, (result as any as PositionSupport<any>).sort());
-            current = Object.getPrototypeOf(current);
         }
         return result;
     }

@@ -13,7 +13,7 @@ export class PostConfiguratorDecorators {
 
     static register<T>(target: any, id: string, configurator: IConfigurator<T>, positioning?: (p: PositionSupport<any>) => void) {
         const current = PostConfiguratorDecorators.SETTER
-            .metadata(target).elem({id, configurator});
+            .ownMetadata(target).elem({id, configurator});
         if (positioning) {
             positioning(current);
         }
@@ -21,7 +21,7 @@ export class PostConfiguratorDecorators {
 
     public static getPostConfigurators(target: any): IterableIterator<IPostConfiguratorMetadata> {
         return PostConfiguratorDecorators
-            .SETTER.metadata(target)
+            .SETTER.metadata(target, PositionSupport.concatReducer, new PositionSupport)
             .sort()
             [Symbol.iterator]();
     }

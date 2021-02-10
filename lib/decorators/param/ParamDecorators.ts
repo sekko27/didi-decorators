@@ -8,6 +8,7 @@ import { MissingParameterDecorationError } from "./MissingParameterDecorationErr
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
+import { ArrayUtil } from "../../modules/didi-commons/ArrayUtil.ts";
 
 export class ParamDecorators {
     public static readonly NAME_TAG = "__name__";
@@ -48,7 +49,7 @@ export class ParamDecorators {
         if (rawParameters === undefined && TypeSupport.hasParameter(method === undefined ? target : target[method])) {
             throw new MissingParameterDecorationError(target, method);
         }
-        const annotatedMethodParams = ParamDecorators.SETTER.metadata(target)
+        const annotatedMethodParams = ParamDecorators.SETTER.metadata(target, ArrayUtil.concatReducer, [])
             .filter(md => md.methodName === method);
         return (rawParameters || []).map((p, ix) => {
             const annotatedMethodParam = annotatedMethodParams.find((amp) => amp.index === ix);
@@ -59,7 +60,7 @@ export class ParamDecorators {
     }
 
     private static getOrCreateMetadata<T>(target: any, methodName: Name | undefined, index: number): IParamDecoratorMetadata<T> {
-        const md = ParamDecorators.SETTER.metadata(target);
+        const md = ParamDecorators.SETTER.ownMetadata(target);
         const current = md.find((pmd) => pmd.index === index && pmd.methodName === methodName);
         if (current === undefined) {
             const type = DecoratorSupport.paramType(target, methodName, index) as BeanType<T>;

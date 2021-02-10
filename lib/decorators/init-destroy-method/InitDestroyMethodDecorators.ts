@@ -24,7 +24,6 @@ export class InitDestroyMethodDecorators {
             PositionSupport.concatReducer,
             new PositionSupport()
         );
-        // console.log(ctr.name, positioning);
         return positioning.sort().map((md: IInitDestroyMethodMetadata) => md.id)[Symbol.iterator]();
     }
 }
