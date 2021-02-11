@@ -10,7 +10,7 @@ export function MapDef(keyDefinition: IDeSerDefinition, valueDefinition: IDeSerD
 
 export function MapCollection(keyDefinition: IDeSerDefinition, valueDefinition: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) => DeSerValidation.validateFieldDefinition(cls, field, MapDef(keyDefinition, valueDefinition)),
+        (prototype, field) => DeSerValidation.validateFieldDefinition(prototype, field, MapDef(keyDefinition, valueDefinition)),
         options
     );
 }

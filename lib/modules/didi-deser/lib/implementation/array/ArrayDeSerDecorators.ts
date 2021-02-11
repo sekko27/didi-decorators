@@ -10,7 +10,7 @@ export function ArrDef(elementDefinition: IDeSerDefinition): ArrayDeSerDefinitio
 
 export function Arr(elementDefinition: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) => DeSerValidation.validateFieldDefinition(cls, field, ArrDef(elementDefinition)),
+        (prototype, field) => DeSerValidation.validateFieldDefinition(prototype, field, ArrDef(elementDefinition)),
         options
     );
 }

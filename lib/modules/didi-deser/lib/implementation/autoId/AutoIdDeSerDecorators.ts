@@ -8,13 +8,13 @@ import { DeSerValidation } from "../base/DeSerValidation.ts";
 
 export function AutoId(valueDefinition?: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) =>
+        (prototype, field) =>
             DeSerValidation.validateFieldDefinition(
-                cls,
+                prototype,
                 field,
                 new OptionalDeSerDefinition(
                     new AutoIdDeSerDefinition(
-                        DeSerAutoDetection.detect(cls, field, valueDefinition)
+                        DeSerAutoDetection.detect(prototype, field, valueDefinition)
                     )
                 )
             ),

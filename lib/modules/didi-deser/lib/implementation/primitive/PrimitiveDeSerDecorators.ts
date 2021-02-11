@@ -12,7 +12,7 @@ export function PrimitiveDef(type: BeanType<PrimitiveType>): PrimitiveDeSerDefin
 
 export function Primitive(valueDefinition?: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) => PrimitiveDef(DecoratorSupport.fieldType(cls, field)),
+        (prototype, field) => PrimitiveDef(DecoratorSupport.fieldType(prototype, field)),
         options
     );
 }

@@ -7,11 +7,11 @@ import { DeSerAutoDetection } from "../base/DeSerAutoDetection.ts";
 
 export function Optional(valueDefinition?: IDeSerDefinition, options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) =>
+        (prototype, field) =>
             DeSerValidation.validateFieldDefinition(
-                cls,
+                prototype,
                 field,
-                new OptionalDeSerDefinition(DeSerAutoDetection.detect(cls, field, valueDefinition))
+                new OptionalDeSerDefinition(DeSerAutoDetection.detect(prototype, field, valueDefinition))
             ),
         options
     );

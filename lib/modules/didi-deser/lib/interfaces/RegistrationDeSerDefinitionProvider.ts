@@ -1,3 +1,3 @@
 import { IDeSerDefinition } from "./IDeSerDefinition.ts";
 
-export type RegistrationDeSerDefinitionProvider = (cls: any, field: string) => IDeSerDefinition;
+export type RegistrationDeSerDefinitionProvider = (prototype: any, field: string) => IDeSerDefinition;

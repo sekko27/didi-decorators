@@ -6,9 +6,9 @@ import { PrimitiveDeSerDefinition } from "../primitive/PrimitiveDeSerDefinition.
 
 export function CreatedAt(options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) =>
+        (prototype, field) =>
             DeSerValidation.validateFieldDefinition(
-                cls,
+                prototype,
                 field,
                 new CreatedAtDeSerDefinition(new PrimitiveDeSerDefinition(Date))
             ),

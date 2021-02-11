@@ -1,9 +1,12 @@
 import { IDeSer } from "../../interfaces/IDeSer.ts";
 import { DeSerError } from "../../errors/DeSerError.ts";
 import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
-import { DeSerArrayUtil } from "../base/DeSerArrayUtil.ts";
+import { DeSerArrayUtil, ElementBasedProvider } from "../base/DeSerArrayUtil.ts";
 
 export class MapDeSer implements IDeSer {
+    private static KeyProvider: ElementBasedProvider = ([k]) => k;
+    private static ValueProvider: ElementBasedProvider = ([_k, v]) => v;
+
     constructor(private readonly keyDeSer: IDeSer, private readonly valueDeSer: IDeSer) {
     }
 
@@ -22,7 +25,7 @@ export class MapDeSer implements IDeSer {
         for (const [key, value] of (source as Map<any, any>).entries()) {
             entries.push([this.keyDeSer.serialize(key), this.valueDeSer.serialize(value)]);
         }
-        return DeSerArrayUtil.markAsUnordered(entries);
+        return DeSerArrayUtil.markAsUnordered(entries, MapDeSer.KeyProvider, MapDeSer.ValueProvider);
     }
 
 }

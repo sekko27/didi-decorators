@@ -11,11 +11,11 @@ export function EmbeddedDef(type: BeanType<any>): EmbeddedDeSerDefinition {
 
 export function Embedded(options: IDeSerDecoratorMetadataOptions = {}) {
     return DeSerDecorators.register(
-        (cls, field) =>
+        (prototype, field) =>
             DeSerValidation.validateFieldDefinition(
-                cls,
+                prototype,
                 field,
-                EmbeddedDef(DecoratorSupport.fieldType(cls, field))
+                EmbeddedDef(DecoratorSupport.fieldType(prototype, field))
         ),
         options
     );

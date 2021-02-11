@@ -19,8 +19,10 @@ import { Embedded, EmbeddedDef } from "../lib/implementation/embedded/EmbeddedDe
 import { Arr, ArrDef } from "../lib/implementation/array/ArrayDeSerDecorators.ts";
 import { Primitive, PrimitiveDef } from "../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 import { MapDeSerBuilder } from "../lib/implementation/map/MapDeSerBuilder.ts";
-import { MapDef } from "../lib/implementation/map/MapDeSerDecorators.ts";
+import { MapCollection, MapDef } from "../lib/implementation/map/MapDeSerDecorators.ts";
 import { DeSerDecorators } from "../lib/implementation/base/DeSerDecorators.ts";
+import { SetDeSerBuilder } from "../lib/implementation/set/SetDeSerBuilder.ts";
+import { SetCollection } from "../lib/implementation/set/SetDeSerDecorators.ts";
 
 class Base {
     @Optional(PrimitiveDef(Number))
@@ -49,8 +51,6 @@ class EmbeddedHard extends Embed {
         this.stringValue = value.toString(2);
     }
 }
-
-console.log(DeSerDecorators.all(Embed)); Deno.exit();
 
 @SealedDecorators.forClass(Embed)(
     SealedDecorators.named("really", EmbeddedReally),
@@ -83,8 +83,11 @@ class DeSerTest extends Base {
     @CreatedAt()
     createdAt?: Date;
 
-    @Optional(MapDef(PrimitiveDef(String), EmbeddedDef(Embed)))
-    map?: Map<String, Embed>;
+    @MapCollection(PrimitiveDef(String), EmbeddedDef(Embed))
+    map: Map<String, Embed>;
+
+    @SetCollection(EmbeddedDef(Embed))
+    set: Set<Embed>;
 }
 
 const ds: DeSerTest = new DeSerTest();
@@ -104,6 +107,10 @@ ds.map = new Map([
     ["k1", new EmbeddedReally(1)],
     ["k2", new EmbeddedHard(2)]
 ]);
+ds.set = new Set([
+    new EmbeddedReally(1),
+    new EmbeddedHard(3)
+]);
 
 const deserBuilder = new DeSerBuilder([
     new ArrayDeSerBuilder(),
@@ -115,12 +122,19 @@ const deserBuilder = new DeSerBuilder([
     new MixedDeSerBuilder(),
     new MongoAutoIdDeSerBuilder(),
     new CreatedAtDeSerBuilder(),
-    new MapDeSerBuilder()
+    new MapDeSerBuilder(),
+    new SetDeSerBuilder(),
 ]);
 
 const deser = deserBuilder.build(EmbeddedDef(DeSerTest));
 const serialized1 = deser.serialize(ds);
-console.log(serialized1);
+const deserialized1 = deser.deserialize(serialized1);
+const deserialized2: DeSerTest = deser.deserialize(serialized1);
+// (deserialized2.map.get("k1") as any).embeddedValue = 3.14;
+deserialized2.set.add(new EmbeddedHard(3));
+console.log(serialized1, deserialized1);
+const comp1 = CompositeComparator.mongoComparator();
+console.log(comp1.compare(serialized1, deser.serialize(deserialized2)));
 Deno.exit();
 ds._id = "60228bb0dec69f00807765e7";
 ds.embeds[5].embeddedValue = 3.14;

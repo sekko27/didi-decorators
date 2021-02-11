@@ -7,17 +7,17 @@ import { EmbeddedDef } from "../embedded/EmbeddedDeSerDecorators.ts";
 import { UnableToDetectFieldDeSerDefinitionError } from "../../errors/UnableToDetectFieldDeSerDefinitionError.ts";
 
 export class DeSerAutoDetection {
-    public static detect(cls: any, field: string, definition?: IDeSerDefinition): IDeSerDefinition {
+    public static detect(prototype: any, field: string, definition?: IDeSerDefinition): IDeSerDefinition {
         if (definition !== undefined) {
             return definition;
         }
-        const type = DecoratorSupport.fieldType(cls, field);
+        const type = DecoratorSupport.fieldType(prototype, field);
         if (TypeSupport.isPrimitiveType(type)) {
             return PrimitiveDef(type as any);
         } else if (TypeSupport.subTypeOf(type, Object) && DeSerDecorators.isDecorated(type)) {
             return EmbeddedDef(type);
         } else {
-            throw new UnableToDetectFieldDeSerDefinitionError(cls, field);
+            throw new UnableToDetectFieldDeSerDefinitionError(prototype, field);
         }
     }
 }
