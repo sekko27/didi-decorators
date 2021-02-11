@@ -20,7 +20,7 @@ export class EmbeddedDeSer implements IDeSer {
 
     deserialize(source: any): any {
         const alias = source?.[EmbeddedDeSer.DISCRIMINATOR_KEY];
-        const implementationClass = SealedDecorators.getImplementationClass(this.cls, alias);
+        const implementationClass = SealedDecorators.getChildClass(this.cls, alias);
         if (implementationClass === undefined) {
             throw new DeSerError(`No sealed implementation exists for class "${this.cls}" by alias ${alias}`);
         }
@@ -35,7 +35,7 @@ export class EmbeddedDeSer implements IDeSer {
     }
 
     serialize(source: any): any {
-        const typeAlias = SealedDecorators.getImplementationAlias(this.cls, source.constructor);
+        const typeAlias = SealedDecorators.getChildAlias(this.cls, source.constructor);
         if (typeAlias === undefined) {
             throw new DeSerError(`Type ${source.constructor} does not belong to sealed classes of ${this.cls}`);
         }

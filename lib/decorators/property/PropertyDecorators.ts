@@ -55,7 +55,7 @@ class PropertyDecoratorsImpl {
         const md = this.setter.ownMetadata(prototype).find(md => md.name === name);
 
         if (md === undefined) {
-            const type = DecoratorSupport.fieldType(prototype?.constructor, name);
+            const type = DecoratorSupport.fieldType(prototype, name);
             const md = {name, type, enumerable: true, readonly: false, tags: TagsQuery.EMPTY};
             this.setter.ownMetadata(prototype).push(md);
             return md;

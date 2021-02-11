@@ -11,7 +11,7 @@ export class DestroyMethodDecorators extends InitDestroyMethodDecorators {
         return this.decorator.decorator(positioning);
     }
 
-    public static all(target: any): IterableIterator<string> {
-        return this.decorator.all(target);
+    public static all(ctr: any): IterableIterator<string> {
+        return this.decorator.all(ctr);
     }
 }

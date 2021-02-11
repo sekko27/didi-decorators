@@ -10,8 +10,8 @@ export class InitDestroyMethodDecorators {
     }
 
     public decorator(positioning?: (position: PositionSupport<IInitDestroyMethodMetadata>) => void) {
-        return (target: any, name: string) => {
-            const current = this.setter.ownMetadata(target).elem({id: name});
+        return (prototype: any, name: string) => {
+            const current = this.setter.ownMetadata(prototype).elem({id: name});
             if (positioning !== undefined) {
                 positioning(current);
             }

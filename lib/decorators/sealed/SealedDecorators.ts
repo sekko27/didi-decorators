@@ -31,7 +31,7 @@ export class SealedDecorators {
 
     public static forClass(type: BeanType<any>, alias?: string) {
         return (...descriptors: SealedClassDescriptor[]) => {
-            return (target: any) => {
+            return (_target: any) => {
                 const wrap = SealedDecorators.named(alias ?? type.name, type);
                 SealedDecorators.register(wrap, wrap, ...descriptors);
             }
@@ -50,29 +50,32 @@ export class SealedDecorators {
         }
     }
 
-    private static getOrCreateMetadata(target: any): ISealedDecoratorMetadata {
-        return SealedDecorators.SETTER.metadata(target);
+    private static getOrCreateMetadata(ctr: any): ISealedDecoratorMetadata {
+        return SealedDecorators.SETTER.ownMetadata(ctr);
     }
 
-    public static getSealedClasses(target: any): NamedSealedClass<any>[] {
-        const firstSealedParent = TypeSupport.findSuperClass(target, (parent) => SealedDecorators.SETTER.isDecorated(parent));
-        if (firstSealedParent === undefined) {
-            return [SealedDecorators.wrap(target, target)];
+    public static getSealedClasses(ctr: any): NamedSealedClass<any>[] {
+        const firstSealedParentPrototype = TypeSupport.findSuperClass(
+            ctr.prototype,
+            (parentPrototype) => SealedDecorators.SETTER.isOwnDecorated(parentPrototype.constructor)
+        );
+        if (firstSealedParentPrototype === undefined) {
+            return [SealedDecorators.wrap(ctr, ctr)];
         } else {
-            return SealedDecorators.getOrCreateMetadata(firstSealedParent).descriptors
-                .filter((nsc) => TypeSupport.subTypeOf(nsc.type, target));
+            return SealedDecorators.getOrCreateMetadata(firstSealedParentPrototype.constructor).descriptors
+                .filter((nsc) => TypeSupport.subTypeOf(nsc.type, ctr));
         }
     }
 
     // TODO Should move to DefaultClassDeSer to pre-initialize map for them
-    //  - getImplementationAlias + getImplementationClass
-    public static getImplementationAlias(base: any, implementation: any): string | undefined {
-        const match = SealedDecorators.getSealedClasses(base).find(nsc => nsc.type === implementation);
+    //  - getChildAlias + getChildClass
+    public static getChildAlias(parentConstructor: any, childConstructor: any): string | undefined {
+        const match = SealedDecorators.getSealedClasses(parentConstructor).find(nsc => nsc.type === childConstructor);
         return match === undefined ? undefined : match[named];
     }
 
-    public static getImplementationClass(base: any, alias: string): BeanType<any> | undefined {
-        const match = SealedDecorators.getSealedClasses(base).find(nsc => nsc[named] === alias);
+    public static getChildClass(parentConstructor: any, childAlias: string): BeanType<any> | undefined {
+        const match = SealedDecorators.getSealedClasses(parentConstructor).find(nsc => nsc[named] === childAlias);
         return match?.type;
     }
 

@@ -11,5 +11,5 @@ export interface IParamDecoratorMetadata<T> {
 }
 
 export function StringifyParamDecoratorMetadata(md: IParamDecoratorMetadata<any>) {
-    return `${md.target.constructor.name}.${String(md.methodName)}([${md.query.stringify()}] :: ${md.paramName} @ ${md.index})`;
+    return `${md.target.name}.${String(md.methodName ?? "<constructor>")}([${md.query.stringify()}] :: ${md.paramName} @ ${md.index})`;
 }

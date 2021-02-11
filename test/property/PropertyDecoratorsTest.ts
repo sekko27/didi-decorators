@@ -1,6 +1,19 @@
 import { assertStrictEquals, assertEquals } from "../../deps.ts";
 import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 
+class X {}
+class Y extends X {}
+
+console.log(Object.getPrototypeOf(Y));
+
+Deno.test("type inference", () => {
+    class A {
+        @PropertyDecorators.Property()
+        a: number = 0;
+    }
+    assertStrictEquals(PropertyDecorators.getOrCreateMetadata(A, "a").type, Number);
+});
+
 Deno.test("non-readonly by default", () => {
     class A {
         @PropertyDecorators.Property()

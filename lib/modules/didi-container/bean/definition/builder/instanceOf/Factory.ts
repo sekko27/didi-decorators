@@ -9,7 +9,7 @@ export class Factory<T> implements IBeanFactory<T> {
     }
 
     public async create(context: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
-        const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.methodParams(this.type, undefined);
+        const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.constructorParams(this.type);
         const params = await context.paramList(paramMetadata, beanResolverContext);
         return new (this.type)(...params) as T;
     }

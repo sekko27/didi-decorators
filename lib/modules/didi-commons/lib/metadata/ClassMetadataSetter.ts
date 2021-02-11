@@ -17,35 +17,41 @@ export class ClassMetadataSetter<C> {
         return this;
     }
 
-    public metadata(prototype: any, reducer: (memo: C, current: C) => C, initial: C): C {
-        if (!this.isDecorated(prototype)) {
-            const metadata: C = this.metadataInstanceFactory(prototype);
-            Reflect.defineMetadata(this.metadataKey, metadata, prototype);
+    public metadata(prototype: any, reducer: (memo: C, current: C) => C, initial: C, prototypeMap: (source: any) => any = (source) => source): C {
+        const mapped = prototypeMap(prototype);
+        if (!this.isDecorated(mapped)) {
+            const metadata: C = this.metadataInstanceFactory(mapped);
+            Reflect.defineMetadata(this.metadataKey, metadata, mapped);
             return metadata;
         }
         let result: C = initial;
         for (let current = prototype; current !== null; current = Object.getPrototypeOf(current)) {
-            if (this.isOwnDecorated(current)) {
-                result = reducer(result, this.ownMetadata(current));
+            const currentMapped = prototypeMap(current);
+            if (this.isOwnDecorated(currentMapped)) {
+                result = reducer(result, this.ownMetadata(currentMapped));
             }
         }
         return result;
     }
 
-    public ownMetadata(prototype: any): C {
-        if (!this.isOwnDecorated(prototype)) {
-            const metadata: C = this.metadataInstanceFactory(prototype);
-            Reflect.defineMetadata(this.metadataKey, metadata, prototype);
+    public constructorMetadata(ctr: any, reducer: (memo: C, current: C) => C, initial: C): C {
+        return this.metadata(ctr.prototype, reducer, initial, (source) => source.constructor);
+    }
+
+    public ownMetadata(reflectTarget: any): C {
+        if (!this.isOwnDecorated(reflectTarget)) {
+            const metadata: C = this.metadataInstanceFactory(reflectTarget);
+            Reflect.defineMetadata(this.metadataKey, metadata, reflectTarget);
             return metadata;
         }
-        return Reflect.getMetadata(this.metadataKey, prototype);
+        return Reflect.getMetadata(this.metadataKey, reflectTarget);
     }
 
-    public isDecorated(constructorOrPrototype: any): boolean {
-        return Reflect.hasMetadata(this.metadataKey, constructorOrPrototype);
+    public isDecorated(reflectTarget: any): boolean {
+        return Reflect.hasMetadata(this.metadataKey, reflectTarget);
     }
 
-    public isOwnDecorated(constructorOrPrototype: any): boolean {
-        return Reflect.hasOwnMetadata(this.metadataKey, constructorOrPrototype);
+    public isOwnDecorated(reflectTarget: any): boolean {
+        return Reflect.hasOwnMetadata(this.metadataKey, reflectTarget);
     }
 }

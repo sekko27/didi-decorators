@@ -13,7 +13,7 @@ export class Factory<T, K extends string, F extends BeanFactoryClass<K, T>> impl
     public async create(context: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         const factoryBean = await context.bean(this.query, beanResolverContext);
         const paramMetadata: IParamDecoratorMetadata<any>[] = ParamDecorators.methodParams(
-            factoryBean.constructor.prototype,
+            factoryBean.constructor,
             this.method
         );
         const params = await context.paramList(paramMetadata, beanResolverContext);

@@ -8,17 +8,17 @@ import { Query } from "../../modules/didi-queries/Query.ts";
 
 export class SetterDecorators {
     public static readonly METADATA_KEY: string = "metrix:decorators:setter";
-    private static readonly SETTER: ClassMetadataSetter<PositionSupport<ISetterMetadata<any>>>
+    private static readonly SETTER: ClassMetadataSetter<PositionSupport<ISetterMetadata>>
         = new ClassMetadataSetter(
             SetterDecorators.METADATA_KEY,
             () => new PositionSupport(),
     );
 
-    public static Setter(positioning?: (position: PositionSupport<IInitDestroyMethodMetadata>) => void) {
-        return (target: any, name: string) => {
-            const current = SetterDecorators.SETTER.metadata(target).elem({
+    public static Setter(positioning?: (position: PositionSupport<ISetterMetadata>) => void) {
+        return (prototype: any, name: string) => {
+            const current = SetterDecorators.SETTER.ownMetadata(prototype).elem({
                 id: name,
-                query: new Query(DecoratorSupport.paramType(target, name, 0))
+                query: new Query(DecoratorSupport.paramType(prototype, name, 0))
             });
             if (positioning !== undefined) {
                 positioning(current);
@@ -26,15 +26,16 @@ export class SetterDecorators {
         }
     }
 
-    public static all(target: any): IterableIterator<ISetterMetadata<any>> {
+    public static all(ctr: any): IterableIterator<ISetterMetadata> {
         return SetterDecorators.SETTER
-            .metadata(target).sort()
-            .map(md => SetterDecorators.extendMetadata(md, target))
+            .metadata(ctr.prototype, PositionSupport.concatReducer, new PositionSupport)
+            .sort()
+            .map(md => SetterDecorators.extendMetadata(md, ctr))
                 [Symbol.iterator]();
     }
 
-    private static extendMetadata<T>(md: ISetterMetadata<T>, target: any): ISetterMetadata<T> {
-        const parameterMetadata = ParamDecorators.methodParams(target, md.id)[0];
+    private static extendMetadata<T>(md: ISetterMetadata<T>, ctr: any): ISetterMetadata<T> {
+        const parameterMetadata = ParamDecorators.methodParams(ctr, md.id)[0];
         return {...md, query: md.query.merge(parameterMetadata.query)};
     }
 }

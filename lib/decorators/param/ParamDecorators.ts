@@ -8,11 +8,14 @@ import { MissingParameterDecorationError } from "./MissingParameterDecorationErr
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
-import { ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
+import { ArrayElementEqualsOperator, ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
 
 export class ParamDecorators {
     public static readonly NAME_TAG = "__name__";
     public static readonly METADATA_KEY: string = "metrix:decorators:param";
+    private static MetadataEquals: ArrayElementEqualsOperator<IParamDecoratorMetadata<any>> =
+        (_1, _2) => _1.methodName === _2.methodName;
+
     private static readonly SETTER: ClassMetadataSetter<IParamDecoratorMetadata<any>[]> =
         new ClassMetadataSetter(
             ParamDecorators.METADATA_KEY,
@@ -20,15 +23,15 @@ export class ParamDecorators {
         );
 
     public static Inject<T>(paramName?: string) {
-        return (target: any, methodName: Name, index: number) => {
-            const md = ParamDecorators.getOrCreateMetadata<T>(target, methodName, index);
-            md.paramName = paramName ?? DecoratorSupport.paramName(target, methodName, index);
+        return (constructorOrPrototype: any, methodName: Name, index: number) => {
+            const md = ParamDecorators.getOrCreateMetadata<T>(constructorOrPrototype, methodName, index);
+            md.paramName = paramName ?? DecoratorSupport.paramName(constructorOrPrototype, methodName, index);
         }
     }
 
     public static Query<T>(tagsQuery: ITagsQuery) {
-        return (target: any, methodName: Name, index: number) => {
-            const md = this.getOrCreateMetadata<T>(target, methodName, index);
+        return (constructorOrPrototype: any, methodName: Name, index: number) => {
+            const md = this.getOrCreateMetadata<T>(constructorOrPrototype, methodName, index);
             md.query = md.query.mergeTagsOnly(tagsQuery);
         }
     }
@@ -44,27 +47,51 @@ export class ParamDecorators {
         return (_target: any, _method: Name) => {};
     }
 
-    public static methodParams(target: any, method?: Name) : IParamDecoratorMetadata<any>[] {
-        const rawParameters: BeanType<any>[] | undefined = DecoratorSupport.paramTypes(target, method);
-        if (rawParameters === undefined && TypeSupport.hasParameter(method === undefined ? target : target[method])) {
-            throw new MissingParameterDecorationError(target, method);
+    public static methodParams(ctr: any, method: Name) : IParamDecoratorMetadata<any>[] {
+        const prototype = ctr.prototype;
+        const rawParameters: BeanType<any>[] | undefined = DecoratorSupport.paramTypes(prototype, method);
+        if (rawParameters === undefined && TypeSupport.hasParameter(prototype[method])) {
+            throw new MissingParameterDecorationError(prototype, method);
         }
-        const annotatedMethodParams = ParamDecorators.SETTER.metadata(target, ArrayUtil.concatReducer, [])
-            .filter(md => md.methodName === method);
+        const annotatedMethodParams = ParamDecorators.SETTER.metadata(
+            prototype,
+            ArrayUtil.concatReducerOnlyFirstByLevels(ParamDecorators.MetadataEquals),
+            []
+        ).filter(md => md.methodName === method);
         return (rawParameters || []).map((p, ix) => {
             const annotatedMethodParam = annotatedMethodParams.find((amp) => amp.index === ix);
             return annotatedMethodParam === undefined
-                ? ParamDecorators.getOrCreateMetadata(target, method, ix)
+                ? ParamDecorators.getOrCreateMetadata(prototype, method, ix)
                 : annotatedMethodParam;
-        })
+        });
     }
 
-    private static getOrCreateMetadata<T>(target: any, methodName: Name | undefined, index: number): IParamDecoratorMetadata<T> {
-        const md = ParamDecorators.SETTER.ownMetadata(target);
+    public static constructorParams(ctr: any): IParamDecoratorMetadata<any>[] {
+        const rawParameters: BeanType<any>[] | undefined = DecoratorSupport.paramTypes(ctr, undefined);
+        if (rawParameters === undefined && TypeSupport.hasParameter(ctr)) {
+            throw new MissingParameterDecorationError(ctr);
+        }
+        const annotatedMethodParams = ParamDecorators.SETTER.constructorMetadata(
+            ctr,
+            ArrayUtil.concatReducerOnlyFirstByLevels(ParamDecorators.MetadataEquals),
+            []
+        );
+        return (rawParameters || []).map((p, ix) => {
+            const annotatedMethodParam = annotatedMethodParams.find((amp) => amp.index === ix);
+            return annotatedMethodParam === undefined
+                ? ParamDecorators.getOrCreateMetadata(ctr, undefined, ix)
+                : annotatedMethodParam;
+        })
+
+    }
+    private static getOrCreateMetadata<T>(reflectTarget: any, methodName: Name | undefined, index: number): IParamDecoratorMetadata<T> {
+        const isConstructor = methodName === undefined;
+        const md = ParamDecorators.SETTER.ownMetadata(reflectTarget);
         const current = md.find((pmd) => pmd.index === index && pmd.methodName === methodName);
         if (current === undefined) {
-            const type = DecoratorSupport.paramType(target, methodName, index) as BeanType<T>;
-            const paramName = DecoratorSupport.paramName(target, methodName, index);
+            const type = DecoratorSupport.paramType(reflectTarget, methodName, index) as BeanType<T>;
+            const paramName = DecoratorSupport.paramName(reflectTarget, methodName, index);
+            const target = isConstructor ? reflectTarget : reflectTarget.constructor;
             const param: IParamDecoratorMetadata<T> = {index, methodName, query: new Query<T>(type), target, paramName};
             md.push(param);
             return param;

@@ -15,4 +15,8 @@ export class MapUtil {
             .join(", ");
         return `{${entries}}`;
     }
+
+    public static firstWinReducer<K = any, V = any>(_1: Map<K, V>, _2: Map<K, V>): Map<K, V> {
+        return new Map(Array.from(_2.entries()).concat(Array.from(_1.entries())));
+    }
 }

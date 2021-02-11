@@ -11,17 +11,17 @@ export class PostConfiguratorDecorators {
         () => new PositionSupport()
         );
 
-    static register<T>(target: any, id: string, configurator: IConfigurator<T>, positioning?: (p: PositionSupport<any>) => void) {
+    static register<T>(ctr: any, id: string, configurator: IConfigurator<T>, positioning?: (p: PositionSupport<any>) => void) {
         const current = PostConfiguratorDecorators.SETTER
-            .ownMetadata(target).elem({id, configurator});
+            .ownMetadata(ctr).elem({id, configurator});
         if (positioning) {
             positioning(current);
         }
     }
 
-    public static getPostConfigurators(target: any): IterableIterator<IPostConfiguratorMetadata> {
+    public static getPostConfigurators(ctr: any): IterableIterator<IPostConfiguratorMetadata> {
         return PostConfiguratorDecorators
-            .SETTER.metadata(target, PositionSupport.concatReducer, new PositionSupport)
+            .SETTER.constructorMetadata(ctr, PositionSupport.concatReducer, new PositionSupport())
             .sort()
             [Symbol.iterator]();
     }

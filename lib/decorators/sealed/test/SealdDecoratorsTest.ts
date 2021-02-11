@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "../../../../deps.ts";
+import { assertEquals, assertStrictEquals, assertThrows } from "../../../../deps.ts";
 import { NamedSealedClass, SealedDecorators } from "../SealedDecorators.ts";
 
 const named = Symbol.for("name");
@@ -40,7 +40,7 @@ Deno.test("Should get the implementation class by alias", () => {
     @SealedDecorators.forClass(A)(B, SealedDecorators.named("alias", C))
     class SealedA {}
 
-    assertStrictEquals(SealedDecorators.getImplementationClass(A, "alias"), C);
+    assertStrictEquals(SealedDecorators.getChildClass(A, "alias"), C);
 })
 
 Deno.test("Should get the implementation alias by type", () => {
@@ -51,7 +51,7 @@ Deno.test("Should get the implementation alias by type", () => {
     @SealedDecorators.forClass(A)(B, SealedDecorators.named("aliasForC", C))
     class SealedA {}
 
-    assertStrictEquals(SealedDecorators.getImplementationAlias(A, C), "aliasForC");
+    assertStrictEquals(SealedDecorators.getChildAlias(A, C), "aliasForC");
 });
 
 Deno.test("Should check the inheritance", () =>  {
@@ -83,4 +83,22 @@ Deno.test("Should check the implementation classes are unique", () => {
         @SealedDecorators.forClass(A)(SealedDecorators.named("alias", B), SealedDecorators.named(B.name, B))
         class SealedA {}
     })
+});
+
+Deno.test("sealed classes should depends on first decorated parent", () => {
+    class A {}
+    class B extends A {}
+    class C extends B {}
+    class D extends C {}
+    class E extends B {}
+    class F extends C {}
+    class G extends D {}
+
+    @SealedDecorators.forClass(B)(C, D, E, G)
+    @SealedDecorators.forClass(C)(D, F)
+    class SealedDefinitions {}
+
+    assertEquals(SealedDecorators.getSealedClasses(D), [
+        SealedDecorators.named(D.name, D)
+    ]);
 });
