@@ -1,5 +1,5 @@
 import { PositionSupport } from "../../../deps.ts";
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { IPostConfiguratorMetadata } from "./IPostConfiguratorMetadata.ts";
 import { IConfigurator } from "./IConfigurator.ts";
 

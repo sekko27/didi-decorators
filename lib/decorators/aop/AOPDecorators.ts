@@ -1,17 +1,20 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { IAOPMetadata } from "./types/IAOPMetadata.ts";
 import { IAroundAOPHandler } from "./types/IAroundAOPHandler.ts";
 import { IBeforeAOPHandler } from "./types/IBeforeAOPHandler.ts";
 import { IAfterAOPHandler } from "./types/IAfterAOPHandler.ts";
-import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { Name } from "../../modules/didi-commons/Name.ts";
+import { BeanType } from "../../modules/didi-commons/lib/types/BeanType.ts";
+import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
-import { ArrayUtil } from "../../modules/didi-commons/ArrayUtil.ts";
+import { ArrayElementEqualsOperator, ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
 
 export class AOPDecorators {
     private static readonly METADATA_KEY: string = "metrix:decorators:aop";
+    private static MetadataEquals: ArrayElementEqualsOperator<IAOPMetadata<any, any>> =
+        (_1, _2) => _1.name === _2.name;
+
     private static readonly SETTER: ClassMetadataSetter<IAOPMetadata<any, any>[]> = new ClassMetadataSetter(
         AOPDecorators.METADATA_KEY,
         () => []
@@ -26,8 +29,8 @@ export class AOPDecorators {
         tags: ITagsQuery,
         handlerArgs?: A,
     ) {
-        return (target: any, name: Name) => {
-            AOPDecorators.SETTER.ownMetadata(target).push({
+        return (prototype: any, name: Name) => {
+            AOPDecorators.SETTER.ownMetadata(prototype).push({
                 handlerQuery: new Query<T>(handleType, tags),
                 handlerArgs,
                 kind,
@@ -61,10 +64,10 @@ export class AOPDecorators {
     }
 
     public static all(ctr: any): IterableIterator<IAOPMetadata<any, any>> {
-        return AOPDecorators.SETTER.metadata(ctr.prototype, ArrayUtil.concatReducer, [])[Symbol.iterator]();
-    }
-
-    public static has(ctr: any): boolean {
-        return AOPDecorators.all(ctr).next() !== null;
+        return AOPDecorators.SETTER.metadata(
+            ctr.prototype,
+            ArrayUtil.concatReducerOnlyFirstByLevels(AOPDecorators.MetadataEquals),
+            []
+        )[Symbol.iterator]();
     }
 }

@@ -1,8 +1,8 @@
-import { BeanType } from "../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../didi-commons/lib/types/BeanType.ts";
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { IDeSerBuilder } from "../../interfaces/IDeSerBuilder.ts";
 import { IDeSer } from "../../interfaces/IDeSer.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { MismatchedDeSerDefinitionTypeError } from "../../errors/MismatchedDeSerDefinitionTypeError.ts";
 import { DeSerDecorators } from "../base/DeSerDecorators.ts";
 

@@ -1,5 +1,5 @@
 import { IConditionalComparator } from "./types/IConditionalComparator.ts";
-import { TypeSupport } from "../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../didi-commons/lib/utils/TypeSupport.ts";
 import { DiffComparable } from "./types/DiffComparable.ts";
 import { DiffKind } from "./types/DiffKind.ts";
 import { IDiff, Modified } from "./types/IDiff.ts";

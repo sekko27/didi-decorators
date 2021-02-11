@@ -1,4 +1,4 @@
-import { BeanType } from "../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";
 import { IBeanDefinitionTags } from "./IBeanDefinitionTags.ts";
 
 export interface IBeanDefinitionMeta<T> {

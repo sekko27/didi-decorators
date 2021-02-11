@@ -1,5 +1,5 @@
 import "../vendor/Reflect.ts";
-import { Name } from "../Name.ts";
+import { Name } from "../types/Name.ts";
 
 export class DecoratorSupport {
     public static fieldType(constructorOrPrototype: any, field: Name): any {

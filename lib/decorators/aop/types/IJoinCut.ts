@@ -1,5 +1,5 @@
-import { BeanType } from "../../../modules/didi-commons/BeanType.ts";
-import { Name } from "../../../modules/didi-commons/Name.ts";
+import { BeanType } from "../../../modules/didi-commons/lib/types/BeanType.ts";
+import { Name } from "../../../modules/didi-commons/lib/types/Name.ts";
 
 export interface IJoinCut<T, R = void> {
     type: BeanType<T>;

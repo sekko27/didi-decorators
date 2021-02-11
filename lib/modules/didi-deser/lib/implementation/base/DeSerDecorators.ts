@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../../../didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../../../didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { IDeSerDecoratorMetadata, IDeSerDecoratorMetadataOptions } from "../../interfaces/IDeSerDecoratorMetadata.ts";
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { RegistrationDeSerDefinitionProvider } from "../../interfaces/RegistrationDeSerDefinitionProvider.ts";

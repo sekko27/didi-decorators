@@ -6,7 +6,7 @@ import { IReadonlyActivationHandlerChain } from "../../activation-handler/Activa
 import { IBeanFactory } from "./IBeanFactory.ts";
 import { IBeanDefinitionResolver } from "./IBeanDefinitionResolver.ts";
 import { IScope } from "../../scope/IScope.ts";
-import { IStringifiable } from "../../../../../didi-commons/IStringifiable.ts";
+import { IStringifiable } from "../../../../../didi-commons/lib/types/IStringifiable.ts";
 
 export interface IFactoryResolverContext<T> extends IBeanDefinitionResolver<T> {
     bean<B>(query: IQuery<B>, context: IBeanResolverContext): Promise<B>;

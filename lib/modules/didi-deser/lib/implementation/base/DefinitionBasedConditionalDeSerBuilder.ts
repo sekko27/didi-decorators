@@ -1,5 +1,5 @@
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
-import { BeanType } from "../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../didi-commons/lib/types/BeanType.ts";
 import { IDeSerBuilderContext } from "../../interfaces/IDeSerBuilderContext.ts";
 import { IDeSer } from "../../interfaces/IDeSer.ts";
 

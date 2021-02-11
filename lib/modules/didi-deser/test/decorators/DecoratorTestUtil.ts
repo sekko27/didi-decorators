@@ -1,5 +1,5 @@
 import { IDeSerDecoratorMetadata } from "../../lib/interfaces/IDeSerDecoratorMetadata.ts";
-import { BeanType } from "../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";
 import { IDeSerDefinition } from "../../lib/interfaces/IDeSerDefinition.ts";
 import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
 import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";

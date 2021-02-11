@@ -1,7 +1,7 @@
-import { BeanType } from "../../didi-commons/BeanType.ts";
+import { BeanType } from "../../didi-commons/lib/types/BeanType.ts";
 import { ITagsQuery } from "./ITagsQuery.ts";
 import { IBeanDefinitionMeta } from "../../didi-container/bean/definition/IBeanDefinitionMeta.ts";
-import { IStringifiable } from "../../didi-commons/IStringifiable.ts";
+import { IStringifiable } from "../../didi-commons/lib/types/IStringifiable.ts";
 
 export interface IQuery<T> extends IStringifiable {
     readonly type: BeanType<T> | undefined;

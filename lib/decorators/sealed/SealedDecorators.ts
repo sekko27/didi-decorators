@@ -1,6 +1,6 @@
-import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
-import { TypeSupport } from "../../modules/didi-commons/TypeSupport.ts";
+import { BeanType } from "../../modules/didi-commons/lib/types/BeanType.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { TypeSupport } from "../../modules/didi-commons/lib/utils/TypeSupport.ts";
 import { assert } from "../../../deps.ts";
 
 const named = Symbol.for("name");

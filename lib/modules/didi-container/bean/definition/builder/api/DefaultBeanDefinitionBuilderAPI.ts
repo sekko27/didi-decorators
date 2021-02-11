@@ -1,5 +1,5 @@
 import { IBeanDefinitionBuilderAPI } from "./IBeanDefinitionBuilderAPI.ts";
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { BeanFactoryClass } from "../interfaces/BeanFactoryClass.ts";
 import { ConstantBeanDefinitionBuilder } from "../constant/ConstantBeanDefinitionBuilder.ts";
 import { FactoryBeanDefinitionBuilder } from "../factory/FactoryBeanDefinitionBuilder.ts";

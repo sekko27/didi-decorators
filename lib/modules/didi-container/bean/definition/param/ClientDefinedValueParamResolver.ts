@@ -5,7 +5,7 @@ import {
 } from "../../../../../decorators/param/IParamDecoratorMetadata.ts";
 import { IParamListResolverContext } from "./interfaces/IParamListResolverContext.ts";
 import { NonResponsibleParamResolverError } from "./errors/NonResponsibleParamResolverError.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { ParamResolverError } from "./errors/ParamResolverError.ts";
 
 export class ClientDefinedValueParamResolver implements IParamResolver {

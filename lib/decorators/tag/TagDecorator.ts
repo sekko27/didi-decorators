@@ -1,5 +1,5 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
-import { Name } from "../../modules/didi-commons/Name.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 

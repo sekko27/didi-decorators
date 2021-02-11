@@ -1,8 +1,8 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { ISetterMetadata } from "./ISetterMetadata.ts";
 import { PositionSupport } from "../../../deps.ts";
 import { IInitDestroyMethodMetadata } from "../init-destroy-method/IInitDestroyMethodMetadata.ts";
-import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
+import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
 import { ParamDecorators } from "../param/ParamDecorators.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 

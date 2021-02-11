@@ -1,5 +1,5 @@
 import { IBeanDefinitionBuilder } from "../interfaces/IBeanDefinitionBuilder.ts";
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { BaseBeanDefinitionBuilder } from "../base/BaseBeanDefinitionBuilder.ts";
 import { IBeanDefinitionResolverFactory } from "../interfaces/IBeanDefinitionResolverFactory.ts";
 import { FactoryResolverContext, IBeanResolverForFactory } from "../interfaces/IBeanResolverForFactory.ts";

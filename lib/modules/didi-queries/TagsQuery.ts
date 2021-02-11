@@ -1,5 +1,5 @@
 import { ITagsQuery } from "./interfaces/ITagsQuery.ts";
-import { Name } from "../didi-commons/Name.ts";
+import { Name } from "../didi-commons/lib/types/Name.ts";
 import { IBeanDefinitionTags } from "../didi-container/bean/definition/IBeanDefinitionTags.ts";
 import { ParamDecorators } from "../../decorators/param/ParamDecorators.ts";
 

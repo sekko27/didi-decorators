@@ -1,4 +1,4 @@
-import { Name } from "./Name.ts";
+import { Name } from "../types/Name.ts";
 
 export type PrimitiveType = string | number | boolean | Date;
 

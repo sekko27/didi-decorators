@@ -1,4 +1,4 @@
-import { Name } from "../../../didi-commons/Name.ts";
+import { Name } from "../../../didi-commons/lib/types/Name.ts";
 
 export interface IBeanDefinitionTags extends Map<Name, any> {
 }

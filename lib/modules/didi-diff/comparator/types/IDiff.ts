@@ -1,6 +1,6 @@
 import { DiffKind } from "./DiffKind.ts";
 import { DiffComparable } from "./DiffComparable.ts";
-import { BeanType } from "../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";
 import { IConditionalComparator } from "./IConditionalComparator.ts";
 
 export interface IDiff {

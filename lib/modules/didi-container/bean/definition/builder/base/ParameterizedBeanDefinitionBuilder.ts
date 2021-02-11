@@ -2,7 +2,7 @@ import { Prototype } from "../../scope/Prototype.ts";
 import { IScope } from "../../scope/IScope.ts";
 import { Singleton } from "../../scope/Singleton.ts";
 import { BaseBeanDefinitionBuilder } from "./BaseBeanDefinitionBuilder.ts";
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { IQuery } from "../../../../../didi-queries/interfaces/IQuery.ts";
 import { Query } from "../../../../../didi-queries/Query.ts";
 import { ITagsQuery } from "../../../../../didi-queries/interfaces/ITagsQuery.ts";

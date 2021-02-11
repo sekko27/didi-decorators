@@ -1,14 +1,14 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { IParamDecoratorMetadata } from "./IParamDecoratorMetadata.ts";
-import { Name } from "../../modules/didi-commons/Name.ts";
-import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
-import { BeanType } from "../../modules/didi-commons/BeanType.ts";
-import { TypeSupport } from "../../modules/didi-commons/TypeSupport.ts";
+import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
+import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
+import { BeanType } from "../../modules/didi-commons/lib/types/BeanType.ts";
+import { TypeSupport } from "../../modules/didi-commons/lib/utils/TypeSupport.ts";
 import { MissingParameterDecorationError } from "./MissingParameterDecorationError.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
-import { ArrayUtil } from "../../modules/didi-commons/ArrayUtil.ts";
+import { ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
 
 export class ParamDecorators {
     public static readonly NAME_TAG = "__name__";

@@ -1,9 +1,9 @@
 import "../vendor/Reflect.ts";
 import { MetadataSetter } from "./MetadataSetter.ts";
-import { TypeSupport } from "../TypeSupport.ts";
-import { IInitDestroyMethodMetadata } from "../../../decorators/init-destroy-method/IInitDestroyMethodMetadata.ts";
+import { TypeSupport } from "../utils/TypeSupport.ts";
+import { IInitDestroyMethodMetadata } from "../../../../decorators/init-destroy-method/IInitDestroyMethodMetadata.ts";
 
-import { PositionSupport } from "../../../../deps.ts";
+import { PositionSupport } from "../../../../../deps.ts";
 /**
  * Per target (prototype / constructor) metadata setter when the metadata can be specified by type.
  */
@@ -32,13 +32,13 @@ export class ClassMetadataSetter<C> {
         return result;
     }
 
-    public ownMetadata(constructorOrPrototype: any): C {
-        if (!this.isOwnDecorated(constructorOrPrototype)) {
-            const metadata: C = this.metadataInstanceFactory(constructorOrPrototype);
-            Reflect.defineMetadata(this.metadataKey, metadata, constructorOrPrototype);
+    public ownMetadata(prototype: any): C {
+        if (!this.isOwnDecorated(prototype)) {
+            const metadata: C = this.metadataInstanceFactory(prototype);
+            Reflect.defineMetadata(this.metadataKey, metadata, prototype);
             return metadata;
         }
-        return Reflect.getMetadata(this.metadataKey, constructorOrPrototype);
+        return Reflect.getMetadata(this.metadataKey, prototype);
     }
 
     public isDecorated(constructorOrPrototype: any): boolean {

@@ -1,4 +1,4 @@
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { IBeanDefinitionBuilderAPI } from "../../builder/api/IBeanDefinitionBuilderAPI.ts";
 import { IQuery } from "../../../../../didi-queries/interfaces/IQuery.ts";
 import { IBeanDefinitionBuilder } from "../../builder/interfaces/IBeanDefinitionBuilder.ts";

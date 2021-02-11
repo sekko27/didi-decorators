@@ -1,7 +1,7 @@
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { IDeSerBuilder } from "../../interfaces/IDeSerBuilder.ts";
 import { IDeSer } from "../../interfaces/IDeSer.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { MismatchedDeSerDefinitionTypeError } from "../../errors/MismatchedDeSerDefinitionTypeError.ts";
 
 export class ArrayDeSerDefinition implements IDeSerDefinition {

@@ -4,7 +4,7 @@ import {
     StringifyParamDecoratorMetadata
 } from "../../../../../decorators/param/IParamDecoratorMetadata.ts";
 import { NonResponsibleParamResolverError } from "./errors/NonResponsibleParamResolverError.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 
 export class DefaultParamResolver implements IParamResolver {
     async resolve(paramMetadata: IParamDecoratorMetadata<any>): Promise<any> {

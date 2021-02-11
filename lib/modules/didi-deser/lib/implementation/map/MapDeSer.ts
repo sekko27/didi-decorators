@@ -1,6 +1,6 @@
 import { IDeSer } from "../../interfaces/IDeSer.ts";
 import { DeSerError } from "../../errors/DeSerError.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { DeSerArrayUtil } from "../base/DeSerArrayUtil.ts";
 
 export class MapDeSer implements IDeSer {

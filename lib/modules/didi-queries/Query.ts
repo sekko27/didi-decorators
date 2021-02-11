@@ -1,10 +1,10 @@
 import { IQuery } from "./interfaces/IQuery.ts";
-import { BeanType } from "../didi-commons/BeanType.ts";
+import { BeanType } from "../didi-commons/lib/types/BeanType.ts";
 import { ITagsQuery } from "./interfaces/ITagsQuery.ts";
 import { TagsQuery } from "./TagsQuery.ts";
 import { IBeanDefinitionMeta } from "../didi-container/bean/definition/IBeanDefinitionMeta.ts";
-import { TypeSupport } from "../didi-commons/TypeSupport.ts";
-import { Name } from "../didi-commons/Name.ts";
+import { TypeSupport } from "../didi-commons/lib/utils/TypeSupport.ts";
+import { Name } from "../didi-commons/lib/types/Name.ts";
 
 export class Query<T> implements IQuery<T> {
     public static byName(name: Name): IQuery<any> {

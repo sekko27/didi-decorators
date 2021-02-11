@@ -1,4 +1,4 @@
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { IBeanResolverContext, IFactoryResolverContext } from "../interfaces/IBeanResolverForFactory.ts";
 import { IParamDecoratorMetadata } from "../../../../../../decorators/param/IParamDecoratorMetadata.ts";
 import { ParamDecorators } from "../../../../../../decorators/param/ParamDecorators.ts";

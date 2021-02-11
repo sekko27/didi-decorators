@@ -1,6 +1,6 @@
-import { BeanType } from "../../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../../didi-commons/lib/types/BeanType.ts";
 import { IBeanDefinitionTags, newBeanDefinitionTags } from "../../IBeanDefinitionTags.ts";
-import { Name } from "../../../../../didi-commons/Name.ts";
+import { Name } from "../../../../../didi-commons/lib/types/Name.ts";
 import { IBeanDefinitionMeta } from "../../IBeanDefinitionMeta.ts";
 import { IBeanDefinition } from "../../IBeanDefinition.ts";
 import { IBeanDefinitionResolverFactory } from "../interfaces/IBeanDefinitionResolverFactory.ts";

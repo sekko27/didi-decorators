@@ -1,6 +1,6 @@
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { DecoratorSupport } from "../../../../../../mod.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { PrimitiveDef } from "../primitive/PrimitiveDeSerDecorators.ts";
 import { DeSerDecorators } from "./DeSerDecorators.ts";
 import { EmbeddedDef } from "../embedded/EmbeddedDeSerDecorators.ts";

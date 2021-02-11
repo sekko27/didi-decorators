@@ -1,4 +1,4 @@
-import { Name } from "../../../modules/didi-commons/Name.ts";
+import { Name } from "../../../modules/didi-commons/lib/types/Name.ts";
 import { IAroundAOPHandler } from "./IAroundAOPHandler.ts";
 import { IBeforeAOPHandler } from "./IBeforeAOPHandler.ts";
 import { IAfterAOPHandler } from "./IAfterAOPHandler.ts";

@@ -3,7 +3,7 @@ import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interf
 import { PropertyDecorators } from "../../../../../decorators/property/PropertyDecorators.ts";
 import { Query } from "../../../../didi-queries/Query.ts";
 import { BeanDefinitionNotFoundError } from "../../container/errors/BeanDefinitionNotFoundError.ts";
-import { Name } from "../../../../didi-commons/Name.ts";
+import { Name } from "../../../../didi-commons/lib/types/Name.ts";
 import { IQuery } from "../../../../didi-queries/interfaces/IQuery.ts";
 
 export class PropertyDefaultValueNotEnabledError extends Error {
@@ -17,7 +17,7 @@ export class PropertyInjectionActivationHandler implements IActivationHandler {
 
     async apply<T>(instance: T, resolverContext: IFactoryResolverContext<T>, beanResolverContext: IBeanResolverContext): Promise<T> {
         const constructor = (instance as any).constructor;
-        for (const property of PropertyDecorators.all(constructor.prototype)) {
+        for (const property of PropertyDecorators.all(constructor)) {
             const query = new Query(property.type, property.tags);
             try {
                 Object.defineProperty(

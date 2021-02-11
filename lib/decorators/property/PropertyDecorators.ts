@@ -1,13 +1,15 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/metadata/ClassMetadataSetter.ts";
+import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
 import { IPropertyMetadata } from "./IPropertyMetadata.ts";
-import { Name } from "../../modules/didi-commons/Name.ts";
-import { DecoratorSupport } from "../../modules/didi-commons/metadata/DecoratorSupport.ts";
+import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
+import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
-import { ArrayUtil } from "../../modules/didi-commons/ArrayUtil.ts";
+import { ArrayElementEqualsOperator, ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
 
 class PropertyDecoratorsImpl {
     private readonly setter: ClassMetadataSetter<IPropertyMetadata<any>[]>;
+    private static readonly MetadataEquals: ArrayElementEqualsOperator<IPropertyMetadata<any>>
+        = (_1, _2) => _1.name === _2.name;
 
     constructor(
         metadataKey: string,
@@ -17,59 +19,53 @@ class PropertyDecoratorsImpl {
 
     public Property(tags: ITagsQuery = TagsQuery.EMPTY) {
         return (target: any, name: Name) => {
-            this.getOrCreateMetadata(target, name).tags = tags;
+            this.getOrCreateMetadataOnPrototype(target, name).tags = tags;
         }
     }
 
     public ReadOnly(readonly: boolean = true) {
         return (target: any, name: Name) => {
-            this.getOrCreateMetadata(target, name).readonly = readonly;
+            this.getOrCreateMetadataOnPrototype(target, name).readonly = readonly;
         }
     }
 
     public Enumerable(enumerable: boolean = true) {
         return (target: any, name: Name) => {
-            this.getOrCreateMetadata(target, name).enumerable = enumerable;
+            this.getOrCreateMetadataOnPrototype(target, name).enumerable = enumerable;
         }
 
     }
 
+    // TODO Why it's not used?
     public EnableDefault() {
         return (target: any, name: Name) => {
-            this.getOrCreateMetadata(target, name).enableDefault = true;
+            this.getOrCreateMetadataOnPrototype(target, name).enableDefault = true;
         }
     }
-    public isTargetDecorated(target: any): boolean {
-        return this.all(target).next() !== null;
+
+    public all(ctr: any): IterableIterator<IPropertyMetadata<any>> {
+        return this.setter.metadata(
+            ctr.prototype,
+            ArrayUtil.concatReducerOnlyFirstByLevels(PropertyDecoratorsImpl.MetadataEquals),
+            []
+        )[Symbol.iterator]();
     }
 
-    public isPropertyDecorated(target: any, name: Name): boolean {
-        return this.realPropertyMetadata(target, name) !== undefined;
-    }
-
-    public all(target: any): IterableIterator<IPropertyMetadata<any>> {
-        return this.setter.metadata(target, ArrayUtil.concatReducer, [])[Symbol.iterator]();
-    }
-
-    public propertyMetadata(target: any, name: Name): IPropertyMetadata<any> {
-        return this.getOrCreateMetadata(target, name);
-    }
-
-    private realPropertyMetadata(target: any, name: Name): IPropertyMetadata<any> | undefined {
-        return this.setter.ownMetadata(target).find(md => md.name === name);
-    }
-
-    private getOrCreateMetadata(target: any, name: Name): IPropertyMetadata<any> {
-        const md = this.realPropertyMetadata(target, name);
+    private getOrCreateMetadataOnPrototype(prototype: any, name: Name): IPropertyMetadata<any> {
+        const md = this.setter.ownMetadata(prototype).find(md => md.name === name);
 
         if (md === undefined) {
-            const type = DecoratorSupport.fieldType(target, name);
+            const type = DecoratorSupport.fieldType(prototype?.constructor, name);
             const md = {name, type, enumerable: true, readonly: false, tags: TagsQuery.EMPTY};
-            this.setter.ownMetadata(target).push(md);
+            this.setter.ownMetadata(prototype).push(md);
             return md;
         } else {
-            return md;
+            return md as IPropertyMetadata<any>;
         }
+
+    }
+    public getOrCreateMetadata(ctr: any, name: Name): IPropertyMetadata<any> {
+        return this.getOrCreateMetadataOnPrototype(ctr?.prototype, name);
     }
 }
 

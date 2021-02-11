@@ -1,7 +1,7 @@
 import { IContainerConfiguration } from "./IContainerConfiguration.ts";
 import { IParamListResolver } from "../param/interfaces/IParamListResolver.ts";
 import { ParamListResolverChain } from "../param/ParamListResolverChain.ts";
-import { BeanType } from "../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../didi-commons/lib/types/BeanType.ts";
 import { IBeanDefinitionBuilderAPI } from "../builder/api/IBeanDefinitionBuilderAPI.ts";
 import { DefaultBeanDefinitionBuilderAPI } from "../builder/api/DefaultBeanDefinitionBuilderAPI.ts";
 import { IBeanDefinitionBuilder } from "../builder/interfaces/IBeanDefinitionBuilder.ts";

@@ -3,7 +3,7 @@ import { DiffComparable } from "../types/DiffComparable.ts";
 import { Bson } from "../../../../../deps.ts";
 import { IComparatorContext } from "../types/IComparatorContext.ts";
 import { IDiff, Modified } from "../types/IDiff.ts";
-import { BeanType } from "../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";
 
 type MongoEqual = { equals(other: any): boolean };
 

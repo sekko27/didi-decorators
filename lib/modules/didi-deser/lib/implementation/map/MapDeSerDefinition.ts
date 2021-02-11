@@ -1,5 +1,5 @@
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
-import { TypeSupport } from "../../../../didi-commons/TypeSupport.ts";
+import { TypeSupport } from "../../../../didi-commons/lib/utils/TypeSupport.ts";
 import { MismatchedDeSerDefinitionTypeError } from "../../errors/MismatchedDeSerDefinitionTypeError.ts";
 
 export class MapDeSerDefinition implements IDeSerDefinition {

@@ -7,7 +7,7 @@ import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { EmbeddedDeSerDefinition } from "./EmbeddedDeSerDefinition.ts";
 import { DefinitionBasedConditionalDeSerBuilder } from "../base/DefinitionBasedConditionalDeSerBuilder.ts";
 import { InMemoryCache } from "../../../../didi-cache/InMemoryCache.ts";
-import { BeanType } from "../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../didi-commons/lib/types/BeanType.ts";
 import { EmbeddedDeSer, IDefaultClassFieldDeSerDescriptor } from "./EmbeddedDeSer.ts";
 import { DeSerDecorators } from "../base/DeSerDecorators.ts";
 

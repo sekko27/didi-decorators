@@ -1,5 +1,5 @@
 import { IDeSer } from "../../interfaces/IDeSer.ts";
-import { BeanType } from "../../../../didi-commons/BeanType.ts";
+import { BeanType } from "../../../../didi-commons/lib/types/BeanType.ts";
 import { SealedDecorators } from "../../../../../decorators/sealed/SealedDecorators.ts";
 import { DeSerError } from "../../errors/DeSerError.ts";
 
