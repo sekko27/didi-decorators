@@ -9,6 +9,8 @@ export class PrimitiveDeSerDefinition<T extends PrimitiveType = PrimitiveType> i
     validateType(type: any): this {
         if (!TypeSupport.subTypeOf(type, this.type)) {
             throw new MismatchedDeSerDefinitionTypeError(`Expected ${this?.type?.name}, given ${type?.name ?? type}`);
+        } else if (!TypeSupport.isPrimitiveType(type)) {
+            throw new MismatchedDeSerDefinitionTypeError(`Expected a primitive type, ${type?.name ?? type} given`);
         }
         return this;
     }
