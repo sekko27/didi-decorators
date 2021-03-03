@@ -1,9 +1,5 @@
 import "../vendor/Reflect.ts";
-import { MetadataSetter } from "./MetadataSetter.ts";
-import { TypeSupport } from "../utils/TypeSupport.ts";
-import { IInitDestroyMethodMetadata } from "../../../../decorators/init-destroy-method/IInitDestroyMethodMetadata.ts";
 
-import { PositionSupport } from "../../../../../deps.ts";
 /**
  * Per target (prototype / constructor) metadata setter when the metadata can be specified by type.
  */
