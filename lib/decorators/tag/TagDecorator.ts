@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
 import { ITagsQuery } from "../../modules/didi-queries/interfaces/ITagsQuery.ts";
 import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
@@ -7,8 +7,8 @@ import { MapUtil } from "../../modules/didi-commons/lib/utils/MapUtil.ts";
 // TODO Make test
 export class TagDecorator {
     public static readonly METADATA_KEY: string = "metrix:decorators:tag";
-    private static readonly SETTER: ClassMetadataSetter<Map<Name, any>> =
-        new ClassMetadataSetter(
+    private static readonly SETTER: Metadata<Map<Name, any>> =
+        new Metadata(
             TagDecorator.METADATA_KEY,
             () => new Map()
         );
@@ -25,6 +25,6 @@ export class TagDecorator {
     }
 
     private static raw(ctr: any): Map<Name, any> {
-        return this.SETTER.metadata(ctr, MapUtil.firstWinReducer, new Map());
+        return this.SETTER.prototypeMetadata(ctr, MapUtil.firstWinReducer, new Map());
     }
 }

@@ -22,19 +22,28 @@ export class ConstructorPropertyInjectionActivationHandler implements IActivatio
         if (ctor.prototype === undefined) {
             return ctor;
         }
+        const proto = ctor.prototype;
         for (const property of ConstructorPropertyDecorators.all(ctor)) {
             const query = new Query(property.type, property.tags);
+            console.log("CPI", property, ctor.prototype);
             try {
+                const bean = await resolverContext.bean(query, beanResolverContext);
+                console.log(bean, property.name, Object.getOwnPropertyDescriptor(ctor.prototype, property.name));
                 Object.defineProperty(
                     ctor.prototype,
                     property.name,
                     {
-                        value: await resolverContext.bean(query, beanResolverContext),
-                        enumerable: property.enumerable,
-                        writable: !property.readonly
+                        get: () => {
+                            console.log("called");
+                            return bean;
+                        },
+                        enumerable: true,
+                        configurable: true
                     }
                 );
+                console.log("CPIAH", ctor, ctor.prototype, (new ctor())[property.name], Object.getOwnPropertyDescriptor(ctor.prototype, property.name));
             } catch (err) {
+                console.log(err);
                 if (err instanceof BeanDefinitionNotFoundError) {
                     if (property.enableDefault !== true) {
                         throw new ConstructorPropertyDefaultValueNotEnabledError(ctor, property.name, query);
@@ -44,6 +53,7 @@ export class ConstructorPropertyInjectionActivationHandler implements IActivatio
                 }
             }
         }
+
         return ctor;
     }
 }

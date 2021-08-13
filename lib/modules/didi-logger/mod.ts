@@ -1,9 +1,9 @@
 export {
     Houston,
     ConsoleTransport, LogLevel, Format, Color, TimePrefix, LogLevelDisplay
-} from "https://deno.land/x/houston/mod.ts";
+} from "https://deno.land/x/houston@1.0.0/mod.ts";
 
-export type { ITransport, Options } from "https://deno.land/x/houston/mod.ts";
+export type { ITransport, Options } from "https://deno.land/x/houston@1.0.0/mod.ts";
 
 import { IHoustonConfiguration } from "./houston/IHoustonConfiguration.ts";
 import { EnableHouston } from "./houston/EnableHouston.ts";

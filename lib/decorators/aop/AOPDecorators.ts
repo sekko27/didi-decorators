@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { IAOPMetadata } from "./types/IAOPMetadata.ts";
 import { IAroundAOPHandler } from "./types/IAroundAOPHandler.ts";
 import { IBeforeAOPHandler } from "./types/IBeforeAOPHandler.ts";
@@ -15,7 +15,7 @@ export class AOPDecorators {
     private static MetadataEquals: ArrayElementEqualsOperator<IAOPMetadata<any, any>> =
         (_1, _2) => _1.name === _2.name;
 
-    private static readonly SETTER: ClassMetadataSetter<IAOPMetadata<any, any>[]> = new ClassMetadataSetter(
+    private static readonly SETTER: Metadata<IAOPMetadata<any, any>[]> = new Metadata(
         AOPDecorators.METADATA_KEY,
         () => []
     );
@@ -64,7 +64,7 @@ export class AOPDecorators {
     }
 
     public static all(ctr: any): IterableIterator<IAOPMetadata<any, any>> {
-        return AOPDecorators.SETTER.metadata(
+        return AOPDecorators.SETTER.prototypeMetadata(
             ctr.prototype,
             ArrayUtil.concatReducerOnlyFirstByLevels(AOPDecorators.MetadataEquals),
             []

@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "../deps.ts";
-import { ClassMetadataSetter } from "../lib/modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../lib/modules/didi-commons/lib/metadata/Metadata.ts";
 
 const TEST_METADATA_KEY = "test";
 interface A_MD {
@@ -12,13 +12,13 @@ Deno.test("instance should be strict equals factory returns", () => {
 
     const md = {id: 1};
 
-    assertStrictEquals(new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md).metadata(A), md);
+    assertStrictEquals(new Metadata<A_MD>(TEST_METADATA_KEY, () => md).prototypeMetadata(A), md);
 });
 
 Deno.test("should use factory provided default value", () => {
     const md = {id: 1};
     assertStrictEquals(
-        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md).metadata(A).id,
+        new Metadata<A_MD>(TEST_METADATA_KEY, () => md).prototypeMetadata(A).id,
         1
     );
 });
@@ -26,9 +26,9 @@ Deno.test("should use factory provided default value", () => {
 Deno.test("configured property should be return", () => {
     const md: A_MD = {id: 1};
     assertStrictEquals(
-        new ClassMetadataSetter<A_MD>(TEST_METADATA_KEY, () => md)
+        new Metadata<A_MD>(TEST_METADATA_KEY, () => md)
             .setField(A, "id", 2)
-            .metadata(A).id,
+            .prototypeMetadata(A).id,
         2
     );
 })

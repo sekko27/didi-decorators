@@ -1,12 +1,12 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { PositionSupport } from "../../../deps.ts";
 import { IInitDestroyMethodMetadata } from "./IInitDestroyMethodMetadata.ts";
 
 export class InitDestroyMethodDecorators {
-    private readonly setter: ClassMetadataSetter<PositionSupport<IInitDestroyMethodMetadata>>;
+    private readonly setter: Metadata<PositionSupport<IInitDestroyMethodMetadata>>;
 
     constructor(readonly metadataKey: string) {
-        this.setter = new ClassMetadataSetter(metadataKey, () => new PositionSupport());
+        this.setter = new Metadata(metadataKey, () => new PositionSupport());
     }
 
     public decorator(positioning?: (position: PositionSupport<IInitDestroyMethodMetadata>) => void) {
@@ -19,7 +19,7 @@ export class InitDestroyMethodDecorators {
     }
 
     public all(ctr: any): IterableIterator<string> {
-        const positioning = this.setter.metadata(
+        const positioning = this.setter.prototypeMetadata(
             ctr.prototype,
             PositionSupport.concatReducer,
             new PositionSupport()

@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../../../didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../../../didi-commons/lib/metadata/Metadata.ts";
 import { IDeSerDecoratorMetadata, IDeSerDecoratorMetadataOptions } from "../../interfaces/IDeSerDecoratorMetadata.ts";
 import { IDeSerDefinition } from "../../interfaces/IDeSerDefinition.ts";
 import { RegistrationDeSerDefinitionProvider } from "../../interfaces/RegistrationDeSerDefinitionProvider.ts";
@@ -9,8 +9,8 @@ export class DeSerDecorators {
     private static MetadataEquals: ArrayElementEqualsOperator<IDeSerDecoratorMetadata> =
         (_1, _2) => _1.name === _2.name;
 
-    private static readonly SETTER: ClassMetadataSetter<IDeSerDecoratorMetadata[]> =
-        new ClassMetadataSetter(
+    private static readonly SETTER: Metadata<IDeSerDecoratorMetadata[]> =
+        new Metadata(
             DeSerDecorators.METADATA_KEY,
             () => []
         );
@@ -29,7 +29,7 @@ export class DeSerDecorators {
     }
 
     public static all(cls: any): IDeSerDecoratorMetadata[] {
-        return DeSerDecorators.SETTER.metadata(
+        return DeSerDecorators.SETTER.prototypeMetadata(
             cls.prototype,
             ArrayUtil.concatReducerOnlyFirstByLevels(DeSerDecorators.MetadataEquals),
             []

@@ -1,4 +1,4 @@
-import "../vendor/Reflect.ts";
+import "../vendor/!Reflect.ts";
 import { Name } from "../types/Name.ts";
 
 export class DecoratorSupport {
@@ -11,9 +11,7 @@ export class DecoratorSupport {
     }
 
     public static paramTypes(reflectTarget: any, method: Name | undefined): any[] | undefined {
-        return method === undefined
-            ? Reflect.getMetadata("design:paramtypes", reflectTarget)
-            : Reflect.getMetadata("design:paramtypes", reflectTarget, method);
+        return this.methodMetadata(reflectTarget, "paramtypes", method);
     }
 
     public static paramType(reflectTarget: any, method: Name | undefined, index: number): any {
@@ -25,9 +23,7 @@ export class DecoratorSupport {
     }
 
     public static paramNames(reflectTarget: any, method: Name | undefined): string[] | undefined {
-        return method === undefined
-            ? Reflect.getMetadata("design:paramnames", reflectTarget)
-            : Reflect.getMetadata("design:paramnames", reflectTarget, method);
+        return this.methodMetadata<string>(reflectTarget, "paramnames", method);
     }
 
     public static paramName(reflectTarget: any, method: Name | undefined, index: number): string {
@@ -40,5 +36,11 @@ export class DecoratorSupport {
 
     public static setterType(prototype: any, method: string): any {
         return DecoratorSupport.paramType(prototype, method, 0);
+    }
+
+    private static methodMetadata<T = any>(reflectTarget: any, key: string, method: Name | undefined): T[] | undefined {
+        return method === undefined
+            ? Reflect.getMetadata(`design:${key}`, reflectTarget)
+            : Reflect.getMetadata(`design:${key}`, reflectTarget, method);
     }
 }

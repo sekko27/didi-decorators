@@ -20,7 +20,7 @@ import {
     Logger,
     LoggerMetadataSetter,
     LoggerType, LogLevel,
-    ConsoleTransport, Format, TimePrefix, LogLevelDisplay,
+    ConsoleTransport, Format, TimePrefix, LogLevelDisplay, ILogger,
 } from "../../lib/modules/didi-logger/mod.ts";
 import { TagDecorator } from "../../lib/decorators/tag/TagDecorator.ts";
 
@@ -85,7 +85,13 @@ Deno.test("katyvasz", async () => {
 
         @InitMethodDecorators.Init()
         init(@ParamDecorators.Inject() @ParamDecorators.Query(TagsQuery.byName("init")) value: number) {
+            // @ts-ignore
+            for (const transport in this?.logger.transports) {
+                // @ts-ignore
+                console.log("xxxx", transport, this?.logger.transports[transport].log);
+            }
             this.logger?.info("!!!!!!!!!!!!!!! Hello from init method !!!!!!!!!!!!!!!");
+            console.log("finish");
             this._init = this._setter * value;
         }
     }
@@ -164,7 +170,7 @@ Deno.test("katyvasz", async () => {
     class AModel {
 
         @ConstructorPropertyDecorators.Property()
-        private readonly bean: Bean;
+        public bean: Bean;
 
         test(value: number) {
             return this.bean.multiply(value);
@@ -188,6 +194,15 @@ Deno.test("katyvasz", async () => {
     configuration.register(GigaFactory).instanceOf();
     configuration.register(Keszitettem).factory(GigaFactory, "kesziccs").as("factoryResult");
 
+    class XX {
+        readonly lala: number = 1;
+    }
+
+    class YY {}
+    // @ts-ignore
+    Object.defineProperty(YY.prototype, "X", {get: () => new XX(), enumerable: true, configurable: true});
+    // @ts-ignore
+    console.log(YY, YY.prototype, YY.prototype.X, new YY().X, "XX");
     const container = await (await configuration.buildContainer()).boot();
     const num = await container.bean(Query.byName("four"));
     const bean = await container.bean(Query.byName("bean"));
@@ -195,7 +210,8 @@ Deno.test("katyvasz", async () => {
     const keszitettem = await container.bean(new Query(Keszitettem));
     const modelClass = await container.bean(Query.byName("a-model"));
     const model: AModel = new modelClass();
-
+    // @ts-ignore
+    console.log(modelClass.prototype, model.bean);
     const taggedBean = await container.bean(Query.byTag("i", "am"));
     const taggedBean2 = await container.bean(Query.byTag("kind", "bean"));
 

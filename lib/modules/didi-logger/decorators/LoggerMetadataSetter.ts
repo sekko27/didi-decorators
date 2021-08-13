@@ -5,8 +5,8 @@ export class LoggerMetadataSetter {
     public static readonly DEFAULT_LOGGER_NAME: string = "default";
 
     public static Logger(loggerName: string = LoggerMetadataSetter.DEFAULT_LOGGER_NAME) {
-        return (cls: any, loggerProperty: string) => {
-            const md = PropertyDecorators.getOrCreateMetadata(cls, loggerProperty);
+        return (prototype: any, loggerProperty: string) => {
+            const md = PropertyDecorators.getOrCreateMetadata(prototype.constructor, loggerProperty);
             md.tags = md.tags.merge(TagsQuery.byName(this.createLoggerBeanName(loggerName)))
         };
     }

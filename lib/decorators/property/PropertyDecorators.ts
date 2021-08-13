@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { IPropertyMetadata } from "./IPropertyMetadata.ts";
 import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
 import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
@@ -7,18 +7,19 @@ import { TagsQuery } from "../../modules/didi-queries/TagsQuery.ts";
 import { ArrayElementEqualsOperator, ArrayUtil } from "../../modules/didi-commons/lib/utils/ArrayUtil.ts";
 
 class PropertyDecoratorsImpl {
-    private readonly setter: ClassMetadataSetter<IPropertyMetadata<any>[]>;
+    private readonly setter: Metadata<IPropertyMetadata<any>[]>;
     private static readonly MetadataEquals: ArrayElementEqualsOperator<IPropertyMetadata<any>>
         = (_1, _2) => _1.name === _2.name;
 
     constructor(
         metadataKey: string,
     ) {
-        this.setter = new ClassMetadataSetter(metadataKey, () => []);
+        this.setter = new Metadata(metadataKey, () => []);
     }
 
     public Property(tags: ITagsQuery = TagsQuery.EMPTY) {
         return (target: any, name: Name) => {
+            console.log(target, name, tags, "PP");
             this.getOrCreateMetadataOnPrototype(target, name).tags = tags;
         }
     }
@@ -44,7 +45,7 @@ class PropertyDecoratorsImpl {
     }
 
     public all(ctr: any): IterableIterator<IPropertyMetadata<any>> {
-        return this.setter.metadata(
+        return this.setter.prototypeMetadata(
             ctr.prototype,
             ArrayUtil.concatReducerOnlyFirstByLevels(PropertyDecoratorsImpl.MetadataEquals),
             []

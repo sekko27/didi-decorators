@@ -1,5 +1,5 @@
 import { BeanType } from "../../modules/didi-commons/lib/types/BeanType.ts";
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { TypeSupport } from "../../modules/didi-commons/lib/utils/TypeSupport.ts";
 import { assert } from "../../../deps.ts";
 
@@ -23,8 +23,8 @@ interface ISealedDecoratorMetadata {
 
 export class SealedDecorators {
     public static readonly METADATA_KEY: string = "metrix:decorators:sealed";
-    private static readonly SETTER: ClassMetadataSetter<ISealedDecoratorMetadata> =
-        new ClassMetadataSetter(
+    private static readonly SETTER: Metadata<ISealedDecoratorMetadata> =
+        new Metadata(
             SealedDecorators.METADATA_KEY,
             (type) => ({name: type.name, descriptors: []})
         );

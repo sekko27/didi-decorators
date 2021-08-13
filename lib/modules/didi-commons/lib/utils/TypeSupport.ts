@@ -64,6 +64,7 @@ export class TypeSupport {
             return index >= target.length;
         } else {
             const descriptor = Object.getOwnPropertyDescriptor(target, methodName);
+            console.log(methodName, target, target?.[methodName])
             switch (true) {
                 case descriptor === undefined: // Something fucked
                 case descriptor?.get !== undefined: // Getter case
@@ -81,6 +82,14 @@ export class TypeSupport {
                 return current;
             }
         }
+    }
+
+    public static prototypeChainReducer<T>(proto: any, reducer: (memo: T, current: any) => T, initial: T): T {
+        let result = initial;
+        for (let current = proto; current !== null; current = Object.getPrototypeOf(current)) {
+            result = reducer(result, current);
+        }
+        return result;
     }
 
     private static _subTypeOf(sub: any, sup: any): boolean {

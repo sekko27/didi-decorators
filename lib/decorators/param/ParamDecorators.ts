@@ -1,4 +1,4 @@
-import { ClassMetadataSetter } from "../../modules/didi-commons/lib/metadata/ClassMetadataSetter.ts";
+import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { IParamDecoratorMetadata } from "./IParamDecoratorMetadata.ts";
 import { Name } from "../../modules/didi-commons/lib/types/Name.ts";
 import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
@@ -16,8 +16,8 @@ export class ParamDecorators {
     private static MetadataEquals: ArrayElementEqualsOperator<IParamDecoratorMetadata<any>> =
         (_1, _2) => _1.methodName === _2.methodName;
 
-    private static readonly SETTER: ClassMetadataSetter<IParamDecoratorMetadata<any>[]> =
-        new ClassMetadataSetter(
+    private static readonly SETTER: Metadata<IParamDecoratorMetadata<any>[]> =
+        new Metadata(
             ParamDecorators.METADATA_KEY,
             () => []
         );
@@ -53,7 +53,7 @@ export class ParamDecorators {
         if (rawParameters === undefined && TypeSupport.hasParameter(prototype[method])) {
             throw new MissingParameterDecorationError(prototype, method);
         }
-        const annotatedMethodParams = ParamDecorators.SETTER.metadata(
+        const annotatedMethodParams = ParamDecorators.SETTER.prototypeMetadata(
             prototype,
             ArrayUtil.concatReducerOnlyFirstByLevels(ParamDecorators.MetadataEquals),
             []
