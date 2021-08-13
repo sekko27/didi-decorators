@@ -13,5 +13,5 @@ Deno.test("should sort properly", () => {
         destroyMethod3() {}
     }
 
-    assertEquals(Array.from(DestroyMethodDecorators.all(Test.prototype)), ["destroyMethod3", "destroyMethod2", "destroyMethod1"]);
+    assertEquals(Array.from(DestroyMethodDecorators.all(Test)), ["destroyMethod3", "destroyMethod2", "destroyMethod1"]);
 });

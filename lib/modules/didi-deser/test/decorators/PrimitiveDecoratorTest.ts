@@ -1,6 +1,8 @@
-import { assertThrows } from "../../../../../deps.ts";
 import { oneElement, PrimitiveEquals } from "./DecoratorTestUtil.ts";
 import { Primitive } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
+import { InvalidFieldDeSerDefinitionError } from "../../lib/errors/InvalidFieldDeSerDefinitionError.ts";
+import { assertThrows } from "../../../../../deps.ts";
+
 
 Deno.test("primitive decorator - it should decorate primitives properly - auto type detection", () => {
     class A { @Primitive() private a: number; }
@@ -35,12 +37,12 @@ Deno.test("primitive decorator - it should decorate primitives property - alias"
 Deno.test("primitive decorator - it should throw error on non-primitive type [array]", () => {
     assertThrows(() => {
         class A { @Primitive() private a: any[]; }
-    });
+    }, InvalidFieldDeSerDefinitionError);
 });
 
 Deno.test("primitive decorator - it should throw error on non-primitive type [class]", () => {
     assertThrows(() => {
         class O {}
         class A { @Primitive() private a: O; }
-    });
+    }, InvalidFieldDeSerDefinitionError);
 });
