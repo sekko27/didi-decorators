@@ -49,7 +49,7 @@ class PropertyDecoratorsImpl {
             ctr.prototype,
             ArrayUtil.concatReducerOnlyFirstByLevels(PropertyDecoratorsImpl.MetadataEquals),
             []
-        )[Symbol.iterator]();
+        ) as unknown as IterableIterator<IPropertyMetadata<any>>;
     }
 
     private getOrCreateMetadataOnPrototype(prototype: any, name: Name): IPropertyMetadata<any> {

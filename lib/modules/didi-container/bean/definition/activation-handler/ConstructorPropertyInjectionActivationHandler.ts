@@ -2,7 +2,6 @@ import { IActivationHandler } from "./IActivationHandler.ts";
 import { IBeanResolverContext, IFactoryResolverContext } from "../builder/interfaces/IBeanResolverForFactory.ts";
 import {
     ConstructorPropertyDecorators,
-    PropertyDecorators
 } from "../../../../../decorators/property/PropertyDecorators.ts";
 import { Query } from "../../../../didi-queries/Query.ts";
 import { BeanDefinitionNotFoundError } from "../../container/errors/BeanDefinitionNotFoundError.ts";
@@ -22,28 +21,13 @@ export class ConstructorPropertyInjectionActivationHandler implements IActivatio
         if (ctor.prototype === undefined) {
             return ctor;
         }
-        const proto = ctor.prototype;
-        for (const property of ConstructorPropertyDecorators.all(ctor)) {
+        const beanMap = new Map();
+        const properties = ConstructorPropertyDecorators.all(ctor);
+        for (const property of properties) {
             const query = new Query(property.type, property.tags);
-            console.log("CPI", property, ctor.prototype);
             try {
-                const bean = await resolverContext.bean(query, beanResolverContext);
-                console.log(bean, property.name, Object.getOwnPropertyDescriptor(ctor.prototype, property.name));
-                Object.defineProperty(
-                    ctor.prototype,
-                    property.name,
-                    {
-                        get: () => {
-                            console.log("called");
-                            return bean;
-                        },
-                        enumerable: true,
-                        configurable: true
-                    }
-                );
-                console.log("CPIAH", ctor, ctor.prototype, (new ctor())[property.name], Object.getOwnPropertyDescriptor(ctor.prototype, property.name));
+                beanMap.set(property.name, await resolverContext.bean(query, beanResolverContext));
             } catch (err) {
-                console.log(err);
                 if (err instanceof BeanDefinitionNotFoundError) {
                     if (property.enableDefault !== true) {
                         throw new ConstructorPropertyDefaultValueNotEnabledError(ctor, property.name, query);
@@ -53,7 +37,20 @@ export class ConstructorPropertyInjectionActivationHandler implements IActivatio
                 }
             }
         }
-
-        return ctor;
+        return new Proxy(ctor, {
+            construct(target, ...args: any[]) {
+                const instance = new target(...args);
+                for (const property of properties) {
+                    if (beanMap.has(property.name)) {
+                        Object.defineProperty(instance, property.name, {
+                            get() {
+                                return beanMap.get(property.name);
+                            }
+                        });
+                    }
+                }
+                return instance;
+            }
+        })
     }
 }
