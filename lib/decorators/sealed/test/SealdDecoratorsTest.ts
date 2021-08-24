@@ -85,7 +85,24 @@ Deno.test("Should check the implementation classes are unique", () => {
     })
 });
 
-Deno.test("sealed classes should depends on first decorated parent", () => {
+Deno.test(
+    "sealed classes should depends on first decorated parent",
+    /**
+     * <pre>
+     * A
+     *  -> B*
+     *   -> C*(B)
+     *    => D(B,C)
+     *     -> G(B)
+     *    -> F(C)
+     *   -> E(B)
+     * </pre>
+     * In this case:
+     *   - first decorated parent of D is C
+     *   - C has defined sealed classes: D, F
+     *   - F is not child of D, but D is, so only D is the sealed class of D
+     */
+    () => {
     class A {}
     class B extends A {}
     class C extends B {}

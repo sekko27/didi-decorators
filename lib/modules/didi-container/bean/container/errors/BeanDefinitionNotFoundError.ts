@@ -2,6 +2,6 @@ import { IBeanResolverContext } from "../../definition/builder/interfaces/IBeanR
 
 export class BeanDefinitionNotFoundError extends Error {
     constructor(readonly context: IBeanResolverContext) {
-        super(`Bean definition not found: ${context.stringify()}`);
+        super(`No bean definition found: ${context.stringify()}`);
     }
 }

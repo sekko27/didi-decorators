@@ -1,5 +1,4 @@
 import { IBeanDefinitionMeta } from "../definition/IBeanDefinitionMeta.ts";
-import { IBeanDefinition } from "../definition/IBeanDefinition.ts";
 import { IQuery } from "../../../didi-queries/interfaces/IQuery.ts";
 
 export interface IMetaRepository<T extends {meta: IBeanDefinitionMeta<any>}> extends Iterable<T> {

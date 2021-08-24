@@ -40,8 +40,6 @@ export class FactoryResolverContext<T> implements IFactoryResolverContext<T> {
     resolve(context: IBeanResolverContext): Promise<T> {
         return this.scope.get(this, context);
     }
-
-
 }
 
 export interface IBeanResolverForClient {

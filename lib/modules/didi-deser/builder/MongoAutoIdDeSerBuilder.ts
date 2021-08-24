@@ -1,11 +1,6 @@
 import { IConditionalDeSerBuilder } from "../lib/interfaces/IConditionalDeSerBuilder.ts";
-import { ArrayDeSerDefinition } from "../lib/implementation/array/ArrayDeSerDefinition.ts";
 import { IDeSerBuilderContext } from "../lib/interfaces/IDeSerBuilderContext.ts";
 import { IDeSer } from "../lib/interfaces/IDeSer.ts";
-import { ArrayDeSer } from "../lib/implementation/array/ArrayDeSer.ts";
-import { IDeSerDefinition } from "../lib/interfaces/IDeSerDefinition.ts";
-import { AutoDeSerDefinition } from "../lib/implementation/auto/AutoDeSerDefinition.ts";
-import { AutoDeSer } from "../lib/implementation/auto/AutoDeSer.ts";
 import { DefinitionBasedConditionalDeSerBuilder } from "../lib/implementation/base/DefinitionBasedConditionalDeSerBuilder.ts";
 import { AutoIdDeSerDefinition } from "../lib/implementation/autoId/AutoIdDeSerDefinition.ts";
 import { assert } from "../../../../deps.ts";

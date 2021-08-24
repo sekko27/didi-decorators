@@ -19,7 +19,6 @@ class PropertyDecoratorsImpl {
 
     public Property(tags: ITagsQuery = TagsQuery.EMPTY) {
         return (target: any, name: Name) => {
-            console.log(target, name, tags, "PP");
             this.getOrCreateMetadataOnPrototype(target, name).tags = tags;
         }
     }
@@ -37,7 +36,6 @@ class PropertyDecoratorsImpl {
 
     }
 
-    // TODO Why it's not used?
     public EnableDefault() {
         return (target: any, name: Name) => {
             this.getOrCreateMetadataOnPrototype(target, name).enableDefault = true;

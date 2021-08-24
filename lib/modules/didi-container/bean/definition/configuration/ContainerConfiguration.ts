@@ -66,7 +66,4 @@ export class ContainerConfiguration implements IContainerConfiguration {
 
         return new ApplicationContainer(beanDefinitions, this.paramListResolver, this.activationHandler);
     }
-
-
-
 }

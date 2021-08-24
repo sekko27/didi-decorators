@@ -96,6 +96,4 @@ export class ApplicationContainer implements IContainer {
         }
         return this;
     }
-
-
 }

@@ -26,11 +26,7 @@ export class ConstantBeanDefinitionBuilder<T> extends BaseBeanDefinitionBuilder<
     protected resolverFactory(): IBeanDefinitionResolverFactory<T> {
         return (beanResolver: IBeanResolverForFactory) => new FactoryResolverContext(
             new Singleton(),
-            {
-                create: async () => {
-                    return this.value
-                }
-            },
+            { create: async () => this.value },
             beanResolver,
             ConstantBeanDefinitionBuilder.PARAM_LIST_RESOLVER,
             ConstantBeanDefinitionBuilder.PARAM_LIST_RESOLVER_CONTEXT

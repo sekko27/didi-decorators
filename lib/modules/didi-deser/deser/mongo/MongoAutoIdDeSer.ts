@@ -1,15 +1,15 @@
 import { IDeSer } from "../../lib/interfaces/IDeSer.ts";
-import { PrimitiveDeSer } from "../../lib/implementation/primitive/PrimitiveDeSer.ts";
-import { assert, Bson } from "../../../../../deps.ts";
+import { Bson } from "../../../../../deps.ts";
+import { Guards } from "../../../didi-commons/lib/types/Guards.ts";
 
 export class MongoAutoIdDeSer implements IDeSer {
     deserialize(source: any): any {
-        assert(source instanceof Bson.ObjectId);
-        return source.toString();
+        return (Guards.ensureMongoId(source)).toString();
     }
 
     serialize(source: any): any {
-        assert(typeof source === "string");
-        return new Bson.ObjectId(source);
+        return new Bson.ObjectId(
+            Guards.ensureString(source, `Serializing mongo id expects string source: ${source}`)
+        );
     }
 }
