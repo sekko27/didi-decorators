@@ -1,3 +1,3 @@
-export interface IConfigurator<T> {
+export interface IConfigurator<T = any> {
     configure(target: T): Promise<void>;
 }

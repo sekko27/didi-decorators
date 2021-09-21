@@ -7,7 +7,7 @@ interface A_MD {
     id: number;
 }
 
-Deno.test("instance should be strict equals to that the provider returns", () => {
+Deno.test("instance should be strict equals to that the deserializer returns", () => {
     class A {}
     const md = {id: 1};
     assertStrictEquals(new ClassMetadataSetter<A_MD>(METADATA_KEY, () => md).ownMetadata(A), md);
