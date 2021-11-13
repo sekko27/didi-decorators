@@ -1,4 +1,4 @@
-import "./Reflect.ts";
+import { Reflect } from "https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts";
 import * as acorn from "https://cdn.esm.sh/v43/acorn@8.4.1/deno/acorn.js";
 import cf from "https://dev.jspm.io/acorn-class-fields@0.3.7";
 
@@ -40,6 +40,7 @@ function parseParams(target: any, property: string): string[] {
 const proxy = new Proxy(Reflect, {
     get(target: any, property: PropertyKey, receiver: any) {
         const original = originalGet(target, property, receiver);
+        console.log(property);
         if (property === "metadata") {
             return function(key: string, value: string) {
                 return function(t: any, p: string) {

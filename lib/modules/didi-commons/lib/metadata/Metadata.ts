@@ -1,4 +1,4 @@
-import "../vendor/!Reflect.ts";
+import { Reflect } from "https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts";
 import { TypeSupport } from "../utils/TypeSupport.ts";
 
 export class Metadata<C> {

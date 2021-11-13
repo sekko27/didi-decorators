@@ -27,6 +27,10 @@ export class Optional<T> {
         return this.isPresent ? this.value : def;
     }
 
+    public getOrProvide(provider: () => T): T {
+        return this.isPresent ? this.value : provider();
+    }
+
     public getOrThrow(errorProvider: () => Error): T {
         if (this.isPresent) {
             return this.value;

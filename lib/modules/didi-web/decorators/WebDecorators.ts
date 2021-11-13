@@ -1,169 +1,186 @@
 import { Metadata } from "../../didi-commons/lib/metadata/Metadata.ts";
+import { IControllerMetadata } from "./IControllerMetadata.ts";
+import { IActionMetadata } from "./IActionMetadata.ts";
+import type { Verb } from "./IActionMetadata.ts";
+
+import { Optional } from "../../didi-commons/lib/types/Optional.ts";
 import {
-    IWebMetadata,
-    IWebRequestParam,
-    IWebRoute,
-    TypedWebParamDeserializer,
-    Verb,
-    WebRequestParamType
-} from "./interfaces/IWebMetadata.ts";
+    HeaderParamMetadata,
+    IActionParamMetadata,
+    PathParamMetadata,
+    QueryParamMetadata
+} from "./IActionParamMetadata.ts";
+import type { ActionParamKind } from "./IActionParamMetadata.ts";
+import { ITypeDefinition, TypeDefinitions } from "../types/ITypeDefinition.ts";
 import { DecoratorSupport } from "../../didi-commons/lib/metadata/DecoratorSupport.ts";
-import { BeanType } from "../../didi-commons/lib/types/BeanType.ts";
 
 export class WebDecorators {
-    // TODO Create commons helper to construct keys by conventions
-    private static readonly METADATA_KEY: string = "metrix:decorators:web";
-    private static readonly CONTROLLER_NAME_RE: RegExp = /Controller$/;
-    private static readonly CONTROLLER_NAME_SUFFIX_LENGTH: number = "Controller".length;
+    private static readonly CONTROLLER_NAME_REGEXP: RegExp = /^(.*)controller$/i;
 
-    private static readonly SETTER: Metadata<IWebMetadata<any, any>> = new Metadata(
+    public static readonly METADATA_KEY: string = "metrix:decorators:web";
+    private static readonly SETTER: Metadata<IControllerMetadata<any>>
+        = new Metadata(
         WebDecorators.METADATA_KEY,
-        (target: any) => {
-            const name = WebDecorators.controllerName(target.name);
-            return {
-                name,
-                routes: [],
-                aggregateRoot: "",
-                type: target,
-                doc: `Web controller ${name}`
-            };
-        }
+        (c) => ({
+            name: c.name,
+            actions: [],
+            controller: c,
+            path: ""
+        }),
     );
 
-    public static Controller(name?: string) {
+    public static Controller(path?: string, name?: string) {
         return (cls: any) => {
-            WebDecorators.SETTER.setField(cls, "name", name ?? WebDecorators.controllerName(cls.name));
+            const cmd = WebDecorators.controllerMetadata(cls);
+            cmd.name = name ?? WebDecorators.prepareControllerName(cls.name);
+            cmd.path = path ?? "";
         }
     }
 
-    public static Aggregate(root: string) {
+    public static ControllerDescription(description: string) {
         return (cls: any) => {
-            WebDecorators.SETTER.setField(cls, "aggregateRoot", root);
+            WebDecorators.controllerMetadata(cls).description = description;
         }
     }
 
-    public static AggregateController(root: string, name?: string) {
+    public static Root(path: string) {
         return (cls: any) => {
-            WebDecorators.Controller(name)(cls);
-            WebDecorators.Aggregate(root)(cls);
+            WebDecorators.SETTER.ownMetadata(cls).path = path;
         }
     }
 
-    public static ControllerDocumentation(doc: string) {
-        return (cls: any) => {
-            WebDecorators.SETTER.setField(cls, "doc", doc);
+    public static Action(path: string, verb?: Verb) {
+        return (proto: any, method: string) => {
+            const amd = WebDecorators.actionMetadataByName(proto.constructor, method);
+            console.log(amd);
+            amd.verb = verb ?? "get";
+            amd.path = path;
         }
     }
 
-    public static Route(verb: Verb, path: string) {
-        return (cls: any, method: string) => {
-            const rmd = WebDecorators.routeMetadata(cls, method);
-            rmd.verb = verb;
-            rmd.path = path;
+    public static Get(path: string = "") {
+        return WebDecorators.Action(path, "get");
+    }
+
+    public static Post(path: string = "") {
+        return WebDecorators.Action(path, "post");
+    }
+
+    public static Put(path: string = "") {
+        return WebDecorators.Action(path, "put");
+    }
+
+    public static Patch(path: string = "") {
+        return WebDecorators.Action(path, "patch");
+    }
+
+    public static Delete(path: string = "") {
+        return WebDecorators.Action(path, "delete");
+    }
+
+    public static Options(path: string = "") {
+        return WebDecorators.Action(path, "options");
+    }
+
+    public static Path(type?: ITypeDefinition, name?: string) {
+        return WebDecorators.Param("path", type, (param: PathParamMetadata<any>, proto, method, index) => {
+            param.name = name ?? DecoratorSupport.paramName(proto, method, index);
+        });
+    }
+
+    public static Query(type?: ITypeDefinition, name?: string) {
+        return WebDecorators.Param("query", type, (param: QueryParamMetadata<any>, proto, method, index) => {
+            param.name = name ?? DecoratorSupport.paramName(proto, method, index);
+        });
+    }
+
+    public static Header(type?: ITypeDefinition, name?: string) {
+        return WebDecorators.Param("header", type, (param: HeaderParamMetadata<any>, proto, method, index) => {
+            param.name = name ?? DecoratorSupport.paramName(proto, method, index);
+        });
+    }
+
+    public static Body(type?: ITypeDefinition) {
+        return WebDecorators.Param("body", type);
+    }
+
+    public static Request(type?: ITypeDefinition) {
+        return WebDecorators.Param("request", type);
+    }
+
+    public static Response(type?: ITypeDefinition) {
+        return WebDecorators.Param("response", type);
+    }
+
+    public static ParamDescription(description: string) {
+        return (proto: any, method: string, index: number) => {
+            // TODO Add hint to move decorator down
+            WebDecorators.optionalActionParamMetadata(proto.constructor, method, index)
+                .getOrThrow(() => new TypeError(`No action parameter metadata has been found: ${proto.constructor.name}@${method}[${index}]`))
+                .description = description;
         }
     }
 
-    public static Get(path: string) {
-        return WebDecorators.VerbRoute(Verb.GET, path);
-    }
-
-    public static Post(path: string) {
-        return WebDecorators.VerbRoute(Verb.POST, path);
-    }
-
-    public static Delete(path: string) {
-        return WebDecorators.VerbRoute(Verb.DELETE, path);
-    }
-
-    public static Patch(path: string) {
-        return WebDecorators.VerbRoute(Verb.PATCH, path);
-    }
-
-    public static Put(path: string) {
-        return WebDecorators.VerbRoute(Verb.PUT, path);
-    }
-
-    public static Options(path: string) {
-        return WebDecorators.VerbRoute(Verb.OPTIONS, path);
-    }
-
-    private static VerbRoute(verb: Verb, path: string) {
-        return (cls: any, method: string) => {
-            WebDecorators.Route(verb, path)(cls, method);
+    private static Param<T extends IActionParamMetadata<any>>(kind: ActionParamKind, type?: ITypeDefinition, configurator?: (param: T, proto: any, method: string, index: number) => void) {
+        return (proto: any, method: string, index: number) => {
+            const typeDef = type ?? WebDecorators.detectParamTypeDefinition(proto, method, index);
+            const md = this.actionParamMetadata(proto.constructor, method, index, kind, typeDef);
+            configurator?.(md as T, proto, method, index);
         }
     }
 
-    private static routeMetadata(cls: any, action: string): IWebRoute<any> {
-        const md = WebDecorators.SETTER.ownMetadata(cls.constructor);
-        const route = md.routes.find(r => r.action === action);
-        if (route === undefined) {
-            const newRoute: IWebRoute<any> = {
-                action,
-                verb: Verb.GET,
-                path: "",
-                params: [],
-                doc: `Controller action ${cls.constructor.name}::${action}`,
-            }
-            md.routes.push(newRoute);
-            return newRoute;
-        } else {
-            return route;
-        }
+    public static controllerMetadata(constructor: any): IControllerMetadata<any> {
+        return WebDecorators.SETTER.ownMetadata(constructor);
     }
 
-    public static ActionDocumentation(doc: string) {
-        return (cls: any, method: string) => {
-            WebDecorators.routeMetadata(cls, method).doc = doc;
-        }
+    private static actionMetadataByName(constructor: any, method: string): IActionMetadata {
+        const metadata = WebDecorators.controllerMetadata(constructor);
+        const found = metadata.actions.find(amd => amd.name === method);
+        return Optional.optional<IActionMetadata>(found)
+            .getOrProvide(() => {
+                const action: IActionMetadata = {
+                    verb: "get",
+                    path: "",
+                    name: method,
+                    params: [],
+                    responses: []
+                };
+                metadata.actions.push(action);
+                return action;
+            });
     }
 
-    public static PathParam(name?: string, deserializer?: TypedWebParamDeserializer<any, any>) {
-        return (cls: any, method: string, index: number) => {
-            WebDecorators.param(cls, method, index, WebRequestParamType.PATH, name, true, deserializer);
-        }
+    private static optionalActionParamMetadata(constructor: any, method: string, index: number): Optional<IActionParamMetadata<any>> {
+        const amd = WebDecorators.actionMetadataByName(constructor, method);
+        return Optional.optional<IActionParamMetadata<any>>(amd.params.find(p => p.index === index));
     }
 
-
-    private static param(
-        cls: any,
+    private static actionParamMetadata(
+        constructor: any,
         method: string,
         index: number,
-        paramType: WebRequestParamType,
-        customName?: string,
-        required?: boolean,
-        deserializer?: TypedWebParamDeserializer<any, any>
-    ): IWebRequestParam<any, any> {
-        const rmd = WebDecorators.routeMetadata(cls, method);
-        const name = customName ?? DecoratorSupport.paramName(cls, method, index);
-        const existing = rmd.params.find(p => p.name === name && paramType === paramType);
-        if (existing === undefined) {
-            const type = DecoratorSupport.paramType(cls, method, index);
-            const param: IWebRequestParam<any, any> = {
-                type,
-                name,
-                paramType,
-                required: required === true,
-                deserializer: WebDecorators.resolveDeserializer(type, deserializer),
-                doc: `Parameter for ${cls.constructor.name}::${method}[${index}] :: ${name} of type "${type}"`,
-            }
-            rmd.params.push(param);
-            return param;
-        } else {
-            return existing;
-        }
+        kind: ActionParamKind,
+        type: ITypeDefinition,
+    ): IActionParamMetadata<any> {
+        const amd = WebDecorators.actionMetadataByName(constructor, method);
+        return Optional.optional<IActionParamMetadata<any>>(amd.params.find(p => p.index === index))
+            .getOrProvide(() => {
+                const paramMetadata: IActionParamMetadata<any> = {index, kind, type};
+                amd.params.push(paramMetadata);
+                return paramMetadata;
+            });
     }
 
-    private static resolveDeserializer(type: BeanType<any>, deserializer?: TypedWebParamDeserializer<any, any>): TypedWebParamDeserializer<any, any> {
-        if (deserializer !== undefined) {
-            return deserializer;
-        }
-        // TODO Implement
-        return async () => undefined;
-    }
-    public static controllerName(base: string) {
-        return WebDecorators.CONTROLLER_NAME_RE.test(base)
-            ? base.substring(0, WebDecorators.CONTROLLER_NAME_SUFFIX_LENGTH)
-            : base;
+    private static detectParamTypeDefinition(proto: any, method: string, index: number): ITypeDefinition {
+        const type = DecoratorSupport.paramType(proto, method, index);
+        return type === Object ? TypeDefinitions.Any : TypeDefinitions.InstanceOf(type);
     }
 
+    public static prepareControllerName(name?: string): string {
+        if (name === undefined) {
+            throw new TypeError(`No controller name has been defined (show never be thrown)`);
+        }
+        const match = name.match(WebDecorators.CONTROLLER_NAME_REGEXP);
+        return match === null ? name : match[1];
+    }
 }

@@ -1,5 +1,5 @@
-import "../vendor/!Reflect.ts";
-import { Name } from "../types/Name.ts";
+import { Reflect } from "https://deno.land/x/reflect_metadata@v0.1.12-2/mod.ts";
+import type { Name } from "../types/Name.ts";
 
 export class DecoratorSupport {
     public static fieldType(reflectTarget: any, field: Name): any {
