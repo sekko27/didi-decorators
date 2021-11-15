@@ -1,5 +1,6 @@
 import type { BeanType } from "../../didi-commons/lib/types/BeanType.ts";
 
+// TODO We should deserialize InstanceOf values before. Annotate that instances for web-based DeSer.
 export interface ITypeDefinition {
     is(value: any): boolean;
 }

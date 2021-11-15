@@ -26,4 +26,4 @@ class ProjectController {
     }
 }
 
-console.log(WebDecorators.controllerMetadata(ProjectController));
+console.log(JSON.stringify(WebDecorators.controllerMetadata(ProjectController), null, 2));
