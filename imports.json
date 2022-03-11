@@ -5,7 +5,7 @@
     "oak/": "https://deno.land/x/oak@v10.4.0/",
     "dotenv/": "https://deno.land/x/dotenv@v3.2.0/",
     "imagescript": "https://deno.land/x/imagescript@1.2.11/mod.ts",
-    "commons": "https://deno.land/x/didi_commons@v0.0.8/mod.ts",
+    "commons": "https://deno.land/x/didi_commons@v0.0.9/mod.ts",
     "schema-validation": "https://deno.land/x/value_schema@v3.1.0/mod.ts",
     "alg": "https://deno.land/x/didi_algorithms@v0.0.11/mod.ts"
   }

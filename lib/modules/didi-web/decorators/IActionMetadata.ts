@@ -1,5 +1,6 @@
 import { ITypeDefinition } from "../types/ITypeDefinition.ts";
 import { IActionParamMetadata } from "./IActionParamMetadata.ts";
+import { ISyncOptional, Optional } from "commons";
 
 export type Verb =
     "get"
@@ -22,4 +23,8 @@ export interface IActionMetadata {
     description?: string;
     params: IActionParamMetadata<any>[];
     responses: IActionResponseMetadata[];
+}
+
+export function findPActionParamMetadataByIndex(amd: IActionMetadata, index: number): ISyncOptional<IActionParamMetadata<unknown>> {
+    return Optional.of(amd.params.find(p => p.index === index));
 }

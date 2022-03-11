@@ -1,9 +1,9 @@
 import { Metadata } from "../../didi-commons/lib/metadata/Metadata.ts";
 import { IControllerMetadata } from "./IControllerMetadata.ts";
-import { IActionMetadata } from "./IActionMetadata.ts";
+import { findPActionParamMetadataByIndex, IActionMetadata } from "./IActionMetadata.ts";
 import type { Verb } from "./IActionMetadata.ts";
 
-import { Optional } from "../../didi-commons/lib/types/Optional.ts";
+import { ISyncOptional, Optional } from "commons";
 import {
     HeaderParamMetadata,
     IActionParamMetadata,
@@ -116,7 +116,7 @@ export class WebDecorators {
         return (proto: any, method: string, index: number) => {
             // TODO Add hint to move decorator down
             WebDecorators.optionalActionParamMetadata(proto.constructor, method, index)
-                .getOrThrow(() => new TypeError(`No action parameter metadata has been found: ${proto.constructor.name}@${method}[${index}]`))
+                .orElseThrow(() => new TypeError(`No action parameter metadata has been found: ${proto.constructor.name}@${method}[${index}]`))
                 .description = description;
         }
     }
@@ -136,8 +136,8 @@ export class WebDecorators {
     private static actionMetadataByName(constructor: any, method: string): IActionMetadata {
         const metadata = WebDecorators.controllerMetadata(constructor);
         const found = metadata.actions.find(amd => amd.name === method);
-        return Optional.optional<IActionMetadata>(found)
-            .getOrProvide(() => {
+        return Optional.of<IActionMetadata>(found)
+            .orElseGet(() => {
                 const action: IActionMetadata = {
                     verb: "get",
                     path: "",
@@ -150,9 +150,8 @@ export class WebDecorators {
             });
     }
 
-    private static optionalActionParamMetadata(constructor: any, method: string, index: number): Optional<IActionParamMetadata<any>> {
-        const amd = WebDecorators.actionMetadataByName(constructor, method);
-        return Optional.optional<IActionParamMetadata<any>>(amd.params.find(p => p.index === index));
+    private static optionalActionParamMetadata(constructor: any, method: string, index: number): ISyncOptional<IActionParamMetadata<unknown>> {
+        return findPActionParamMetadataByIndex(WebDecorators.actionMetadataByName(constructor, method), index);
     }
 
     private static actionParamMetadata(
@@ -161,10 +160,10 @@ export class WebDecorators {
         index: number,
         kind: ActionParamKind,
         type: ITypeDefinition,
-    ): IActionParamMetadata<any> {
+    ): IActionParamMetadata<unknown> {
         const amd = WebDecorators.actionMetadataByName(constructor, method);
-        return Optional.optional<IActionParamMetadata<any>>(amd.params.find(p => p.index === index))
-            .getOrProvide(() => {
+        return findPActionParamMetadataByIndex(amd, index)
+            .orElseGet(() => {
                 const paramMetadata: IActionParamMetadata<any> = {index, kind, type};
                 amd.params.push(paramMetadata);
                 return paramMetadata;
