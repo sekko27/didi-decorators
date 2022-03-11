@@ -1,6 +1,6 @@
 import { IEntity } from "../types/IEntity.ts";
 import { Metadata } from "./Metadata.ts";
-import { PositionSupport } from "../../../../../deps.ts";
+import { PositionSupport } from "alg";
 
 export class PositioningMetadata<T extends IEntity> extends Metadata<PositionSupport<T>> {
     constructor(key: string) {

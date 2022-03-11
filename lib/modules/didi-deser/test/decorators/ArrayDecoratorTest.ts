@@ -1,6 +1,6 @@
 import { ArrayEquals, oneElement } from "./DecoratorTestUtil.ts";
 import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
-import { assertStrictEquals, assertThrows } from "../../../../../deps.ts";
+import { assertStrictEquals, assertThrows } from "std/testing/asserts.ts";
 import { InvalidFieldDeSerDefinitionError } from "../../lib/errors/InvalidFieldDeSerDefinitionError.ts";
 import { ArrayDeSerDefinition } from "../../lib/implementation/array/ArrayDeSerDefinition.ts";
 import { Arr, ArrDef } from "../../lib/implementation/array/ArrayDeSerDecorators.ts";

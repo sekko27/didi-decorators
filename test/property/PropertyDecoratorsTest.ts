@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertEquals } from "../../deps.ts";
+import { assertStrictEquals, assertEquals } from "std/testing/asserts.ts";
 import { PropertyDecorators } from "../../lib/decorators/property/PropertyDecorators.ts";
 
 class X {}

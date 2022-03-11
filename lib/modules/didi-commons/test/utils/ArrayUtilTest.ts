@@ -1,4 +1,4 @@
-import { assertEquals } from "../../../../../deps.ts";
+import { assertEquals } from "std/testing/asserts.ts";
 import { ArrayUtil } from "../../lib/utils/ArrayUtil.ts";
 
 type Elem = {id: number, name: string};

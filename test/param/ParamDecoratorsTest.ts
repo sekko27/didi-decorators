@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "../../deps.ts";
+import { assertEquals, assertThrows } from "std/testing/asserts.ts";
 
 import { ParamDecorators } from "../../lib/decorators/param/ParamDecorators.ts";
 import { MissingParameterDecorationError } from "../../lib/decorators/param/MissingParameterDecorationError.ts";

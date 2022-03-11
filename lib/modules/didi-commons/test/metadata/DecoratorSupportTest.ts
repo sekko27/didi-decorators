@@ -1,4 +1,4 @@
-import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
+import { assertEquals, assertStrictEquals } from "std/testing/asserts.ts";
 import { DecoratorSupport } from "../../lib/metadata/DecoratorSupport.ts";
 
 const fieldTypes: Map<keyof A, any> = new Map();

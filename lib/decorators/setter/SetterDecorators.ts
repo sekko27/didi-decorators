@@ -1,7 +1,6 @@
 import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { ISetterMetadata } from "./ISetterMetadata.ts";
-import { PositionSupport } from "../../../deps.ts";
-import { IInitDestroyMethodMetadata } from "../init-destroy-method/IInitDestroyMethodMetadata.ts";
+import { PositionSupport } from "alg";
 import { DecoratorSupport } from "../../modules/didi-commons/lib/metadata/DecoratorSupport.ts";
 import { ParamDecorators } from "../param/ParamDecorators.ts";
 import { Query } from "../../modules/didi-queries/Query.ts";

@@ -1,6 +1,6 @@
-import { AutoEquals, oneElement, OptionalEquals } from "./DecoratorTestUtil.ts";
+import { AutoEquals, oneElement } from "./DecoratorTestUtil.ts";
 import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
-import { assertStrictEquals } from "../../../../../deps.ts";
+import { assertStrictEquals } from "std/testing/asserts.ts";
 import { Auto } from "../../lib/implementation/auto/AutoDeSerDecorators.ts";
 import { PrimitiveDef } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 

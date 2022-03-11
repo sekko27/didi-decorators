@@ -1,5 +1,5 @@
 import { IDeSer } from "../../lib/interfaces/IDeSer.ts";
-import { Bson } from "../../../../../deps.ts";
+import { Bson } from "mongo/mod.ts";
 import { Guards } from "../../../didi-commons/lib/types/Guards.ts";
 
 export class MongoAutoIdDeSer implements IDeSer {

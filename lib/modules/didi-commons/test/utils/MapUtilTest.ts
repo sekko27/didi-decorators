@@ -1,4 +1,4 @@
-import { assertEquals } from "../../../../../deps.ts";
+import { assertEquals } from "std/testing/asserts.ts";
 import { MapUtil } from "../../lib/utils/MapUtil.ts";
 
 Deno.test("first win reducer - has conflict", () => {

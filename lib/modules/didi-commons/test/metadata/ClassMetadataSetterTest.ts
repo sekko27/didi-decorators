@@ -1,5 +1,5 @@
 import {ClassMetadataSetter} from "../../lib/metadata/ClassMetadataSetter.ts";
-import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
+import { assertEquals, assertStrictEquals } from "std/testing/asserts.ts";
 
 
 const METADATA_KEY = "metadataKey";

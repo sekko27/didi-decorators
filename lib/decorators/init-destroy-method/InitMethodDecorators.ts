@@ -1,4 +1,4 @@
-import { PositionSupport } from "../../../deps.ts";
+import { PositionSupport } from "alg";
 import { IInitDestroyMethodMetadata } from "./IInitDestroyMethodMetadata.ts";
 import { InitDestroyMethodDecorators } from "./InitDestroyMethodDecorators.ts";
 

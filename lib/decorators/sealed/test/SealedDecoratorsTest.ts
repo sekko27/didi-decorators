@@ -1,4 +1,4 @@
-import { assertEquals, assertStrictEquals, assertThrows } from "../../../../deps.ts";
+import { assertEquals, assertStrictEquals, assertThrows } from "std/testing/asserts.ts";
 import { NamedSealedClass, SealedDecorators } from "../SealedDecorators.ts";
 
 const named = Symbol.for("name");

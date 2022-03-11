@@ -1,4 +1,4 @@
-import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
+import { assertEquals, assertStrictEquals } from "std/testing/asserts.ts";
 import { TypeSupport } from "../../lib/utils/TypeSupport.ts";
 
 class A {}

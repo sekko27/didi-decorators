@@ -1,6 +1,6 @@
 import { IConditionalComparator } from "../types/IConditionalComparator.ts";
 import { DiffComparable } from "../types/DiffComparable.ts";
-import { Bson } from "../../../../../deps.ts";
+import { Bson } from "mongo/mod.ts";
 import { IComparatorContext } from "../types/IComparatorContext.ts";
 import { IDiff, Modified } from "../types/IDiff.ts";
 import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";

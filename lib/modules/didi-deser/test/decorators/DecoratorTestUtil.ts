@@ -1,7 +1,7 @@
 import { IDeSerDecoratorMetadata } from "../../lib/interfaces/IDeSerDecoratorMetadata.ts";
 import { BeanType } from "../../../didi-commons/lib/types/BeanType.ts";
 import { IDeSerDefinition } from "../../lib/interfaces/IDeSerDefinition.ts";
-import { assertEquals, assertStrictEquals } from "../../../../../deps.ts";
+import { assertEquals, assertStrictEquals } from "std/testing/asserts.ts";
 import { PrimitiveDeSerDefinition } from "../../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { DeSerDecorators } from "../../lib/implementation/base/DeSerDecorators.ts";
 import { OptionalDeSerDefinition } from "../../lib/implementation/optional/OptionalDeSerDefinition.ts";

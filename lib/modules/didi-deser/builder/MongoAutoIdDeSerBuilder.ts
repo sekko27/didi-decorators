@@ -3,7 +3,7 @@ import { IDeSerBuilderContext } from "../lib/interfaces/IDeSerBuilderContext.ts"
 import { IDeSer } from "../lib/interfaces/IDeSer.ts";
 import { DefinitionBasedConditionalDeSerBuilder } from "../lib/implementation/base/DefinitionBasedConditionalDeSerBuilder.ts";
 import { AutoIdDeSerDefinition } from "../lib/implementation/autoId/AutoIdDeSerDefinition.ts";
-import { assert } from "../../../../deps.ts";
+import { assert } from "std/testing/asserts.ts";
 import { PrimitiveDeSerDefinition } from "../lib/implementation/primitive/PrimitiveDeSerDefinition.ts";
 import { MongoAutoIdDeSer } from "../deser/mongo/MongoAutoIdDeSer.ts";
 

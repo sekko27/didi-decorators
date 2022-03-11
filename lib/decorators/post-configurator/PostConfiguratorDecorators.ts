@@ -1,4 +1,4 @@
-import { PositionSupport } from "../../../deps.ts";
+import { PositionSupport } from "alg";
 import { IPostConfiguratorMetadata } from "./IPostConfiguratorMetadata.ts";
 import { IConfigurator } from "./IConfigurator.ts";
 import { PositioningMetadata } from "../../modules/didi-commons/lib/metadata/PositioningMetadata.ts";

@@ -1,5 +1,5 @@
 import { IActivationHandler } from "./IActivationHandler.ts";
-import { PositionSupport } from "../../../../../../deps.ts";
+import { PositionSupport } from "alg";
 import { InitMethodActivationHandler } from "./InitMethodActivationHandler.ts";
 import { SetterInjectionActivationHandler } from "./SetterInjectionActivationHandler.ts";
 import { PropertyInjectionActivationHandler } from "./PropertyInjectionActivationHandler.ts";

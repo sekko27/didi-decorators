@@ -1,7 +1,7 @@
 import { BeanType } from "../../modules/didi-commons/lib/types/BeanType.ts";
 import { Metadata } from "../../modules/didi-commons/lib/metadata/Metadata.ts";
 import { TypeSupport } from "../../modules/didi-commons/lib/utils/TypeSupport.ts";
-import { assert } from "../../../deps.ts";
+import { assert } from "std/testing/asserts.ts";
 
 const named = Symbol.for("name");
 

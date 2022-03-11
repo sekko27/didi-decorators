@@ -1,7 +1,7 @@
 import { oneElement, PrimitiveEquals } from "./DecoratorTestUtil.ts";
 import { Primitive } from "../../lib/implementation/primitive/PrimitiveDeSerDecorators.ts";
 import { InvalidFieldDeSerDefinitionError } from "../../lib/errors/InvalidFieldDeSerDefinitionError.ts";
-import { assertThrows } from "../../../../../deps.ts";
+import { assertThrows } from "std/testing/asserts.ts";
 
 
 Deno.test("primitive decorator - it should decorate primitives properly - auto type detection", () => {

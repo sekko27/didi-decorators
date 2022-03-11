@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertEquals } from "../../deps.ts";
+import { assertStrictEquals, assertEquals } from "std/testing/asserts.ts";
 import { SetterDecorators } from "../../lib/decorators/setter/SetterDecorators.ts";
 
 Deno.test("should resolve type properly", () => {

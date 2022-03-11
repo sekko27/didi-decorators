@@ -1,4 +1,4 @@
-import { PositionSupport } from "../../../deps.ts";
+import { PositionSupport } from "alg";
 import { IInitDestroyMethodMetadata } from "./IInitDestroyMethodMetadata.ts";
 import { PositioningMetadata } from "../../modules/didi-commons/lib/metadata/PositioningMetadata.ts";
 

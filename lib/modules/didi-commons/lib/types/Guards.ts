@@ -1,4 +1,5 @@
-import { assert, Bson } from "../../../../../deps.ts";
+import { assert } from "std/testing/asserts.ts";
+import { Bson } from "mongo/mod.ts";
 
 export class Guards {
     public static isString(value: any): value is string {
